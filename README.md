@@ -60,7 +60,7 @@ git clone https://github.com/nestjs/typescript-starter.git "${project_name}"
 ### Installation
 
 ```bash
-$ npm install
+$ yarn
 ```
 
 ### Running the app
