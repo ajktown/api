@@ -1,5 +1,5 @@
-import { WordDomain } from "./word.domain"
-import { DateTime } from 'luxon'
+import { WordDomain } from './word.domain';
+import { DateTime } from 'luxon';
 
 enum DummyWordId {
   element1 = `2ce0dc45-4542-443b-9d20-f15f5d8c65e8`,
@@ -46,4 +46,4 @@ export const dummyWordDomains = [
     example: `중용해라`,
     tags: [],
   }),
-]
+];
