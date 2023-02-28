@@ -10,7 +10,7 @@ export class WordController {
   constructor(private readonly wordService: WordService) {}
 
   @Get(WordControllerPath.GetWords)
-  async getHello() {
+  async getWords() {
     return this.wordService.getWords()
   }
 }
