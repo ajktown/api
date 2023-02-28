@@ -11,6 +11,6 @@ export class WordController {
 
   @Get(WordControllerPath.GetWords)
   async getWords() {
-    return this.wordService.getWords()
+    return this.wordService.get()
   }
 }
