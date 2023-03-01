@@ -8,7 +8,7 @@ const bootstrap = async () => {
   const app = await NestFactory.create(MainModule)
 
   app.setGlobalPrefix(GLOBAL_PREFIX)
-  app.enableCors()
+  app.enableCors() // TODO: Does it enable too many Requesting Origins?
 
   await app.listen(LISTENING_PORT)
 }
