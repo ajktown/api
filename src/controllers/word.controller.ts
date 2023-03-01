@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Param } from '@nestjs/common'
 import { WordService } from '@/services/word.service'
 
 const API_VERSION = "v1"
 export enum WordControllerPath {
-  GetWords = `words`
+  GetWords = `words`,
+  GetWordById = `words/:word_id`,
 }
 
 @Controller(API_VERSION)
@@ -13,5 +14,12 @@ export class WordController {
   @Get(WordControllerPath.GetWords)
   async getWords() {
     return this.wordService.get()
+  }
+
+  @Get(WordControllerPath.GetWordById)
+  async getWordById(
+    @Param('word_id') wordId: string // TODO: Put validation here
+  ) {
+    return this.wordService.getById(wordId)
   }
 }
