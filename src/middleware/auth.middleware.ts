@@ -7,7 +7,6 @@ import { NextFunction, Request, Response } from "express"
 export class AuthMiddleware implements NestMiddleware {
   async use (req: Request, res: Response, next: NextFunction) {
      // TODO: Temporary, wait for 1 second
-    console.log("passing middleware...")
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     next()
