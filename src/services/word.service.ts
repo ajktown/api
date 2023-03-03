@@ -8,7 +8,7 @@ export class WordService {
     return dummyWordDomains
   }
 
-  getById(wordId: string): WordDomain | undefined {
+  getById(id: string): WordDomain | undefined {
     return dummyWordDomains[0] // TODO: Fix it, it just returns the first index
   }
 }

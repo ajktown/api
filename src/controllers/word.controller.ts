@@ -4,7 +4,7 @@ import { WordService } from '@/services/word.service'
 const API_VERSION = "v1"
 export enum WordControllerPath {
   GetWords = `words`,
-  GetWordById = `words/:word_id`,
+  GetWordById = `words/:id`,
 }
 
 @Controller(API_VERSION)
@@ -18,8 +18,8 @@ export class WordController {
 
   @Get(WordControllerPath.GetWordById)
   async getWordById(
-    @Param('word_id') wordId: string // TODO: Put validation here
+    @Param('id') id: string // TODO: Put validation here
   ) {
-    return this.wordService.getById(wordId)
+    return this.wordService.getById(id)
   }
 }
