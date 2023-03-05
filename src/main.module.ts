@@ -5,14 +5,12 @@ import { WordModule } from './modules/word.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
 
 @Module({
-  imports: [
-    WordModule,
-  ],
+  imports: [WordModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class MainModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes("*")
+    consumer.apply(AuthMiddleware).forRoutes('*')
   }
 }
