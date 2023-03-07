@@ -31,7 +31,7 @@ export const dummyWordDomains = [
     term: `insinuated`,
     pronunciation: ``,
     definition: `(자기에게 유리한 일을 하기 위해 환심·존경 등을) 사다`,
-    example: `I never thought it insinuated date rape.`,
+    example: `he was insinuating that she had no self-control`,
     tags: [],
   }),
   new WordDomain({
