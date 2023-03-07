@@ -1,13 +1,13 @@
 import { Controller, Get, Param } from '@nestjs/common'
 import { WordService } from '@/services/word.service'
+import { AjkTownApiVersion } from './index.interface'
 
-const API_VERSION = 'v1'
 export enum WordControllerPath {
   GetWords = `words`,
   GetWordById = `words/:id`,
 }
 
-@Controller(API_VERSION)
+@Controller(AjkTownApiVersion.V1)
 export class WordController {
   constructor(private readonly wordService: WordService) {}
 
