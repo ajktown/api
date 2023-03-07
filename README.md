@@ -10,7 +10,6 @@
     - [Running the app](#running-the-app)
     - [Test](#test)
     - [Support](#support)
-    - [Stay in touch](#stay-in-touch)
     - [License](#license)
 
 <!-- /TOC -->
@@ -60,7 +59,7 @@ git clone https://github.com/nestjs/typescript-starter.git "${project_name}"
 ### Installation
 
 ```bash
-$ npm install
+$ yarn
 ```
 
 ### Running the app
@@ -92,12 +91,6 @@ $ yarn test:cov
 ### Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-### Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ### License
 

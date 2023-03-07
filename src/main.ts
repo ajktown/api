@@ -1,8 +1,15 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core'
+import { MainModule } from './main.module'
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+const GLOBAL_PREFIX = '/api'
+const LISTENING_PORT = 8000 // TODO: Use the env data
+
+const bootstrap = async () => {
+  const app = await NestFactory.create(MainModule)
+
+  app.setGlobalPrefix(GLOBAL_PREFIX)
+  app.enableCors() // TODO: Does it enable too many Requesting Origins?
+
+  await app.listen(LISTENING_PORT)
 }
-bootstrap();
+bootstrap()
