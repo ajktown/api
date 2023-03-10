@@ -9,6 +9,7 @@ export class WordService {
   }
 
   getById(id: string): WordDomain | undefined {
+    console.log({ id }) // TODO: Remove it
     return dummyWordDomains[0] // TODO: Fix it, it just returns the first index
   }
 }
