@@ -1,6 +1,7 @@
 
 export enum PrivateEnvAttr {
   Port = `PORT`,
-  MongoDbPassword = `MONGO_DB_PW`
+  MongoDbUserName = `MONG_DB_USERNAME`, // The current PROD name is "jeongwookim"
+  MongoDbPassword = `MONGO_DB_PW` // The current PROD name is "zrb****************"
 }
 
