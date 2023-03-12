@@ -24,10 +24,12 @@
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/mongoose": "^9.2.1",
     "@nestjs/platform-express": "^9.0.0",
     "class-validator": "^0.14.0",
     "iso-639-1": "^2.1.15",
     "luxon": "^3.3.0",
+    "mongoose": "^7.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
     "webpack": "^5.76.1"
