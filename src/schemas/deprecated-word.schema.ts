@@ -4,10 +4,10 @@ import { HydratedDocument } from 'mongoose'
 // TODO: This is deprecated MongoDB Schema of WordData
 // ! Document, Props, Schema
 
-export type DeprecatedWordDocument = HydratedDocument<DeprecatedWordSchemaProps>
+export type DeprecatedWordDocument = HydratedDocument<DeprecatedWordSchemaDefinitions>
 
 @Schema()
-export class DeprecatedWordSchemaProps {
+export class DeprecatedWordSchemaDefinitions {
   @Prop({ required: true })
   ownerID: string // the owner id 5f85729......
 
@@ -55,5 +55,5 @@ export class DeprecatedWordSchemaProps {
 }
 
 export const DeprecatedWordSchema = SchemaFactory.createForClass(
-  DeprecatedWordSchemaProps,
+  DeprecatedWordSchemaDefinitions,
 )

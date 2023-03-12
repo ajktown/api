@@ -4,13 +4,13 @@ import { WordController } from '@/controllers/word.controller'
 import { MongooseModule } from '@nestjs/mongoose'
 import {
   DeprecatedWordSchema,
-  DeprecatedWordSchemaProps,
+  DeprecatedWordSchemaDefinitions,
 } from '@/schemas/deprecated-word.schema'
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: DeprecatedWordSchemaProps.name, schema: DeprecatedWordSchema },
+      { name: DeprecatedWordSchemaDefinitions.name, schema: DeprecatedWordSchema },
     ]),
   ],
   controllers: [WordController],

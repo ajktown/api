@@ -3,7 +3,7 @@ import { WordDomain } from '@/domains/word/word.domain'
 import { PostWordReqDTO } from '@/dto/post-word.req-dto'
 import {
   DeprecatedWordDocument,
-  DeprecatedWordSchemaProps,
+  DeprecatedWordSchemaDefinitions,
 } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -12,7 +12,7 @@ import { Model } from 'mongoose'
 @Injectable()
 export class WordService {
   constructor(
-    @InjectModel(DeprecatedWordSchemaProps.name)
+    @InjectModel(DeprecatedWordSchemaDefinitions.name)
     private deprecatedWordModel: Model<DeprecatedWordDocument>,
   ) {}
 
