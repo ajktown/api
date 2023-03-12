@@ -12,7 +12,7 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "paths": {
+    "paths": { // Allow @ import
       "@/*": ["./src/*"],
       "@/public/*": ["./public/*"]
     },
