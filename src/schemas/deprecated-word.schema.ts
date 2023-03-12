@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument } from 'mongoose'
-
+import { SchemaCollectionName } from './index.collections'
 // TODO: This is deprecated MongoDB Schema of WordData
 // ! Document, Props, Schema
 
-export type DeprecatedWordDocument = HydratedDocument<DeprecatedWordSchemaDefinitions>
+export type DeprecatedWordDocument = HydratedDocument<DeprecatedWordSchemaProps>
 
-@Schema()
-export class DeprecatedWordSchemaDefinitions {
+@Schema({ collection: SchemaCollectionName.DeprecatedWords })
+export class DeprecatedWordSchemaProps {
   @Prop({ required: true })
   ownerID: string // the owner id 5f85729......
 
@@ -55,5 +55,5 @@ export class DeprecatedWordSchemaDefinitions {
 }
 
 export const DeprecatedWordSchema = SchemaFactory.createForClass(
-  DeprecatedWordSchemaDefinitions,
+  DeprecatedWordSchemaProps,
 )
