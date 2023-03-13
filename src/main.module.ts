@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 
 // TODO: Move this to env or something else.
 const MONGO_DB_ROOT_URI =
-  'mongodb://root:local_root_71aae4225232353a9736957210416f22d8571c@0.0.0.0:55302/'
+  'mongodb://root:local_root_71aae4225232353a9736957210416f22d8571c@0.0.0.0:55929/'
 
 @Module({
   imports: [WordModule, MongooseModule.forRoot(MONGO_DB_ROOT_URI)],
