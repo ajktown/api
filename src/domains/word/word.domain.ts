@@ -51,7 +51,7 @@ export class WordDomain {
 
     return new WordDomain({
       id: props.id,
-      languageCode: props.language as GlobalLanguageCode,
+      languageCode: props.language as GlobalLanguageCode, // TODO: Write a type validator
       semester: props.sem,
       isFavorite: props.isFavorite,
       term: props.word,
