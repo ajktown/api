@@ -51,9 +51,6 @@ export class DeprecatedWordSchemaProps {
   dateAdded: number // 1677483296006
 
   @Prop()
-  __v: number // mongo db provided version number? usually 0
-
-  @Prop()
   meaning: string
 
   @Prop()

@@ -1,4 +1,5 @@
 import { dummyWordDomains } from '@/domains/word/index.dummy'
+import { IWord } from '@/domains/word/index.interface'
 import { WordDomain } from '@/domains/word/word.domain'
 import { PostWordReqDTO } from '@/dto/post-word.req-dto'
 import {
@@ -24,8 +25,8 @@ export class WordService {
     )
   }
 
-  get(): WordDomain[] {
-    return dummyWordDomains
+  get(): Partial<IWord>[] {
+    return dummyWordDomains.map((each) => each.toResDTO())
   }
 
   getById(id: string): WordDomain | undefined {

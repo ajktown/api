@@ -4,4 +4,5 @@ export type GlobalLanguageCode = LanguageCode
 
 export interface DataBasics {
   createdAt: string
+  updatedAt: string
 }

@@ -1,5 +1,4 @@
 import { WordDomain } from './word.domain'
-import { DateTime } from 'luxon'
 
 enum DummyWordId {
   element1 = `2ce0dc45-4542-443b-9d20-f15f5d8c65e8`,
@@ -8,12 +7,10 @@ enum DummyWordId {
   UnknownElement = `unknown_word_id_sample`,
 }
 
-// TODO: Use it
 export const dummyWordDomains = [
-  new WordDomain({
+  WordDomain.fromDummyDto({
     id: DummyWordId.element1,
     languageCode: `en`,
-    createdAt: DateTime.now().minus({ day: 1 }).toString(),
     semester: 231,
     isFavorite: true,
     term: `breadth`,
@@ -22,10 +19,9 @@ export const dummyWordDomains = [
     example: ``,
     tags: [`Algorithm`],
   }),
-  new WordDomain({
+  WordDomain.fromDummyDto({
     id: DummyWordId.element2,
     languageCode: `en`,
-    createdAt: DateTime.now().minus({ day: 7 }).toString(),
     semester: 224,
     isFavorite: false,
     term: `insinuated`,
@@ -34,10 +30,9 @@ export const dummyWordDomains = [
     example: `he was insinuating that she had no self-control`,
     tags: [],
   }),
-  new WordDomain({
+  WordDomain.fromDummyDto({
     id: DummyWordId.element3,
     languageCode: `ko`,
-    createdAt: DateTime.now().minus({ day: 7 }).toString(),
     semester: 224,
     isFavorite: false,
     term: `중용`,
