@@ -9,7 +9,7 @@ import { IWord } from './index.interface'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
-// I think every from to file can be like umm... moved together
+// TODO: every static function and toDocument() or toDTO() could be moved to other files instead. But not decided yet.
 // ! Dependency-free domain
 
 export class WordDomain {
