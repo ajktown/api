@@ -27,7 +27,6 @@ export class WordController {
 
   @Post(WordControllerPath.PostWord)
   async post(@Body() reqDto: PostWordReqDTO) {
-    const res = (await this.wordService.post(reqDto)).toResDTO()
-    return res
+    return (await this.wordService.post(reqDto)).toResDTO()
   }
 }
