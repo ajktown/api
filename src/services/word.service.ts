@@ -26,15 +26,19 @@ export class WordService {
   }
 
   async get(): Promise<Partial<IWord>[]> {
-    return (await this.deprecatedWordModel.find().sort({
-      createdAt: -1
-    }).exec()).map((props) =>
-      WordDomain.fromMdb(props).toResDTO(),
-    )
+    return (
+      await this.deprecatedWordModel
+        .find()
+        .sort({
+          createdAt: -1,
+        })
+        .exec()
+    ).map((props) => WordDomain.fromMdb(props).toResDTO())
   }
 
-  getById(id: string): WordDomain | undefined {
-    console.log({ id }) // TODO: Remove it
-    return dummyWordDomains[0] // TODO: Fix it, it just returns the first index
+  async getById(id: string): Promise<Partial<IWord>> {
+    return WordDomain.fromMdb(
+      await this.deprecatedWordModel.findById(id).exec(),
+    ).toResDTO()
   }
 }
