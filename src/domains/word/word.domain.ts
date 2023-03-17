@@ -19,20 +19,6 @@ export class WordDomain {
     this.props = props
   }
 
-  static fromDummyDto(dto: PostWordReqDTO & { id: string }): WordDomain {
-    return new WordDomain({
-      id: dto.id,
-      languageCode: dto.languageCode,
-      semester: dto.semester,
-      isFavorite: dto.isFavorite,
-      term: dto.term,
-      pronunciation: dto.pronunciation,
-      definition: dto.definition,
-      example: dto.example,
-      tags: dto.tags,
-    })
-  }
-
   static fromPostReqDto(dto: PostWordReqDTO): WordDomain {
     return new WordDomain({
       languageCode: dto.languageCode,
