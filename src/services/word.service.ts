@@ -25,8 +25,12 @@ export class WordService {
     )
   }
 
-  get(): Partial<IWord>[] {
-    return dummyWordDomains.map((each) => each.toResDTO())
+  async get(): Promise<Partial<IWord>[]> {
+    return (await this.deprecatedWordModel.find().sort({
+      createdAt: -1
+    }).exec()).map((props) =>
+      WordDomain.fromMdb(props).toResDTO(),
+    )
   }
 
   getById(id: string): WordDomain | undefined {
