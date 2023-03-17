@@ -59,6 +59,8 @@ export class WordDomain {
       definition: props.meaning,
       example: props.example,
       tags: props.tag,
+      createdAt: props.createdAt,
+      updatedAt: props.updatedAt,
     })
   }
 

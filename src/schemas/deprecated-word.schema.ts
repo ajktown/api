@@ -1,3 +1,4 @@
+import { DataBasicsDateStr } from '@/global.interface'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument } from 'mongoose'
 import {
@@ -7,7 +8,10 @@ import {
 // TODO: This is deprecated MongoDB Schema of WordData
 // ! Document, Props, Schema
 
-export type DeprecatedWordDocument = HydratedDocument<DeprecatedWordSchemaProps>
+export type DeprecatedWordDocument = HydratedDocument<
+  DeprecatedWordSchemaProps,
+  DataBasicsDateStr
+>
 
 @Schema({
   collection: SchemaCollectionName.DeprecatedWords,
