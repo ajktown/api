@@ -1,4 +1,3 @@
-import { dummyWordDomains } from '@/domains/word/index.dummy'
 import { IWord } from '@/domains/word/index.interface'
 import { WordDomain } from '@/domains/word/word.domain'
 import { PostWordReqDTO } from '@/dto/post-word.req-dto'

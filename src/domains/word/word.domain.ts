@@ -75,7 +75,7 @@ export class WordDomain {
       example: this.props.example,
       tag: this.props.tags,
       ownerID: 'abc',
-      // Not used below (Deprecated Props):
+      // Deprecated Props (Not used below from Wordnote, or Wordy v2):
       reviewdOn: [],
       order: 1,
       step: 1,
