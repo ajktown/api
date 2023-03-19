@@ -6,7 +6,7 @@ import {
   DeprecatedWordSchema,
   DeprecatedWordSchemaProps,
 } from '@/schemas/deprecated-word.schema'
-import { ChatGptService } from '@/services/chat-gpt.service'
+import { ChatGptService } from '@/ai_services/chat-gpt.service'
 
 @Module({
   imports: [
