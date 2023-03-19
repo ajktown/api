@@ -6,7 +6,8 @@ import {
   DeprecatedWordSchema,
   DeprecatedWordSchemaProps,
 } from '@/schemas/deprecated-word.schema'
-import { ChatGptService } from '@/ai_services/chat-gpt.service'
+import { ChatGptService } from '@/services/chat-gpt.service'
+import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { ChatGptService } from '@/ai_services/chat-gpt.service'
     ]),
   ],
   controllers: [WordController],
-  providers: [WordService, ChatGptService],
+  providers: [WordService, ChatGptService, TermToExamplePrompt],
 })
 export class WordModule {}

@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ChatGptService } from '../ai_services/chat-gpt.service'
+import { ChatGptService } from './chat-gpt.service'
 
 @Injectable()
 export class WordService {
