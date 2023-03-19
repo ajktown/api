@@ -41,6 +41,7 @@ export class ChatGptService {
       model: PrivateOpenaiModel.TextDavinci003,
       prompt: this.generateSentencePrompt(postWordDto.term),
       temperature: 0.6, // 0 ~ 1
+      // user, TODO: ChatGPT offers abuse model 
     })
 
     return completion.data.choices[0].text.trim()
