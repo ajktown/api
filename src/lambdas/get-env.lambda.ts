@@ -2,9 +2,12 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 export enum SupportedEnvAttr {
+  // ! General
   ListeningPort = `LISTENING_PORT`,
+  // ! Mongo DB
   MongoDbUserName = `MDB_USER_NAME`, // The current PROD name is "jeongwookim"
   MongoDbPassword = `MDB_PASSWORD`, // The current PROD pw is "zrb****************"
+  // ! Open AI
   OpenAiKey = `OPEN_AI_KEY`,
 }
 
