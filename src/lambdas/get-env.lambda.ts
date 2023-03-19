@@ -11,6 +11,9 @@ export enum SupportedEnvAttr {
   OpenAiKey = `OPEN_AI_KEY`,
 }
 
-export const getEnvLambda = (attr: SupportedEnvAttr): undefined | string => {
-  return process.env[attr]
+export const getEnvLambda = (
+  attr: SupportedEnvAttr,
+  defaultValue?: string | number,
+): undefined | string => {
+  return process.env[attr] || defaultValue.toString()
 }
