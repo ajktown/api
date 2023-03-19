@@ -20,7 +20,9 @@
   },
   "peacock.color": "#215732",
   "cSpell.words": [
+    "davinci",
     "nestjs",
+    "openai",
     "wordnote"
   ]
 }
