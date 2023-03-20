@@ -7,7 +7,7 @@ export class TermToExamplePrompt extends PromptRoot {
   // TODO: Prompt root gets the data and return naturally.
   get(term: string) {
     return this.buildString({
-      command: `Suggest a simple example sentence with given term in American (New York, more specifically New York) English.
+      command: `Suggest a simple example sentence with given term in American English.
       If it seems like there are multiple terms, please choose the one that is the highest level.`,
       reqHeader: `Term`,
       samples: [
