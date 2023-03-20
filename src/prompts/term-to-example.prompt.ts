@@ -3,6 +3,8 @@ import { PromptRoot } from './index.root'
 
 @Injectable()
 export class TermToExamplePrompt extends PromptRoot {
+  // TODO: I think this get function can be removed, and the rest of them goes as variable, and 
+  // TODO: Prompt root gets the data and return naturally.
   get(term: string) {
     return this.buildString({
       command: `Suggest a simple example sentence with given term in American (New York, more specifically New York) English.
