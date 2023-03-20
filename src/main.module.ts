@@ -5,9 +5,14 @@ import { WordModule } from './modules/word.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
 import { MongooseModule } from '@nestjs/mongoose'
 import { getMdbUriLambda } from './lambdas/get-mdb-uri.lambda'
+import { SmartWordModule } from './modules/smart-word.module'
 
 @Module({
-  imports: [WordModule, MongooseModule.forRoot(getMdbUriLambda())],
+  imports: [
+    WordModule,
+    SmartWordModule,
+    MongooseModule.forRoot(getMdbUriLambda()),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

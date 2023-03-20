@@ -19,6 +19,10 @@ export class WordDomain {
     this.props = props
   }
 
+  static fromRaw(props: Partial<IWord>) {
+    return new WordDomain(props)
+  }
+
   static fromPostReqDto(dto: PostWordReqDTO): WordDomain {
     return new WordDomain({
       languageCode: dto.languageCode,

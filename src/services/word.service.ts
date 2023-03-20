@@ -8,19 +8,15 @@ import {
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { ChatGptService } from './chat-gpt.service'
 
 @Injectable()
 export class WordService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
     private deprecatedWordModel: Model<DeprecatedWordDocument>,
-    private chatGtpService: ChatGptService,
   ) {}
 
   async post(postReqDto: PostWordReqDTO): Promise<WordDomain> {
-    postReqDto.example =
-      await this.chatGtpService.getExampleSentenceByPostWordDto(postReqDto)
     return WordDomain.fromMdb(
       await WordDomain.fromPostReqDto(postReqDto)
         .toDocument(this.deprecatedWordModel)

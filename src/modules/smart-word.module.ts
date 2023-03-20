@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common'
 import { WordService } from '@/services/word.service'
-import { WordController } from '@/controllers/word.controller'
 import { MongooseModule } from '@nestjs/mongoose'
 import {
   DeprecatedWordSchema,
   DeprecatedWordSchemaProps,
 } from '@/schemas/deprecated-word.schema'
-import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
+import { RandomSampleToWordPrompt } from '@/prompts/random-sentence-to-word.prompt'
+import { SmartWordService } from '@/services/smart-word.service'
+import { SmartWordController } from '@/controllers/smart-word.controller'
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
       { name: DeprecatedWordSchemaProps.name, schema: DeprecatedWordSchema },
     ]),
   ],
-  controllers: [WordController],
-  providers: [WordService, TermToExamplePrompt],
+  controllers: [SmartWordController],
+  providers: [SmartWordService, WordService, RandomSampleToWordPrompt],
 })
-export class WordModule {}
+export class SmartWordModule {}

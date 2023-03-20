@@ -3,12 +3,14 @@ import { PromptRoot } from './index.root'
 
 @Injectable()
 export class TermToExamplePrompt extends PromptRoot {
-  // TODO: I think this get function can be removed, and the rest of them goes as variable, and 
+  // TODO: I think this get function can be removed, and the rest of them goes as variable, and
   // TODO: Prompt root gets the data and return naturally.
-  get(term: string) {
-    return this.buildString({
-      command: `Suggest a simple example sentence with given term in American English.
-      If it seems like there are multiple terms, please choose the one that is the highest level.`,
+  async get(term: string) {
+    return this.execute({
+      command: `Suggest a simple example sentence with given term in American English.`,
+      extraRequests: [
+        `If it seems like there are multiple terms, please choose the one that is the highest level.`,
+      ],
       reqHeader: `Term`,
       samples: [
         {
