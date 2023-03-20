@@ -18,20 +18,10 @@ export class SmartWordService {
   ) {}
 
   async post(smartPostWordReq: SmartPostWordReqDTO): Promise<WordDomain> {
-    const res = await this.randomSampleToWordPrompt.get(
-      smartPostWordReq.givenStr,
-    )
-    const splittedRes = res.split('$')
-    if (splittedRes.length !== 3) throw new Error('Something is wrong')
-
-    const [term, definition, example] = splittedRes
-
     return WordDomain.fromMdb(
-      await WordDomain.fromRaw({
-        term,
-        definition,
-        example,
-      })
+      await WordDomain.fromRaw(
+        await this.randomSampleToWordPrompt.toIWord(smartPostWordReq.givenStr),
+      )
         .toDocument(this.deprecatedWordModel)
         .save(),
     )

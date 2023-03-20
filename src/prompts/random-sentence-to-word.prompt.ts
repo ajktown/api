@@ -1,14 +1,20 @@
+import { IWord } from '@/domains/word/index.interface'
 import { Injectable } from '@nestjs/common'
 import { PromptRoot } from './index.root'
 
+enum PrivateType {
+  FullSentence = `full-sentence`,
+  Term = `term`,
+}
 @Injectable()
 export class RandomSampleToWordPrompt extends PromptRoot {
-  async get(randomSample: string) {
+  private async get(randomSample: string): Promise<string> {
     return this.execute({
-      command: `Return a dollar sign($) separated, ordered in term, meaning, example sentence with the given "Random sample".`,
+      command: `Return a dollar sign($) separated, ordered in type, ${PrivateType.Term} meaning, ${PrivateType.FullSentence} with the given "Random sample".`,
       extraRequests: [
-        `The random sample could be full sentence.`,
-        `If it is full sentence, extract the hardest term, use the given full sentence as example sentence.`,
+        `the "Type" defines what kind of the random sample is. It could be ${PrivateType.Term} or ${PrivateType.FullSentence}.`,
+        `If the type is ${PrivateType.FullSentence}, extract the hardest term.`,
+        `Leave blank string if the type matches to the returning`,
         `The random sample also cloud be just a single term. In that case, use that term for the meaning and generate a simple sentence.`,
         `Meaning must be returned in the easiest manner`,
         `Answer it in the random sample's language`,
@@ -16,15 +22,37 @@ export class RandomSampleToWordPrompt extends PromptRoot {
       reqHeader: `Random sample`,
       samples: [
         {
+          req: `Xi and Putin end initial meeting in Moscow, affirm ties amid Ukraine war`,
+          res: `${PrivateType.FullSentence}$affirm$to strongly state or assert something as true$`,
+        },
+        {
           req: `Fate of First Republic Uncertain as Shares Plummet Again`,
-          res: `Plummet$to put into a lower position$Fate of First Republic Uncertain as Shares Plummet Again`,
+          res: `${PrivateType.FullSentence}$Plummet$to put into a lower position$`,
         },
         {
           req: `obstreperous`,
-          res: `obstreperous$noisy and difficult to control.$the boy is cocky and obstreperous.`,
+          res: `${PrivateType.Term}$$noisy and difficult to control.$the boy is cocky and obstreperous.`,
+        },
+        {
+          req: `Netflix and chill`,
+          res: `${PrivateType.Term}$$Wanna grab coffee in 21st expression.$Wanna netflix and chill?`,
         },
       ],
       mainRequestStr: randomSample,
     })
+  }
+
+  async toIWord(randomSample: string): Promise<Partial<IWord>> {
+    const res = await this.get(randomSample)
+    const splittedRes = res.split('$')
+    if (splittedRes.length !== 4) throw new Error('Something is wrong')
+
+    const [type, term, definition, example] = splittedRes
+
+    return {
+      term: type !== PrivateType.Term ? term : randomSample,
+      definition,
+      example: type !== PrivateType.FullSentence ? example : randomSample,
+    }
   }
 }
