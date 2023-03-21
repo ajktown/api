@@ -1,4 +1,4 @@
-import { PostWordReqDTO } from '@/dto/post-word.req-dto'
+import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GlobalLanguageCode } from '@/global.interface'
 import {
   DeprecatedWordDocument,
@@ -24,7 +24,7 @@ export class WordDomain {
     return new WordDomain(props)
   }
 
-  static fromPostReqDto(dto: PostWordReqDTO): WordDomain {
+  static fromPostReqDto(dto: PostWordBodyDTO): WordDomain {
     return new WordDomain({
       languageCode: dto.languageCode,
       semester: dto.semester,

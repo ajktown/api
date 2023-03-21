@@ -1,6 +1,8 @@
 import { IWord } from '@/domains/word/index.interface'
 import { WordDomain } from '@/domains/word/word.domain'
-import { PostWordReqDTO } from '@/dto/post-word.req-dto'
+import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
+import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
+import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
   DeprecatedWordDocument,
@@ -16,9 +18,10 @@ export class WordService {
     @InjectModel(DeprecatedWordSchemaProps.name)
     private deprecatedWordModel: Model<DeprecatedWordDocument>,
     private termToExamplePrompt: TermToExamplePrompt,
+    private getWordQueryFactory: GetWordQueryFactory,
   ) {}
 
-  async post(postReqDto: PostWordReqDTO): Promise<WordDomain> {
+  async post(postReqDto: PostWordBodyDTO): Promise<WordDomain> {
     if (!postReqDto.example) {
       // If no example given, Ask Chat GPT to generate one, if allowed.
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
@@ -31,13 +34,11 @@ export class WordService {
     )
   }
 
-  async get(): Promise<Partial<IWord>[]> {
+  async get(query: GetWordQueryDTO): Promise<Partial<IWord>[]> {
     return (
       await this.deprecatedWordModel
-        .find()
-        .sort({
-          createdAt: -1,
-        })
+        .find(this.getWordQueryFactory.toFind(query))
+        .sort(this.getWordQueryFactory.toSort())
         .exec()
     ).map((props) => WordDomain.fromMdb(props).toResDTO())
   }

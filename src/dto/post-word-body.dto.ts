@@ -1,7 +1,7 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { IsArray, IsNumber, IsBoolean, IsString } from 'class-validator'
 
-export class PostWordReqDTO {
+export class PostWordBodyDTO {
   @IsString()
   languageCode: GlobalLanguageCode
 
