@@ -4,8 +4,8 @@ static_resources:
     address:
       socket_address:
         protocol: TCP
-        address: 127.0.0.1
-        port_value: 80
+        address: 127.0.0.1 # localhost
+        port_value: 10000 # listening port; 80 requires sudo for envoy
     filter_chains:
     - filters:
       - name: envoy.filters.network.http_connection_manager
