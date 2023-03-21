@@ -19,6 +19,11 @@ export class WordDomain {
     this.props = props
   }
 
+  // TODO: Probably not the best method to provide. Consider deleting it.
+  static fromRaw(props: Partial<IWord>) {
+    return new WordDomain(props)
+  }
+
   static fromPostReqDto(dto: PostWordReqDTO): WordDomain {
     return new WordDomain({
       languageCode: dto.languageCode,

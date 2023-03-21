@@ -6,6 +6,7 @@ import {
   DeprecatedWordSchema,
   DeprecatedWordSchemaProps,
 } from '@/schemas/deprecated-word.schema'
+import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import {
     ]),
   ],
   controllers: [WordController],
-  providers: [WordService],
+  providers: [WordService, TermToExamplePrompt],
 })
 export class WordModule {}
