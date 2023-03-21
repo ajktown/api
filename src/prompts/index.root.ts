@@ -44,7 +44,7 @@ export class PromptRoot {
     ${PRIVATE_RES_HEADER}:`
   }
 
-  async execute(args: PrivateArgs): Promise<string> {
+  protected async execute(args: PrivateArgs): Promise<string> {
     const openai = this.prepareOpenai()
     const completion = await openai.createCompletion({
       model: PrivateOpenaiModel.TextDavinci003,

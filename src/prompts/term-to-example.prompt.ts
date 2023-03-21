@@ -7,9 +7,10 @@ export class TermToExamplePrompt extends PromptRoot {
   // TODO: Prompt root gets the data and return naturally.
   async get(term: string) {
     return this.execute({
-      command: `Suggest a simple example sentence with given term in American English.`,
+      command: `Suggest a simple example sentence`,
       extraRequests: [
-        `If it seems like there are multiple terms, please choose the one that is the highest level.`,
+        `Return the example sentence in the language according to the given`,
+        `If language is English, return in American English instead of British or others`,
       ],
       reqHeader: `Term`,
       samples: [

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common'
-import { WordService } from '@/services/word.service'
 import { MongooseModule } from '@nestjs/mongoose'
 import {
   DeprecatedWordSchema,
@@ -16,6 +15,6 @@ import { SmartWordController } from '@/controllers/smart-word.controller'
     ]),
   ],
   controllers: [SmartWordController],
-  providers: [SmartWordService, WordService, RandomSampleToWordPrompt],
+  providers: [SmartWordService, RandomSampleToWordPrompt],
 })
 export class SmartWordModule {}
