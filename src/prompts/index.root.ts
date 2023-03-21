@@ -25,7 +25,7 @@ enum PrivateOpenaiModel {
 }
 
 export class PromptRoot {
-  private isChatGptAllowed(): boolean {
+  protected isChatGptAllowed(): boolean {
     const env = getEnvLambda(SupportedEnvAttr.StrictlyEnv)
     if (StrictlyEnv.LocalMode !== env) return false
 

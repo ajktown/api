@@ -9,6 +9,7 @@ enum PrivateType {
 @Injectable()
 export class RandomSampleToWordPrompt extends PromptRoot {
   private async get(randomSample: string): Promise<string> {
+    // TODO: This chat gpt does not return really well.
     return this.execute({
       command: `Return a dollar sign($) separated, ordered in type, ${PrivateType.Term} meaning, ${PrivateType.FullSentence} with the given "Random sample".`,
       extraRequests: [
@@ -41,11 +42,17 @@ export class RandomSampleToWordPrompt extends PromptRoot {
       mainRequestStr: randomSample,
     })
   }
-
+  private getEmptyDefault(randomSample: string) {
+    return {
+      term: randomSample,
+    }
+  }
   async toIWord(randomSample: string): Promise<Partial<IWord>> {
+    if (!this.isChatGptAllowed()) return this.getEmptyDefault(randomSample)
+
     const res = await this.get(randomSample)
     const splittedRes = res.split('$')
-    if (splittedRes.length !== 4) throw new Error('Something is wrong')
+    if (splittedRes.length !== 4) throw new Error('Chat GPT Generated data is wrongful.')
 
     const [type, term, definition, example] = splittedRes
 
