@@ -19,7 +19,11 @@ export class WordService {
   ) {}
 
   async post(postReqDto: PostWordReqDTO): Promise<WordDomain> {
-    postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
+    if (!postReqDto.example) {
+      // If no example given, Ask Chat GPT to generate one, if allowed.
+      postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
+    }
+
     return WordDomain.fromMdb(
       await WordDomain.fromPostReqDto(postReqDto)
         .toDocument(this.deprecatedWordModel)
