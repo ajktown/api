@@ -35,8 +35,8 @@ export class RandomSampleToWordPrompt extends PromptRoot {
           res: `${PrivateType.Term}$$noisy and difficult to control.$the boy is cocky and obstreperous.`,
         },
         {
-          req: `Netflix and chill`,
-          res: `${PrivateType.Term}$$Wanna grab coffee in 21st expression.$Wanna netflix and chill?`,
+          req: `noreaster`,
+          res: `${PrivateType.Term}$$ A really bad snow storm, characteristic of the Northeast$Hey, South Carolina got 18 inches of snow Boy 2: Well that's nothing compared to a Noreaster.`,
         },
       ],
       mainRequestStr: randomSample,
@@ -52,7 +52,8 @@ export class RandomSampleToWordPrompt extends PromptRoot {
 
     const res = await this.get(randomSample)
     const splittedRes = res.split('$')
-    if (splittedRes.length !== 4) throw new Error('Chat GPT Generated data is wrongful.')
+    if (splittedRes.length !== 4)
+      throw new Error('Chat GPT Generated data is wrongful.')
 
     const [type, term, definition, example] = splittedRes
 

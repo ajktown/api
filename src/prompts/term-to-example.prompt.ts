@@ -5,6 +5,7 @@ import { PromptRoot } from './index.root'
 export class TermToExamplePrompt extends PromptRoot {
   // TODO: I think this get function can be removed, and the rest of them goes as variable, and
   // TODO: Prompt root gets the data and return naturally.
+  // TODO: This works pretty well for English, but not for Japanese.
   async get(term: string) {
     return this.execute({
       command: `Suggest a simple example sentence`,
