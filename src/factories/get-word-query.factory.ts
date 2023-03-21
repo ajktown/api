@@ -2,6 +2,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { Injectable } from '@nestjs/common'
 import { SortOrder } from 'mongoose'
 
+// TODO: Gotta refactor this too.
 type PrivateReturning =
   | string
   | { [key: string]: SortOrder | { $meta: 'textScore' } }
