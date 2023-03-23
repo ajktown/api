@@ -11,6 +11,10 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
       ...this.toObject('language', query.languageCode),
       ...this.toObject('sem', query.semester),
       ...this.toObject('isFavorite', query.isFavorite),
+      ...this.toObject('word', query.term),
+      ...this.toObject('pronun', query.pronunciation),
+      ...this.toObject('meaning', query.definition),
+      ...this.toObject('example', query.example),
     }
   }
 }
