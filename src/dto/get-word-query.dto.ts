@@ -1,10 +1,14 @@
+import { GlobalLanguageCode } from '@/global.interface'
 import { IsOptional, IsString } from 'class-validator'
 
 export class GetWordQueryDTO {
   @IsString()
   @IsOptional()
   id: string
-  // languageCode: GlobalLanguageCode
+
+  @IsOptional()
+  @IsString()
+  languageCode: GlobalLanguageCode
   // semester: number
   // isFavorite: boolean
   // term: string

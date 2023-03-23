@@ -5,8 +5,8 @@ type PrivateToSort =
   | { [key: string]: SortOrder | { $meta: 'textScore' } }
   | [string, SortOrder][]
 
-export class FactoryRoot {
-  protected toObject(key: string, value: any) {
+export class FactoryRoot<DocumentProps> {
+  protected toObject(key: keyof DocumentProps | '_id', value: any) {
     return value ? { [key]: [value] } : {}
   }
 
