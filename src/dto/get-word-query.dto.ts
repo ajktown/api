@@ -1,5 +1,5 @@
 import { GlobalLanguageCode } from '@/global.interface'
-import { IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class GetWordQueryDTO {
   @IsString()
@@ -9,8 +9,14 @@ export class GetWordQueryDTO {
   @IsOptional()
   @IsString()
   languageCode: GlobalLanguageCode
-  // semester: number
-  // isFavorite: boolean
+
+  @IsOptional()
+  @IsNumber()
+  semester: number
+
+  @IsOptional()
+  @IsBoolean()
+  isFavorite: boolean
   // term: string
   // pronunciation: string
   // definition: string
