@@ -20,11 +20,6 @@ enum PrivateOpenaiModel {
 }
 
 export class PromptRoot {
-  protected isChatGptAllowed(): boolean {
-    if (!envLambda.isLocalMode()) return false
-    return envLambda.isChatGptAllowed()
-  }
-
   private prepareOpenai() {
     const apiKey = envLambda.get(SupportedEnvAttr.OpenAiKey)
     if (!apiKey) throw new Error('Open AI API Key not found on env file')
@@ -50,7 +45,8 @@ export class PromptRoot {
   }
 
   protected async execute(args: PrivateArgs): Promise<string> {
-    if (this.isChatGptAllowed()) return ''
+    if (!envLambda.isChatGptAllowed()) return ''
+
     const openai = this.prepareOpenai()
     const completion = await openai.createCompletion({
       model: PrivateOpenaiModel.TextDavinci003,

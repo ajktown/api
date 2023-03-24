@@ -28,9 +28,13 @@ export const envLambda = {
   isLocalMode: () =>
     envLambda.get(SupportedEnvAttr.StrictlyEnv, StrictlyEnv.DefaultMode) ===
     StrictlyEnv.LocalMode,
-  isChatGptAllowed: () =>
-    envLambda.get(SupportedEnvAttr.StrictlyAllowChatGtp) ===
-    StrictlyAllowChatGtp.AllowChatGpt,
+  isChatGptAllowed: () => {
+    if (!envLambda.isLocalMode()) return false
+    return (
+      envLambda.get(SupportedEnvAttr.StrictlyAllowChatGtp) ===
+      StrictlyAllowChatGtp.AllowChatGpt
+    )
+  },
 }
 
 // ! Do not export Strictly imports below. They are only for this file.
