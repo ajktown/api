@@ -1,7 +1,9 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IWord } from '@/domains/word/index.interface'
 
-export class GetWordQueryDTO {
+type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
+export class GetWordQueryDTO implements Omit<IWord, PrivateNotYetImplemented> {
   @IsString()
   @IsOptional()
   id: string

@@ -10,6 +10,4 @@ export interface IWord extends DataBasicsDateStr {
   definition: string
   example: string
   tags: string[]
-  createdAt: string
-  updatedAt: string
 }
