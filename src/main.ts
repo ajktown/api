@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core'
-import { getEnvLambda, SupportedEnvAttr } from './lambdas/get-env.lambda'
+import { envLambda, SupportedEnvAttr } from './lambdas/get-env.lambda'
 import { MainModule } from './main.module'
 
 const PRIVATE_GLOBAL_PREFIX = '/api'
@@ -11,7 +11,7 @@ const bootstrap = async () => {
   app.setGlobalPrefix(PRIVATE_GLOBAL_PREFIX)
   app.enableCors() // TODO: Does it enable too many Requesting Origins?
 
-  const port = getEnvLambda(
+  const port = envLambda.get(
     SupportedEnvAttr.ListeningPort,
     PRIVATE_DEFAULT_LISTENING_PORT,
   )

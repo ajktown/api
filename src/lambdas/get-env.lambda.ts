@@ -13,21 +13,34 @@ export enum SupportedEnvAttr {
   OpenAiKey = `OPEN_AI_KEY`,
 }
 
-export const getEnvLambda = (
-  attr: SupportedEnvAttr,
-  defaultValue?: string | number,
-): undefined | string => {
-  const envData = process.env[attr]
-  if (envData) return envData
-  if (!defaultValue) return undefined
-  return defaultValue.toString()
+export const envLambda = {
+  get: (
+    attr: SupportedEnvAttr,
+    defaultValue?: string | number,
+  ): undefined | string => {
+    const envData = process.env[attr]
+    if (envData) return envData
+    if (!defaultValue) return undefined
+    return defaultValue.toString()
+  },
+  isProductionEnv: () =>
+    envLambda.get(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode,
+  isLocalMode: () =>
+    envLambda.get(SupportedEnvAttr.StrictlyEnv, StrictlyEnv.DefaultMode) ===
+    StrictlyEnv.LocalMode,
+  isChatGptAllowed: () =>
+    envLambda.get(SupportedEnvAttr.StrictlyAllowChatGtp) ===
+    StrictlyAllowChatGtp.AllowChatGpt,
 }
 
-export enum StrictlyEnv {
+// ! Do not export Strictly imports below. They are only for this file.
+enum StrictlyEnv {
   ProductMode = 'prod',
   LocalMode = 'local',
+  DefaultMode = 'local', // Default mode must be one of the modes of StrictlyEnv above.
 }
 
-export enum StrictlyAllowChatGtp {
+enum StrictlyAllowChatGtp {
   AllowChatGpt = 'true',
 }
+// ! Do not export Strictly imports above. They are only for this file.

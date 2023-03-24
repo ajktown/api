@@ -1,10 +1,5 @@
 import { GlobalLanguageCode } from '@/global.interface'
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator'
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class GetWordQueryDTO {
   @IsString()

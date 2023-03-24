@@ -1,9 +1,4 @@
-import {
-  getEnvLambda,
-  StrictlyAllowChatGtp,
-  StrictlyEnv,
-  SupportedEnvAttr,
-} from '@/lambdas/get-env.lambda'
+import { envLambda, SupportedEnvAttr } from '@/lambdas/get-env.lambda'
 import { Configuration, OpenAIApi } from 'openai'
 
 const PRIVATE_RES_HEADER = `Answer`
@@ -26,16 +21,12 @@ enum PrivateOpenaiModel {
 
 export class PromptRoot {
   protected isChatGptAllowed(): boolean {
-    const env = getEnvLambda(SupportedEnvAttr.StrictlyEnv)
-    if (StrictlyEnv.LocalMode !== env) return false
-
-    return (
-      getEnvLambda(SupportedEnvAttr.StrictlyAllowChatGtp) ===
-      StrictlyAllowChatGtp.AllowChatGpt
-    )
+    if (!envLambda.isLocalMode()) return false
+    return envLambda.isChatGptAllowed()
   }
+
   private prepareOpenai() {
-    const apiKey = getEnvLambda(SupportedEnvAttr.OpenAiKey)
+    const apiKey = envLambda.get(SupportedEnvAttr.OpenAiKey)
     if (!apiKey) throw new Error('Open AI API Key not found on env file')
 
     return new OpenAIApi(
