@@ -39,6 +39,7 @@ export class WordService {
       await this.deprecatedWordModel
         .find(this.getWordQueryFactory.toFind(query))
         .sort(this.getWordQueryFactory.toSort())
+        .limit(query.limit)
         .exec()
     ).map((props) => WordDomain.fromMdb(props).toResDTO())
   }
