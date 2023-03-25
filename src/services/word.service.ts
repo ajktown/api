@@ -21,6 +21,7 @@ export class WordService {
     private getWordQueryFactory: GetWordQueryFactory,
   ) {}
 
+  /** Post a new word */
   async post(postReqDto: PostWordBodyDTO): Promise<WordDomain> {
     if (!postReqDto.example) {
       // If no example given, Ask Chat GPT to generate one, if allowed.
@@ -34,6 +35,7 @@ export class WordService {
     )
   }
 
+  /** Get words by given query */
   async get(query: GetWordQueryDTO): Promise<Partial<IWord>[]> {
     return (
       await this.deprecatedWordModel
@@ -44,6 +46,18 @@ export class WordService {
     ).map((props) => WordDomain.fromMdb(props).toResDTO())
   }
 
+  /** Get word ids by given query */
+  async getWordIds(query: GetWordQueryDTO): Promise<string[]> {
+    return (
+      await this.deprecatedWordModel
+        .find(this.getWordQueryFactory.toFind(query))
+        .sort(this.getWordQueryFactory.toSort())
+        .limit(query.limit)
+        .exec()
+    ).map((props) => WordDomain.fromMdb(props).id)
+  }
+
+  /** Get word data by given id */
   async getById(id: string): Promise<Partial<IWord>> {
     return WordDomain.fromMdb(
       await this.deprecatedWordModel.findById(id).exec(),

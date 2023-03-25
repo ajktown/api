@@ -6,6 +6,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 
 export enum WordControllerPath {
   GetWords = `words`,
+  GetWordIds = `word-ids`,
   GetWordById = `words/:id`,
   PostWord = `words`,
 }
@@ -17,6 +18,11 @@ export class WordController {
   @Get(WordControllerPath.GetWords)
   async getWords(@Query() query: GetWordQueryDTO) {
     return this.wordService.get(query)
+  }
+
+  @Get(WordControllerPath.GetWordIds)
+  async getWordIds(@Query() query: GetWordQueryDTO) {
+    return this.wordService.getWordIds(query)
   }
 
   @Get(WordControllerPath.GetWordById)

@@ -19,6 +19,10 @@ export class WordDomain {
     this.props = props
   }
 
+  get id() {
+    return this.props.id
+  }
+
   // TODO: Probably not the best method to provide. Consider deleting it.
   static fromRaw(props: Partial<IWord>) {
     return new WordDomain(props)
