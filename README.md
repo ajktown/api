@@ -4,6 +4,7 @@
 
 - [AJK Town API](#ajk-town-api)
   - [Overview](#overview)
+  - [To create image](#to-create-image)
   - [About the starter of this project](#about-the-starter-of-this-project)
     - [Description](#description)
     - [Installation](#installation)
@@ -17,6 +18,11 @@
 ## Overview
 
 `AJK Town API` is the second generation project produced by AJK Town, or AJ Kim. It was renamed after "Wordy", which once contained both API server and the Frontend source code packaged together. They are now separated into two repositories `AJK Town API` and `AJK Town Wordnote`.
+
+## To create image
+```bash
+docker build -t ajktown-api:latest .
+```
 
 ## About the starter of this project
 
