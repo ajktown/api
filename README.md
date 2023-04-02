@@ -5,6 +5,7 @@
 - [AJK Town API](#ajk-town-api)
   - [Overview](#overview)
   - [To create image](#to-create-image)
+  - [For Envoy](#for-envoy)
   - [About the starter of this project](#about-the-starter-of-this-project)
     - [Description](#description)
     - [Installation](#installation)
@@ -23,6 +24,10 @@
 ```bash
 docker build -t ajktown-api:latest .
 ```
+
+## For Envoy
+
+Please check the documentation [here](https://github.com/ajktown/docs/blob/main/prepare-envoy.md)
 
 ## About the starter of this project
 
