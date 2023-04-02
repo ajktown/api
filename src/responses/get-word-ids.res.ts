@@ -1,8 +1,3 @@
-import { GlobalLanguageCode } from '@/global.interface'
-
-export interface GetWordIdsRes {
+export type GetWordIdsRes = {
   wordIds: string[]
-  daysAgo: number[]
-  languages: GlobalLanguageCode[]
-  tags: string[]
 }

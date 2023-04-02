@@ -1,15 +1,28 @@
-import { ISemester } from './index.interface'
+import { ISemester, ISemesterDetailedInfo } from './index.interface'
 
 export class SemesterDomain {
   private readonly props: Partial<ISemester>
+  private details: undefined | ISemesterDetailedInfo
 
   private constructor(props: Partial<ISemester>) {
     this.props = props
   }
 
+  get id() {
+    return this.props.code.toString()
+  }
+
+  get semester() {
+    return this.props.code
+  }
+
   // TODO: Probably not the best method to provide. Consider deleting it.
   static fromRaw(props: Partial<ISemester>) {
     return new SemesterDomain(props)
+  }
+
+  insertDetails(props: ISemesterDetailedInfo) {
+    this.details = props
   }
 
   // static fromPostReqDto(dto: PostWordBodyDTO): WordDomain {
@@ -65,6 +78,10 @@ export class SemesterDomain {
   // }
 
   toResDTO(): Partial<ISemester> {
-    return this.props
+    return {
+      id: this.id,
+      ...this.props,
+      ...(this.details ? this.details : {}),
+    }
   }
 }

@@ -4,6 +4,7 @@ import { SemesterService } from '@/services/semester.service'
 
 enum ApiHomePath {
   GetSemesters = `semesters`,
+  GetSemesterById = `semesters/:id`,
 }
 @Controller(AjkTownApiVersion.V1)
 export class SemesterController {
@@ -12,5 +13,10 @@ export class SemesterController {
   @Get(ApiHomePath.GetSemesters)
   getSemesters() {
     return this.semesterService.getSemesters()
+  }
+
+  @Get(ApiHomePath.GetSemesterById)
+  getSemesterById() {
+    return this.semesterService.getSemesterById(`231`)
   }
 }
