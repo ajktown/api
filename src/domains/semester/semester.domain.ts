@@ -81,7 +81,7 @@ export class SemesterDomain {
     return {
       id: this.id,
       ...this.props,
-      ...(this.details ? this.details : {}),
+      details: this.details,
     }
   }
 }
