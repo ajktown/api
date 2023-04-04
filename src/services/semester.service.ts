@@ -16,6 +16,7 @@ export class SemesterService {
     @InjectModel(DeprecatedWordSchemaProps.name)
     private deprecatedWordModel: Model<DeprecatedWordDocument>,
   ) {}
+
   getSemesters(): Partial<ISemester>[] {
     return DUMMY_SEMESTERS.map((e) => e.toResDTO())
   }
