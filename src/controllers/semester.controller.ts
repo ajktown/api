@@ -16,9 +16,7 @@ export class SemesterController {
   }
 
   @Get(ApiHomePath.GetSemesterById)
-  getSemesterById(
-    @Param('id') id: string,
-  ) {
+  getSemesterById(@Param('id') id: string) {
     return this.semesterService.getSemesterById(id)
   }
 }

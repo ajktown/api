@@ -1,5 +1,11 @@
 import { GlobalLanguageCode } from '@/global.interface'
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { IWord } from '@/domains/word/index.interface'
 import { GetReqDTORoot } from './index.root'
 
@@ -15,6 +21,10 @@ export class GetWordQueryDTO
   @IsOptional()
   @IsString()
   languageCode: GlobalLanguageCode
+
+  @IsOptional()
+  @IsArray()
+  languageCodes: GlobalLanguageCode[]
 
   @IsOptional()
   @IsNumber()

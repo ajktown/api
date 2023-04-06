@@ -8,8 +8,14 @@ type PrivateToSort =
   | [string, SortOrder][]
 
 export class FactoryRoot<DocumentProps> {
+  /** method that takes key and value and return the object in MDB */
   protected toObject(key: keyof DocumentProps | '_id', value: any) {
     return value ? { [key]: [value] } : {}
+  }
+
+  /** method that takes key and value and return the object in MDB */
+  protected toInObject(key: keyof DocumentProps | '_id', value: any[]) {
+    return value ? { [key]: { $in: value } } : {}
   }
 
   /** method that takes daysAgo and return the range of object in MDB */
