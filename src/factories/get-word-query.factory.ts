@@ -17,6 +17,7 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
       ...this.toObject('meaning', query.definition),
       ...this.toObject('example', query.example),
       ...this.toRangeObjectByDaysAgo('createdAt', query.daysAgo),
+      ...this.toInObject('tag', query.tags),
     }
   }
 }

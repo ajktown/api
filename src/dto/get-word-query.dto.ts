@@ -54,8 +54,7 @@ export class GetWordQueryDTO
   @IsNumber()
   daysAgo: number
 
-  // TODO: Not sure how to search with tags
-  // @IsOptional()
-  // @IsArray()
-  // tags: string[]
+  @IsOptional()
+  @IsArray()
+  tags: string[]
 }
