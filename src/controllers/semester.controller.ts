@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Param } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { SemesterService } from '@/services/semester.service'
 
@@ -16,7 +16,9 @@ export class SemesterController {
   }
 
   @Get(ApiHomePath.GetSemesterById)
-  getSemesterById() {
-    return this.semesterService.getSemesterById(`231`)
+  getSemesterById(
+    @Param('id') id: string,
+  ) {
+    return this.semesterService.getSemesterById(id)
   }
 }
