@@ -13,11 +13,11 @@ export const timeHandler = {
   },
   /** Returns JS Start Date and End Date from given nDaysAgo */
   getDateFromDaysAgo: (nDaysAgo: number): [Date, Date] => {
-    const nDaysAgoDate = new Date(new Date().valueOf() - nDaysAgo * DAY_IN_MS)
+    const nDaysAgoDate = DateTime.now().minus({ days: nDaysAgo })
 
     return [
-      DateTime.fromJSDate(nDaysAgoDate).startOf('day').toJSDate(),
-      DateTime.fromJSDate(nDaysAgoDate).endOf('day').toJSDate(),
+      nDaysAgoDate.startOf('day').toJSDate(),
+      nDaysAgoDate.endOf('day').toJSDate(),
     ]
   },
 
