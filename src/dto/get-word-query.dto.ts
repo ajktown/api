@@ -40,6 +40,10 @@ export class GetWordQueryDTO
   @IsString()
   example: string
 
+  @IsOptional()
+  @IsNumber()
+  daysAgo: number
+
   // TODO: Not sure how to search with tags
   // @IsOptional()
   // @IsArray()

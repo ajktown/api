@@ -31,6 +31,43 @@ describe(`timeHandler.getDaysAgo(date: Date)`, () => {
   })
 })
 
+// Write test for timeHandler.daysAgo
+describe(`timeHandler.getDateFromDaysAgo(daysAgo: number)`, () => {
+  it(`should be exposed as a function`, () => {
+    expect(timeHandler).toBeDefined()
+    expect(timeHandler.getDateFromDaysAgo).toBeDefined()
+  })
+
+  interface Test {
+    sampleDaysAgo: number
+    wantStart: Date
+    wantEnd: Date
+  }
+
+  const tests: Test[] = [
+    {
+      sampleDaysAgo: 0,
+      wantStart: DateTime.now().startOf('day').toJSDate(),
+      wantEnd: DateTime.now().endOf('day').toJSDate(),
+    },
+    {
+      sampleDaysAgo: 1,
+      wantStart: DateTime.now().minus({ days: 1 }).startOf('day').toJSDate(),
+      wantEnd: DateTime.now().minus({ days: 1 }).endOf('day').toJSDate(),
+    },
+  ]
+
+  tests.forEach((test) => {
+    const [gotStart, gotEnd] = timeHandler.getDateFromDaysAgo(
+      test.sampleDaysAgo,
+    )
+    it(`should return "${test.wantStart}" and "${test.wantEnd}" with arg(s) "${test.sampleDaysAgo}"`, () => {
+      expect(gotStart.valueOf()).toEqual(test.wantStart.valueOf())
+      expect(gotEnd.valueOf()).toEqual(test.wantEnd.valueOf())
+    })
+  })
+})
+
 describe(`timeHandler.isWithinDaysAgo(daysAgo: number, date: Date)`, () => {
   it(`should be exposed as a function`, () => {
     expect(timeHandler).toBeDefined()
