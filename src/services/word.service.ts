@@ -51,6 +51,7 @@ export class WordService {
   async getWordIds(query: GetWordQueryDTO): Promise<GetWordIdsRes> {
     const words = await this.get(query)
     return {
+      length: words.length,
       wordIds: words.map((e) => e.id),
     }
   }
