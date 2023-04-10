@@ -22,7 +22,7 @@
 
 ## To create image
 
-*Watchout for that last dot at the end*
+*Watchout for that last period at the end*
 
 ```bash
 docker build -t ajktown-api:latest .
