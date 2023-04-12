@@ -1,4 +1,4 @@
-import { DataBasicsDateStr } from '@/global.interface'
+import { DataBasicsDate } from '@/global.interface'
 import { timeHandler } from '@/handlers/time.handler'
 import { SortOrder } from 'mongoose'
 
@@ -20,7 +20,7 @@ export class FactoryRoot<DocumentProps> {
 
   /** method that takes daysAgo and return the range of object in MDB */
   protected toRangeObjectByDaysAgo(
-    key: keyof DocumentProps | '_id' | keyof DataBasicsDateStr,
+    key: keyof DocumentProps | '_id' | keyof DataBasicsDate,
     daysAgo: number,
   ): { [key: string]: { $gte: Date; $lt: Date } } {
     const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo)

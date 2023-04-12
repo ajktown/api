@@ -1,6 +1,6 @@
-import { DataBasicsDateStr, GlobalLanguageCode } from 'src/global.interface'
+import { DataBasicsDate, GlobalLanguageCode } from 'src/global.interface'
 
-export interface ISemester extends DataBasicsDateStr {
+export interface ISemester extends DataBasicsDate {
   id: string
   code: number // 231
   year: number // 2023

@@ -1,4 +1,4 @@
-import { DataBasicsDateStr } from '@/global.interface'
+import { DataBasicsDate } from '@/global.interface'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument } from 'mongoose'
 import {
@@ -10,7 +10,7 @@ import {
 
 export type DeprecatedWordDocument = HydratedDocument<
   DeprecatedWordSchemaProps,
-  DataBasicsDateStr
+  DataBasicsDate
 >
 
 @Schema({
