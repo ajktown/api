@@ -11,7 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
     // TODO! This entire thing is NOT working as the class name. Delete them all when test complete
     // TODO: Temporary, wait for 1 second
     // TODO: Apply access control for token, in a standard Nest JS Way with validator
-    if (envLambda.isProductMode()) next()
+    if (envLambda.mode.isProduct()) next()
 
     await new Promise((resolve) =>
       setTimeout(resolve, PRIVATE_WAITING_MILLISECONDS),

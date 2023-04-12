@@ -23,13 +23,15 @@ export const envLambda = {
     if (!defaultValue) return undefined
     return defaultValue.toString()
   },
-  isProductMode: () =>
-    envLambda.get(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode,
-  isLocalMode: () =>
-    envLambda.get(SupportedEnvAttr.StrictlyEnv, StrictlyEnv.DefaultMode) ===
-    StrictlyEnv.LocalMode,
+  mode: {
+    isProduct: () =>
+      envLambda.get(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode,
+    isLocal: () =>
+      envLambda.get(SupportedEnvAttr.StrictlyEnv, StrictlyEnv.DefaultMode) ===
+      StrictlyEnv.LocalMode,
+  },
   isChatGptAllowed: () => {
-    if (!envLambda.isLocalMode()) return false
+    if (!envLambda.mode.isLocal()) return false
     return (
       envLambda.get(SupportedEnvAttr.StrictlyAllowChatGtp) ===
       StrictlyAllowChatGtp.AllowChatGpt
