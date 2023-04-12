@@ -23,7 +23,7 @@ export const envLambda = {
     if (!defaultValue) return undefined
     return defaultValue.toString()
   },
-  isProductionEnv: () =>
+  isProductMode: () =>
     envLambda.get(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode,
   isLocalMode: () =>
     envLambda.get(SupportedEnvAttr.StrictlyEnv, StrictlyEnv.DefaultMode) ===
