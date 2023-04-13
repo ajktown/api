@@ -1,6 +1,6 @@
-import { DataBasicsDateStr, GlobalLanguageCode } from 'src/global.interface'
+import { DataBasicsDate, GlobalLanguageCode } from 'src/global.interface'
 
-export interface IWord extends DataBasicsDateStr {
+export interface IWord extends DataBasicsDate {
   id: string
   languageCode: GlobalLanguageCode
   semester: number

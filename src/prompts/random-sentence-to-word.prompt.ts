@@ -1,4 +1,5 @@
 import { IWord } from '@/domains/word/index.interface'
+import { envLambda } from '@/lambdas/get-env.lambda'
 import { Injectable } from '@nestjs/common'
 import { PromptRoot } from './index.root'
 
@@ -48,7 +49,7 @@ export class RandomSampleToWordPrompt extends PromptRoot {
     }
   }
   async toIWord(randomSample: string): Promise<Partial<IWord>> {
-    if (!this.isChatGptAllowed()) return this.getEmptyDefault(randomSample)
+    if (!envLambda.isChatGptAllowed()) return this.getEmptyDefault(randomSample)
 
     const res = await this.get(randomSample)
     const splittedRes = res.split('$')

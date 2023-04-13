@@ -1,8 +1,4 @@
-import {
-  getEnvLambda,
-  StrictlyEnv,
-  SupportedEnvAttr,
-} from '@/lambdas/get-env.lambda'
+import { envLambda } from '@/lambdas/get-env.lambda'
 import { Injectable, NestMiddleware } from '@nestjs/common'
 import { NextFunction, Request, Response } from 'express'
 
@@ -15,11 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
     // TODO! This entire thing is NOT working as the class name. Delete them all when test complete
     // TODO: Temporary, wait for 1 second
     // TODO: Apply access control for token, in a standard Nest JS Way with validator
-    if (
-      getEnvLambda(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode
-    ) {
-      next()
-    }
+    if (envLambda.mode.isProduct()) next()
 
     await new Promise((resolve) =>
       setTimeout(resolve, PRIVATE_WAITING_MILLISECONDS),

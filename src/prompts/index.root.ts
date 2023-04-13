@@ -1,9 +1,4 @@
-import {
-  getEnvLambda,
-  StrictlyAllowChatGtp,
-  StrictlyEnv,
-  SupportedEnvAttr,
-} from '@/lambdas/get-env.lambda'
+import { envLambda, SupportedEnvAttr } from '@/lambdas/get-env.lambda'
 import { Configuration, OpenAIApi } from 'openai'
 
 const PRIVATE_RES_HEADER = `Answer`
@@ -25,17 +20,8 @@ enum PrivateOpenaiModel {
 }
 
 export class PromptRoot {
-  protected isChatGptAllowed(): boolean {
-    const env = getEnvLambda(SupportedEnvAttr.StrictlyEnv)
-    if (StrictlyEnv.LocalMode !== env) return false
-
-    return (
-      getEnvLambda(SupportedEnvAttr.StrictlyAllowChatGtp) ===
-      StrictlyAllowChatGtp.AllowChatGpt
-    )
-  }
   private prepareOpenai() {
-    const apiKey = getEnvLambda(SupportedEnvAttr.OpenAiKey)
+    const apiKey = envLambda.get(SupportedEnvAttr.OpenAiKey)
     if (!apiKey) throw new Error('Open AI API Key not found on env file')
 
     return new OpenAIApi(
@@ -59,7 +45,8 @@ export class PromptRoot {
   }
 
   protected async execute(args: PrivateArgs): Promise<string> {
-    if (this.isChatGptAllowed()) return ''
+    if (!envLambda.isChatGptAllowed()) return ''
+
     const openai = this.prepareOpenai()
     const completion = await openai.createCompletion({
       model: PrivateOpenaiModel.TextDavinci003,

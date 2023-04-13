@@ -1,4 +1,4 @@
-import { PostWordReqDTO } from '@/dto/post-word.req-dto'
+import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GlobalLanguageCode } from '@/global.interface'
 import {
   DeprecatedWordDocument,
@@ -19,12 +19,16 @@ export class WordDomain {
     this.props = props
   }
 
+  get id() {
+    return this.props.id
+  }
+
   // TODO: Probably not the best method to provide. Consider deleting it.
   static fromRaw(props: Partial<IWord>) {
     return new WordDomain(props)
   }
 
-  static fromPostReqDto(dto: PostWordReqDTO): WordDomain {
+  static fromPostReqDto(dto: PostWordBodyDTO): WordDomain {
     return new WordDomain({
       languageCode: dto.languageCode,
       semester: dto.semester,
@@ -50,8 +54,8 @@ export class WordDomain {
       definition: props.meaning,
       example: props.example,
       tags: props.tag,
-      createdAt: props.createdAt,
-      updatedAt: props.updatedAt,
+      createdAt: new Date(props.createdAt),
+      updatedAt: new Date(props.createdAt),
     })
   }
 
