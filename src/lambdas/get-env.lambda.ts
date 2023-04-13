@@ -27,7 +27,7 @@ export const envLambda = {
     isProduct: () =>
       envLambda.get(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode,
     isLocal: () =>
-      envLambda.get(SupportedEnvAttr.StrictlyEnv, StrictlyEnv.DefaultMode) ===
+      envLambda.get(SupportedEnvAttr.StrictlyEnv, PRIVATE_DEFAULT_ENV_MODE) ===
       StrictlyEnv.LocalMode,
   },
   isChatGptAllowed: () => {
@@ -43,8 +43,8 @@ export const envLambda = {
 enum StrictlyEnv {
   ProductMode = 'prod',
   LocalMode = 'local',
-  DefaultMode = 'local', // Default mode must be one of the modes of StrictlyEnv above.
 }
+const PRIVATE_DEFAULT_ENV_MODE: StrictlyEnv = StrictlyEnv.LocalMode
 
 enum StrictlyAllowChatGtp {
   AllowChatGpt = 'true',
