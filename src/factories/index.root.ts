@@ -1,13 +1,29 @@
+import { GetReqDTORoot } from '@/dto/index.root'
 import { DataBasicsDate } from '@/global.interface'
 import { timeHandler } from '@/handlers/time.handler'
 import { SortOrder } from 'mongoose'
 
+enum PrivateSearchOptions {
+  CaseInsensitive = `i`,
+}
 type PrivateToSort =
   | string
   | { [key: string]: SortOrder | { $meta: 'textScore' } }
   | [string, SortOrder][]
 
 export class FactoryRoot<DocumentProps> {
+  protected toObjectWithSearch(
+    keys: (keyof DocumentProps | '_id')[],
+    query: GetReqDTORoot,
+  ) {
+    if (!query.searchInput) return {}
+    return {
+      $or: keys.map((key) => ({
+        [key]: { $regex: query.searchInput },
+      })),
+    }
+  }
+
   /** method that takes key and value and return the object in MDB */
   protected toObject(key: keyof DocumentProps | '_id', value: any) {
     return value ? { [key]: [value] } : {}

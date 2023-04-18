@@ -5,8 +5,18 @@ import { FactoryRoot } from './index.root'
 
 @Injectable()
 export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> {
+  private toFindWithSearch(query: GetWordQueryDTO) {
+    if (!query.searchInput) return {}
+
+    return this.toObjectWithSearch(
+      ['word', 'pronun', 'meaning', 'example'],
+      query,
+    )
+  }
+
   toFind(query: GetWordQueryDTO) {
     return {
+      ...this.toFindWithSearch(query),
       ...this.toObject('_id', query.id),
       ...this.toObject('language', query.languageCode),
       ...this.toInObject('language', query.languageCodes),
