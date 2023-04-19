@@ -14,6 +14,7 @@ export class FactoryRoot<DocumentProps> {
     query: GetReqDTORoot,
   ) {
     if (!query.searchInput) return {}
+    // TODO: The speed of the search can be improved by NOT using regex.
     return {
       $or: keys.map((key) => ({
         [key]: { $regex: query.searchInput, $options: 'i' },
