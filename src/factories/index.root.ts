@@ -16,7 +16,7 @@ export class FactoryRoot<DocumentProps> {
     if (!query.searchInput) return {}
     return {
       $or: keys.map((key) => ({
-        [key]: query.searchInput,
+        [key]: { $regex: query.searchInput, $options: 'i' },
       })),
     }
   }
