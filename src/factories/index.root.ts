@@ -3,9 +3,6 @@ import { DataBasicsDate } from '@/global.interface'
 import { timeHandler } from '@/handlers/time.handler'
 import { SortOrder } from 'mongoose'
 
-enum PrivateSearchOptions {
-  CaseInsensitive = `i`,
-}
 type PrivateToSort =
   | string
   | { [key: string]: SortOrder | { $meta: 'textScore' } }
