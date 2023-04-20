@@ -1,4 +1,3 @@
-import { GetReqDTORoot } from '@/dto/index.root'
 import { DataBasicsDate } from '@/global.interface'
 import { timeHandler } from '@/handlers/time.handler'
 import { SortOrder } from 'mongoose'
@@ -11,13 +10,13 @@ type PrivateToSort =
 export class FactoryRoot<DocumentProps> {
   protected toObjectWithSearch(
     keys: (keyof DocumentProps | '_id')[],
-    query: GetReqDTORoot,
+    searchInput: undefined | string,
   ) {
-    if (!query.searchInput) return {}
+    if (!searchInput) return {}
     // TODO: The speed of the search can be improved by NOT using regex.
     return {
       $or: keys.map((key) => ({
-        [key]: { $regex: query.searchInput, $options: 'i' },
+        [key]: { $regex: searchInput, $options: 'i' },
       })),
     }
   }

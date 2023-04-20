@@ -11,7 +11,7 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
 
     return this.toObjectWithSearch(
       ['word', 'example'], // 'pronun', 'meaning',
-      query,
+      query.searchInput,
     )
   }
 
