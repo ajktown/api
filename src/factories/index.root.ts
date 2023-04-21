@@ -8,6 +8,19 @@ type PrivateToSort =
   | [string, SortOrder][]
 
 export class FactoryRoot<DocumentProps> {
+  protected toObjectWithSearch(
+    keys: (keyof DocumentProps | '_id')[],
+    searchInput: undefined | string,
+  ) {
+    if (!searchInput) return {}
+    // TODO: The speed of the search can be improved by NOT using regex.
+    return {
+      $or: keys.map((key) => ({
+        [key]: { $regex: searchInput, $options: 'i' },
+      })),
+    }
+  }
+
   /** method that takes key and value and return the object in MDB */
   protected toObject(key: keyof DocumentProps | '_id', value: any) {
     return value ? { [key]: [value] } : {}

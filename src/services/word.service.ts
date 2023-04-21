@@ -40,7 +40,11 @@ export class WordService {
   async get(query: GetWordQueryDTO): Promise<Partial<IWord>[]> {
     return (
       await this.deprecatedWordModel
-        .find(this.getWordQueryFactory.toFind(query))
+        .find(
+          this.getWordQueryFactory.getFilter(query),
+          this.getWordQueryFactory.getProjection(),
+          this.getWordQueryFactory.getOptions(query),
+        )
         .sort(this.getWordQueryFactory.toSort())
         .limit(query.limit)
         .exec()
