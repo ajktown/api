@@ -7,9 +7,11 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { getMdbUriLambda } from './lambdas/get-mdb-uri.lambda'
 import { SmartWordModule } from './modules/smart-word.module'
 import { SemesterModule } from './modules/semester.module'
+import { AuthModule } from './modules/auth.module'
 
 @Module({
   imports: [
+    AuthModule,
     WordModule,
     SemesterModule,
     SmartWordModule,
