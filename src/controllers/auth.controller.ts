@@ -13,6 +13,6 @@ export class AuthController {
 
   @Post(AuthControllerPath.PostGoogleAuth)
   async post(@Body() reqDto: PostAuthGoogleBodyDTO) {
-    await this.authService.byGoogle(reqDto)
+    return this.authService.byGoogle(reqDto)
   }
 }

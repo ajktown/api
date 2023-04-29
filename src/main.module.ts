@@ -8,8 +8,7 @@ import { getMdbUriLambda } from './lambdas/get-mdb-uri.lambda'
 import { SmartWordModule } from './modules/smart-word.module'
 import { SemesterModule } from './modules/semester.module'
 import { AuthModule } from './modules/auth.module'
-import { JwtModule } from '@nestjs/jwt';
-import { envLambda } from './lambdas/get-env.lambda'
+import { JwtModule } from '@nestjs/jwt'
 import { getJwtOptionsLambda } from './lambdas/get-jwt-options.lambda'
 
 @Module({
