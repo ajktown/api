@@ -1,3 +1,4 @@
+import { UserDomain } from '@/domains/user/user.domain'
 import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
@@ -15,9 +16,8 @@ export class AuthService {
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
       })
       const payload = ticket.getPayload()
-      console.log({
-        payload,
-      })
+      const user = UserDomain.fromGoogleAuthPayload(payload)
+      console.log(user.toResDTO())
       // const userid = payload['sub']
       // If request specified a G Suite domain:
       // const domain = payload['hd'];
