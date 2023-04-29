@@ -8,6 +8,9 @@ import { getMdbUriLambda } from './lambdas/get-mdb-uri.lambda'
 import { SmartWordModule } from './modules/smart-word.module'
 import { SemesterModule } from './modules/semester.module'
 import { AuthModule } from './modules/auth.module'
+import { JwtModule } from '@nestjs/jwt';
+import { envLambda } from './lambdas/get-env.lambda'
+import { getJwtOptionsLambda } from './lambdas/get-jwt-options.lambda'
 
 @Module({
   imports: [
@@ -16,6 +19,7 @@ import { AuthModule } from './modules/auth.module'
     SemesterModule,
     SmartWordModule,
     MongooseModule.forRoot(getMdbUriLambda()),
+    JwtModule.register(getJwtOptionsLambda()),
   ],
   controllers: [AppController],
   providers: [AppService],

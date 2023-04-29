@@ -5,6 +5,8 @@ export enum SupportedEnvAttr {
   // ! General
   ListeningPort = `LISTENING_PORT`,
   StrictlyEnv = `ENV`,
+  // ! JWT Token Secrets
+  JwtTokenSecret = `JWT_TOKEN_SECRET`,
   // ! Mongo DB
   MongoDbUserName = `MDB_USER_NAME`, // The current PROD name is "jeongwookim"
   MongoDbPassword = `MDB_PASSWORD`, // The current PROD pw is "zrb****************"
@@ -22,6 +24,9 @@ export const envLambda = {
     if (envData) return envData
     if (!defaultValue) return undefined
     return defaultValue.toString()
+  },
+  getJwtTokenSecret: () => {
+    return envLambda.get(SupportedEnvAttr.JwtTokenSecret)
   },
   mode: {
     isProduct: () =>

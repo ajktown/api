@@ -2,9 +2,20 @@ import { UserDomain } from '@/domains/user/user.domain'
 import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private readonly jwtService: JwtService,
+  ){}
+
+  private async signJwt (user: UserDomain) {
+    // TODO: Implement later
+    return {
+      accessToken: await this.jwtService.signAsync(user.toResDTO())
+    }
+  }
   /** Get words by given query */
   async byGoogle(query: PostAuthGoogleBodyDTO) {
     const client = new OAuth2Client(query.clientId)
@@ -17,7 +28,7 @@ export class AuthService {
       })
       const payload = ticket.getPayload()
       const user = UserDomain.fromGoogleAuthPayload(payload)
-      console.log(user.toResDTO())
+      console.log(await this.signJwt(user))
       // const userid = payload['sub']
       // If request specified a G Suite domain:
       // const domain = payload['hd'];
