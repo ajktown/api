@@ -1,4 +1,6 @@
+import { DeprecatedUserDocument } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
+import { FilterQuery } from 'mongoose'
 
 interface IOauthPayload {
   userEmail: string
@@ -20,5 +22,11 @@ export class OauthPayloadDomain {
     return new OauthPayloadDomain({
       userEmail: payload.email,
     })
+  }
+
+  toFind(): FilterQuery<Partial<DeprecatedUserDocument>> {
+    return {
+      email: this.email,
+    }
   }
 }

@@ -34,10 +34,7 @@ export class AuthService {
       const oauthPayload = OauthPayloadDomain.fromPayload(ticket.getPayload())
 
       const doc = await this.deprecatedUserModel
-        .find({
-          // TODO: toFind() implement for OauthPayload
-          email: oauthPayload.email,
-        })
+        .find(oauthPayload.toFind())
         .limit(1)
         .exec()
 
