@@ -48,7 +48,7 @@ export class WordService {
         .sort(this.getWordQueryFactory.toSort())
         .limit(query.limit)
         .exec()
-    ).map((props) => WordDomain.fromMdb(props).toResDTO())
+    ).map((wordRaw) => WordDomain.fromMdb(wordRaw).toResDTO())
   }
 
   /** Get word ids by given query */

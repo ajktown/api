@@ -4,7 +4,7 @@ import { Response } from 'express'
 
 const PRIVATE_DEFAULT_ACCESS_TOKEN_EXPIRES_IN = 1000 * 60 * 60 * 24 // 1 day
 
-export const setHttpOnlyCookieLambda = (
+export const getResWithHttpCookieLambda = (
   res: Response,
   data: PostOauthRes,
 ): Response => {

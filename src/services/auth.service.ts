@@ -6,34 +6,47 @@ import { JwtService } from '@nestjs/jwt'
 import { PostOauthRes } from '@/responses/post-auth-oauth.res'
 import { GetWhoAmIRes } from '@/responses/get-who-am-i.res'
 import { CookieConst } from '@/constants/cookie.const'
+import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
+import {
+  DeprecatedUserDocument,
+  DeprecatedUserSchemaProps,
+} from '@/schemas/deprecated-user.schema'
+import { Model } from 'mongoose'
+import { InjectModel } from '@nestjs/mongoose'
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @InjectModel(DeprecatedUserSchemaProps.name)
+    private deprecatedUserModel: Model<DeprecatedUserDocument>,
+  ) {}
 
-  private async signJwt(user: UserDomain): Promise<PostOauthRes> {
-    // TODO: Implement later
-    return {
-      accessToken: await this.jwtService.signAsync(user.toResDTO()),
-    }
-  }
   /** Get words by given query */
   async byGoogle(query: PostAuthGoogleBodyDTO): Promise<PostOauthRes> {
-    const client = new OAuth2Client(query.clientId)
     try {
-      const ticket = await client.verifyIdToken({
+      const ticket = await new OAuth2Client(query.clientId).verifyIdToken({
         idToken: query.credential,
-        audience: query.clientId, // Specify the CLIENT_ID of the app that accesses the backend
-        // Or, if multiple clients access the backend:
-        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        audience: query.clientId,
       })
-      const payload = ticket.getPayload()
-      const user = UserDomain.fromGoogleAuthPayload(payload)
-      // const userid = payload['sub']
-      // If request specified a G Suite domain:
-      // const domain = payload['hd'];
 
-      return this.signJwt(user)
+      const oauthPayload = OauthPayloadDomain.fromPayload(ticket.getPayload())
+
+      const doc = await this.deprecatedUserModel
+        .find({
+          // TODO: toFind() implement for OauthPayload
+          email: oauthPayload.email,
+        })
+        .limit(1)
+        .exec()
+
+      if (doc.length !== 1)
+        throw new Error("The returned data should be 1. But it's not.")
+
+      return AccessTokenDomain.fromUser(
+        UserDomain.fromMdb(doc[0]),
+      ).toAccessToken(this.jwtService)
     } catch (error) {
       throw new Error('Invalid Credential')
     }
@@ -54,9 +67,10 @@ export class AuthService {
   }
   async getWhoAmi(@Req() req: Request): Promise<GetWhoAmIRes> {
     const potentialToken = req['cookies'][CookieConst.AjktownSecuredAccessToken]
-    if (typeof potentialToken !== 'string' || !potentialToken) return this.notSignedIn()
+    if (typeof potentialToken !== 'string' || !potentialToken)
+      return this.notSignedIn()
 
-    // TODO: Should be handled by the 
+    // TODO: Should be handled by the
     try {
       await this.jwtService.verify(potentialToken)
     } catch {
@@ -66,8 +80,8 @@ export class AuthService {
     return {
       isSignedIn: true,
       detailedInfo: {
-        id: "abc"
-      }
+        id: 'abc',
+      },
     }
   }
 }
