@@ -1,8 +1,8 @@
+import { IOauthPayload } from '@/domains/auth/access-token.domain'
+
 interface PrivateGetWhoAmIResYesSignedIn {
   isSignedIn: true
-  detailedInfo: {
-    id: string
-  }
+  detailedInfo: IOauthPayload
 }
 
 interface PrivateGetWhoAmIResNoSignedIn {

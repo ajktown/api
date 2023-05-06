@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { AuthService } from '@/services/auth.service'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.lambda'
 
 export enum AuthControllerPath {
