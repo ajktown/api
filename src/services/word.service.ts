@@ -69,6 +69,8 @@ export class WordService {
 
   /** Get word data by given id */
   async getById(id: string): Promise<Partial<IWord>> {
+    // TODO: Must apply access control, in a clean way? (Maybe I should do the getWords, instead of
+    // TODO: Having a different command
     return WordDomain.fromMdb(
       await this.deprecatedWordModel.findById(id).exec(),
     ).toResDTO()

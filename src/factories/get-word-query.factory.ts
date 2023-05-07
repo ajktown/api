@@ -18,7 +18,7 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
 
   getFilter(
     query: GetWordQueryDTO,
-    atd?: AccessTokenDomain,
+    atd: AccessTokenDomain,
   ): FilterQuery<DeprecatedWordSchemaProps> {
     return {
       ...this.toObject('ownerID', atd.userId),
