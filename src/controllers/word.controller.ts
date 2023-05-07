@@ -3,6 +3,9 @@ import { WordService } from '@/services/word.service'
 import { AjkTownApiVersion } from './index.interface'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
+import { JwtService } from '@nestjs/jwt'
+import { Request } from 'express'
 
 export enum WordControllerPath {
   GetWords = `words`,
@@ -13,16 +16,23 @@ export enum WordControllerPath {
 
 @Controller(AjkTownApiVersion.V1)
 export class WordController {
-  constructor(private readonly wordService: WordService) {}
+  constructor(
+    private readonly wordService: WordService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  private getAtd(req: Request) {
+    return AccessTokenDomain.fromReq(req, this.jwtService)
+  }
 
   @Get(WordControllerPath.GetWords)
-  async getWords(@Query() query: GetWordQueryDTO) {
-    return this.wordService.get(query)
+  async getWords(req: Request, @Query() query: GetWordQueryDTO) {
+    return this.wordService.get(await this.getAtd(req), query)
   }
 
   @Get(WordControllerPath.GetWordIds)
-  async getWordIds(@Query() query: GetWordQueryDTO) {
-    return this.wordService.getWordIds(query)
+  async getWordIds(req: Request, @Query() query: GetWordQueryDTO) {
+    return this.wordService.getWordIds(await this.getAtd(req), query)
   }
 
   @Get(WordControllerPath.GetWordById)

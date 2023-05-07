@@ -22,6 +22,10 @@ export class AccessTokenDomain {
     return this.props.userEmail
   }
 
+  get userId() {
+    return this.props.userId
+  }
+
   static fromUser(user: UserDomain) {
     return new AccessTokenDomain({
       userEmail: user.toResDTO().email,

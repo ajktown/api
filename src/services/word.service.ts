@@ -1,3 +1,4 @@
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { IWord } from '@/domains/word/index.interface'
 import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
@@ -37,11 +38,14 @@ export class WordService {
   }
 
   /** Get words by given query */
-  async get(query: GetWordQueryDTO): Promise<Partial<IWord>[]> {
+  async get(
+    atd: AccessTokenDomain,
+    query: GetWordQueryDTO,
+  ): Promise<Partial<IWord>[]> {
     return (
       await this.deprecatedWordModel
         .find(
-          this.getWordQueryFactory.getFilter(query),
+          this.getWordQueryFactory.getFilter(query, atd),
           this.getWordQueryFactory.getProjection(),
           this.getWordQueryFactory.getOptions(query),
         )
@@ -52,8 +56,11 @@ export class WordService {
   }
 
   /** Get word ids by given query */
-  async getWordIds(query: GetWordQueryDTO): Promise<GetWordIdsRes> {
-    const words = await this.get(query)
+  async getWordIds(
+    atd: AccessTokenDomain,
+    query: GetWordQueryDTO,
+  ): Promise<GetWordIdsRes> {
+    const words = await this.get(atd, query)
     return {
       length: words.length,
       wordIds: words.map((e) => e.id),
