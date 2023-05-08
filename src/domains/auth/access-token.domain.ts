@@ -13,8 +13,8 @@ export class AccessTokenDomain {
   private readonly props: Partial<IOauthPayload>
 
   private constructor(props: IOauthPayload) {
-    if (props.userEmail === undefined) throw new Error('user email not defined')
-    if (props.userId === undefined) throw new Error('user id not defined')
+    if (!props.userEmail) throw new Error('user email not defined')
+    if (!props.userId) throw new Error('user id not defined')
     this.props = props
   }
 
