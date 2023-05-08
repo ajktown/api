@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common'
 import { WordService } from '@/services/word.service'
 import { AjkTownApiVersion } from './index.interface'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
@@ -21,17 +21,17 @@ export class WordController {
     private readonly jwtService: JwtService,
   ) {}
 
-  private getAtd(req: Request) {
+  private getAtd(@Req() req: Request) {
     return AccessTokenDomain.fromReq(req, this.jwtService)
   }
 
   @Get(WordControllerPath.GetWords)
-  async getWords(req: Request, @Query() query: GetWordQueryDTO) {
+  async getWords(@Req() req: Request, @Query() query: GetWordQueryDTO) {
     return this.wordService.get(await this.getAtd(req), query)
   }
 
   @Get(WordControllerPath.GetWordIds)
-  async getWordIds(req: Request, @Query() query: GetWordQueryDTO) {
+  async getWordIds(@Req() req: Request, @Query() query: GetWordQueryDTO) {
     return this.wordService.getWordIds(await this.getAtd(req), query)
   }
 
