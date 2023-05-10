@@ -18,6 +18,10 @@ export class GetWordQueryDTO
   @IsOptional()
   id: string
 
+  @IsString()
+  @IsOptional()
+  userId: string
+
   @IsOptional()
   @IsString()
   languageCode: GlobalLanguageCode

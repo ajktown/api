@@ -37,13 +37,16 @@ export class WordController {
 
   @Get(WordControllerPath.GetWordById)
   async getWordById(
+    @Req() req: Request,
     @Param('id') id: string, // TODO: Put validation here
   ) {
-    return this.wordService.getById(id)
+    return this.wordService.getById(await this.getAtd(req), id)
   }
 
   @Post(WordControllerPath.PostWord)
-  async post(@Body() reqDto: PostWordBodyDTO) {
-    return (await this.wordService.post(reqDto)).toResDTO()
+  async post(@Req() req: Request, @Body() reqDto: PostWordBodyDTO) {
+    return (
+      await this.wordService.post(await this.getAtd(req), reqDto)
+    ).toResDTO()
   }
 }

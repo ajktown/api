@@ -24,14 +24,17 @@ export class WordService {
   ) {}
 
   /** Post a new word */
-  async post(postReqDto: PostWordBodyDTO): Promise<WordDomain> {
+  async post(
+    atd: AccessTokenDomain,
+    postReqDto: PostWordBodyDTO,
+  ): Promise<WordDomain> {
     if (!postReqDto.example) {
       // If no example given, Ask Chat GPT to generate one, if allowed.
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
     return WordDomain.fromMdb(
-      await WordDomain.fromPostReqDto(postReqDto)
+      await WordDomain.fromPostReqDto(atd, postReqDto)
         .toDocument(this.deprecatedWordModel)
         .save(),
     )
@@ -68,11 +71,16 @@ export class WordService {
   }
 
   /** Get word data by given id */
-  async getById(id: string): Promise<Partial<IWord>> {
-    // TODO: Must apply access control, in a clean way? (Maybe I should do the getWords, instead of
-    // TODO: Having a different command
-    return WordDomain.fromMdb(
-      await this.deprecatedWordModel.findById(id).exec(),
-    ).toResDTO()
+  async getById(atd: AccessTokenDomain, id: string): Promise<Partial<IWord>> {
+    // TODO: Make these one liner with factory.
+    const query = new GetWordQueryDTO()
+    query.id = id
+    query.limit = 1
+    query.userId = atd.userId
+
+    const res = await this.get(atd, query)
+    if (res.length !== 1) throw new Error('Not found!')
+
+    return res[0]
   }
 }
