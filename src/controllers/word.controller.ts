@@ -8,10 +8,10 @@ import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 
 export enum WordControllerPath {
+  PostWord = `words`,
   GetWords = `words`,
   GetWordIds = `word-ids`,
   GetWordById = `words/:id`,
-  PostWord = `words`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -20,6 +20,13 @@ export class WordController {
     private readonly wordService: WordService,
     private readonly jwtService: JwtService,
   ) {}
+
+  @Post(WordControllerPath.PostWord)
+  async post(@Req() req: Request, @Body() reqDto: PostWordBodyDTO) {
+    return (
+      await this.wordService.post(await this.getAtd(req), reqDto)
+    ).toResDTO()
+  }
 
   private getAtd(@Req() req: Request) {
     return AccessTokenDomain.fromReq(req, this.jwtService)
@@ -41,12 +48,5 @@ export class WordController {
     @Param('id') id: string, // TODO: Put validation here
   ) {
     return this.wordService.getById(await this.getAtd(req), id)
-  }
-
-  @Post(WordControllerPath.PostWord)
-  async post(@Req() req: Request, @Body() reqDto: PostWordBodyDTO) {
-    return (
-      await this.wordService.post(await this.getAtd(req), reqDto)
-    ).toResDTO()
   }
 }
