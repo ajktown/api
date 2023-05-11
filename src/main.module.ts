@@ -35,12 +35,17 @@ export class MainModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .exclude(
+        // TODO: This should be handled by other source with a good list.
         {
           path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.GetWhoAmI,
           method: RequestMethod.GET,
         },
         {
           path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.PostGoogleAuth,
+          method: RequestMethod.POST,
+        },
+        {
+          path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.PostDevAuth,
           method: RequestMethod.POST,
         },
       )

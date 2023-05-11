@@ -7,6 +7,7 @@ import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.l
 
 export enum AuthControllerPath {
   GetWhoAmI = `auth/who-am-i`,
+  PostDevAuth = `auth/dev`,
   PostGoogleAuth = `auth/google`,
 }
 
@@ -17,6 +18,12 @@ export class AuthController {
   @Post(AuthControllerPath.PostGoogleAuth)
   async post(@Body() reqDto: PostAuthGoogleBodyDTO, @Res() response: Response) {
     const data = await this.authService.byGoogle(reqDto)
+    getResWithHttpCookieLambda(response, data).send({ message: 'OK' })
+  }
+
+  @Post(AuthControllerPath.PostDevAuth)
+  async postDevAuth(@Res() response: Response) {
+    const data = await this.authService.byDeveloper()
     getResWithHttpCookieLambda(response, data).send({ message: 'OK' })
   }
 

@@ -49,6 +49,13 @@ export class AuthService {
     }
   }
 
+  /** Attaches HttpOnly Token for dev-user */
+  async byDeveloper(): Promise<PostOauthRes> {
+    return AccessTokenDomain.fromUser(
+      UserDomain.toDevUserDomain(),
+    ).toAccessToken(this.jwtService)
+  }
+
   async getWhoAmi(@Req() req: Request): Promise<GetWhoAmIRes> {
     try {
       const domain = await AccessTokenDomain.fromReq(req, this.jwtService)
