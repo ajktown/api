@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   /** Attaches HttpOnly Token for dev-user */
-  async byDeveloper(): Promise<PostOauthRes> {
+  async byDevToken(): Promise<PostOauthRes> {
     return AccessTokenDomain.fromUser(
       UserDomain.toDevUserDomain(),
     ).toAccessToken(this.jwtService)

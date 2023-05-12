@@ -45,7 +45,8 @@ export class MainModule implements NestModule {
           method: RequestMethod.POST,
         },
         {
-          path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.PostDevAuth,
+          path:
+            AjkTownApiVersion.V1 + '/' + AuthControllerPath.PostDevTokenAuth,
           method: RequestMethod.POST,
         },
       )
