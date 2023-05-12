@@ -27,7 +27,7 @@ export class WordService {
   async post(
     atd: AccessTokenDomain,
     postReqDto: PostWordBodyDTO,
-  ): Promise<WordDomain> {
+  ): Promise<Partial<IWord>> {
     if (!postReqDto.example) {
       // If no example given, Ask Chat GPT to generate one, if allowed.
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
@@ -37,7 +37,7 @@ export class WordService {
       await WordDomain.fromPostReqDto(atd, postReqDto)
         .toDocument(this.deprecatedWordModel)
         .save(),
-    )
+    ).toResDTO(atd)
   }
 
   /** Get words by given query */
@@ -48,14 +48,14 @@ export class WordService {
     return (
       await this.deprecatedWordModel
         .find(
-          this.getWordQueryFactory.getFilter(query, atd),
+          this.getWordQueryFactory.getFilter(atd, query),
           this.getWordQueryFactory.getProjection(),
           this.getWordQueryFactory.getOptions(query),
         )
         .sort(this.getWordQueryFactory.toSort())
         .limit(query.limit)
         .exec()
-    ).map((wordRaw) => WordDomain.fromMdb(wordRaw).toResDTO())
+    ).map((wordRaw) => WordDomain.fromMdb(wordRaw).toResDTO(atd))
   }
 
   /** Get word ids by given query */
@@ -71,16 +71,9 @@ export class WordService {
   }
 
   /** Get word data by given id */
-  async getById(atd: AccessTokenDomain, id: string): Promise<Partial<IWord>> {
-    // TODO: Make these one liner with factory.
-    const query = new GetWordQueryDTO()
-    query.id = id
-    query.limit = 1
-    query.userId = atd.userId
-
-    const res = await this.get(atd, query)
-    if (res.length !== 1) throw new Error('Not found!')
-
-    return res[0]
+  async getById(id: string, atd: AccessTokenDomain): Promise<Partial<IWord>> {
+    return WordDomain.fromMdb(
+      await this.deprecatedWordModel.findById(id).exec(),
+    ).toResDTO(atd)
   }
 }

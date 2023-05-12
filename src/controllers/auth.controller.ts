@@ -8,7 +8,7 @@ import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.l
 export enum AuthControllerPath {
   PostDevTokenAuth = `auth/dev-token`,
   PostGoogleAuth = `auth/google`,
-  GetWhoAmI = `auth/who-am-i`,
+  GetWhoAmI = `auth/who-am-i`, // TODO: will become auth/prep (GetAuthPrep)
 }
 
 @Controller(AjkTownApiVersion.V1)

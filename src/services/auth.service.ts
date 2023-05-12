@@ -31,7 +31,9 @@ export class AuthService {
         audience: query.clientId,
       })
 
-      const oauthPayload = OauthPayloadDomain.fromPayload(ticket.getPayload())
+      const oauthPayload = OauthPayloadDomain.fromGooglePayload(
+        ticket.getPayload(),
+      )
 
       const doc = await this.deprecatedUserModel
         .find(oauthPayload.toFind())
@@ -39,7 +41,9 @@ export class AuthService {
         .exec()
 
       if (doc.length !== 1)
-        throw new Error("The returned data should be 1. But it's not.")
+        throw new Error(
+          `Length of the returned data should be 1, but we got "${doc.length}"`,
+        )
 
       return AccessTokenDomain.fromUser(
         UserDomain.fromMdb(doc[0]),

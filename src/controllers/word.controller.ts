@@ -23,23 +23,26 @@ export class WordController {
 
   @Post(WordControllerPath.PostWord)
   async post(@Req() req: Request, @Body() reqDto: PostWordBodyDTO) {
-    return (
-      await this.wordService.post(await this.getAtd(req), reqDto)
-    ).toResDTO()
-  }
-
-  private getAtd(@Req() req: Request) {
-    return AccessTokenDomain.fromReq(req, this.jwtService)
+    return this.wordService.post(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      reqDto,
+    )
   }
 
   @Get(WordControllerPath.GetWords)
   async getWords(@Req() req: Request, @Query() query: GetWordQueryDTO) {
-    return this.wordService.get(await this.getAtd(req), query)
+    return this.wordService.get(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      query,
+    )
   }
 
   @Get(WordControllerPath.GetWordIds)
   async getWordIds(@Req() req: Request, @Query() query: GetWordQueryDTO) {
-    return this.wordService.getWordIds(await this.getAtd(req), query)
+    return this.wordService.getWordIds(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      query,
+    )
   }
 
   @Get(WordControllerPath.GetWordById)
@@ -47,6 +50,9 @@ export class WordController {
     @Req() req: Request,
     @Param('id') id: string, // TODO: Put validation here
   ) {
-    return this.wordService.getById(await this.getAtd(req), id)
+    return this.wordService.getById(
+      id,
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+    )
   }
 }

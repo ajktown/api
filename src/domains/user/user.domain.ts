@@ -1,6 +1,5 @@
 import { DeprecatedUserDocument } from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
-import { TokenPayload } from 'google-auth-library'
 import { envLambda } from '@/lambdas/get-env.lambda'
 
 export class UserDomain {
@@ -24,15 +23,6 @@ export class UserDomain {
       imageUrl: '',
       languagePreference: 'en',
       dateAdded: new Date().valueOf(),
-    })
-  }
-
-  static fromGoogleAuthPayload(payload: TokenPayload) {
-    return new UserDomain({
-      federalID: payload.sub,
-      email: payload.email,
-      givenName: payload.given_name,
-      familyName: payload.family_name,
     })
   }
 

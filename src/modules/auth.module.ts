@@ -10,6 +10,7 @@ import {
 @Module({
   imports: [
     MongooseModule.forFeature([
+      // TODO: This mapping should be refactored somewhere else.
       { name: DeprecatedUserSchemaProps.name, schema: DeprecatedUserSchema },
     ]),
   ],

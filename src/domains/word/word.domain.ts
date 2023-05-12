@@ -17,7 +17,7 @@ export class WordDomain {
   private readonly props: Partial<IWord>
 
   private constructor(props: Partial<IWord>) {
-    if (!props.userId) throw new Error('No ownerID!')
+    if (!props.userId) throw new Error('No userId (OwnerID)!')
 
     this.props = props
   }
@@ -88,7 +88,14 @@ export class WordDomain {
     return new deprecatedWordModel(docProps)
   }
 
-  toResDTO(): Partial<IWord> {
+  /** Returns props of the WordDomain, and userId (ownerId) must match
+   * to the accessTokenDomain claiming userId
+   */
+  toResDTO(atd: AccessTokenDomain): Partial<IWord> {
+    if (atd.userId !== this.props.userId) {
+      throw new Error('No access')
+    }
+
     return this.props
   }
 }

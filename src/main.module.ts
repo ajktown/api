@@ -10,7 +10,6 @@ import { WordModule } from './modules/word.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
 import { MongooseModule } from '@nestjs/mongoose'
 import { getMdbUriLambda } from './lambdas/get-mdb-uri.lambda'
-import { SmartWordModule } from './modules/smart-word.module'
 import { SemesterModule } from './modules/semester.module'
 import { AuthModule } from './modules/auth.module'
 import { JwtModule } from '@nestjs/jwt'
@@ -23,7 +22,6 @@ import { AjkTownApiVersion } from './controllers/index.interface'
     AuthModule,
     WordModule,
     SemesterModule,
-    SmartWordModule,
     MongooseModule.forRoot(getMdbUriLambda()),
     JwtModule.register(getJwtOptionsLambda()),
   ],
