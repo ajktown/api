@@ -62,10 +62,10 @@ export class AuthService {
 
   async getWhoAmi(@Req() req: Request): Promise<GetWhoAmIRes> {
     try {
-      const domain = await AccessTokenDomain.fromReq(req, this.jwtService)
+      const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
       return {
         isSignedIn: true,
-        detailedInfo: domain.toDetailedInfo(),
+        detailedInfo: atd.toDetailedInfo(),
       }
     } catch {
       return {
