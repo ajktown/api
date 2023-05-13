@@ -10,6 +10,8 @@ export class OauthPayloadDomain {
   private readonly props: Partial<IOauthPayload>
 
   private constructor(props: Partial<IOauthPayload>) {
+    if (!props.userEmail) throw new Error('Failed to find email')
+
     this.props = props
   }
 
@@ -18,7 +20,6 @@ export class OauthPayloadDomain {
   }
 
   static fromGooglePayload(payload: TokenPayload) {
-    if (!payload.email) throw new Error('Failed to find email')
     return new OauthPayloadDomain({
       userEmail: payload.email,
     })
