@@ -9,6 +9,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { SemesterDetailsDomain } from '@/domains/semester/semester-details.domain'
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 
 @Injectable()
 export class SemesterService {
@@ -21,7 +22,10 @@ export class SemesterService {
     return DUMMY_SEMESTERS.map((e) => e.toResDTO())
   }
 
-  async getSemesterById(id: string): Promise<Partial<ISemester>> {
+  async getSemesterById(
+    id: string,
+    atd: AccessTokenDomain,
+  ): Promise<Partial<ISemester>> {
     const found = DUMMY_SEMESTERS.find((e) => e.id === id)
     if (!found) throw new Error('Not found!')
 
@@ -29,7 +33,7 @@ export class SemesterService {
       await this.deprecatedWordModel.find({ sem: found.semester }).exec()
     ).map((props) => WordDomain.fromMdb(props))
 
-    const details = SemesterDetailsDomain.fromWords(words).toDetails()
+    const details = SemesterDetailsDomain.fromWords(words, atd).toDetails()
     found.insertDetails(details)
 
     return found.toResDTO()

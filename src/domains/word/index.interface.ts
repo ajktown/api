@@ -2,6 +2,7 @@ import { DataBasicsDate, GlobalLanguageCode } from 'src/global.interface'
 
 export interface IWord extends DataBasicsDate {
   id: string
+  userId: string
   languageCode: GlobalLanguageCode
   semester: number
   isFavorite: boolean

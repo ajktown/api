@@ -3,6 +3,7 @@ import { DeprecatedWordSchemaProps } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { FactoryRoot } from './index.root'
 import { FilterQuery, ProjectionType, QueryOptions } from 'mongoose'
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 
 @Injectable()
 export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> {
@@ -15,8 +16,12 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
     )
   }
 
-  getFilter(query: GetWordQueryDTO): FilterQuery<DeprecatedWordSchemaProps> {
+  getFilter(
+    atd: AccessTokenDomain,
+    query: GetWordQueryDTO,
+  ): FilterQuery<DeprecatedWordSchemaProps> {
     return {
+      ownerID: atd.userId,
       ...this.getFilterForSearchInput(query),
       ...this.toObject('_id', query.id),
       ...this.toObject('language', query.languageCode),

@@ -6,6 +6,7 @@ import {
 } from '@/schemas/deprecated-word.schema'
 import { Model } from 'mongoose'
 import { IWord } from './index.interface'
+import { AccessTokenDomain } from '../auth/access-token.domain'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -16,6 +17,8 @@ export class WordDomain {
   private readonly props: Partial<IWord>
 
   private constructor(props: Partial<IWord>) {
+    if (!props.userId) throw new Error('No userId (OwnerID)!')
+
     this.props = props
   }
 
@@ -28,8 +31,12 @@ export class WordDomain {
     return new WordDomain(props)
   }
 
-  static fromPostReqDto(dto: PostWordBodyDTO): WordDomain {
+  static fromPostReqDto(
+    atd: AccessTokenDomain,
+    dto: PostWordBodyDTO,
+  ): WordDomain {
     return new WordDomain({
+      userId: atd.userId,
       languageCode: dto.languageCode,
       semester: dto.semester,
       isFavorite: dto.isFavorite,
@@ -46,6 +53,7 @@ export class WordDomain {
 
     return new WordDomain({
       id: props.id,
+      userId: props.ownerID,
       languageCode: props.language as GlobalLanguageCode, // TODO: Write a type validator
       semester: props.sem,
       isFavorite: props.isFavorite,
@@ -69,8 +77,8 @@ export class WordDomain {
       meaning: this.props.definition,
       example: this.props.example,
       tag: this.props.tags,
-      ownerID: 'abc',
-      // Deprecated Props (Not used below from Wordnote, or Wordy v2):
+      ownerID: this.props.userId,
+      // Deprecated Props Below (Not used below from Wordnote, or Wordy v2):
       reviewdOn: [],
       order: 1,
       step: 1,
@@ -80,7 +88,14 @@ export class WordDomain {
     return new deprecatedWordModel(docProps)
   }
 
-  toResDTO(): Partial<IWord> {
+  /** Returns props of the WordDomain, and userId (ownerId) must match
+   * to the accessTokenDomain claiming userId
+   */
+  toResDTO(atd: AccessTokenDomain): Partial<IWord> {
+    if (atd.userId !== this.props.userId) {
+      throw new Error('No access')
+    }
+
     return this.props
   }
 }
