@@ -10,7 +10,7 @@ export class UserDomain {
   }
 
   /** This can be run only when it is non-production */
-  static toDevUserDomain(): UserDomain {
+  static underDevEnv(): UserDomain {
     if (envLambda.mode.isProduct())
       throw new Error('Cannot create dev user under production environment')
 
