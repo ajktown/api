@@ -4,7 +4,7 @@ import { Injectable, Req } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
 import { PostOauthRes } from '@/responses/post-auth-oauth.res'
-import { GetWhoAmIRes } from '@/responses/get-who-am-i.res'
+import { GetAuthPrepRes as GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
   DeprecatedUserDocument,
@@ -60,7 +60,7 @@ export class AuthService {
     ).toAccessToken(this.jwtService)
   }
 
-  async getWhoAmi(@Req() req: Request): Promise<GetWhoAmIRes> {
+  async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {
     try {
       const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
       return {

@@ -1,14 +1,14 @@
 import { IOauthPayload } from '@/domains/auth/access-token.domain'
 
-interface PrivateGetWhoAmIResYesSignedIn {
+interface PrivateGetAuthPrepResYesSignedIn {
   isSignedIn: true
   detailedInfo: IOauthPayload
 }
 
-interface PrivateGetWhoAmIResNoSignedIn {
+interface PrivateGetAuthPrepResNoSignedIn {
   isSignedIn: false
 }
 
-export type GetWhoAmIRes =
-  | PrivateGetWhoAmIResYesSignedIn
-  | PrivateGetWhoAmIResNoSignedIn
+export type GetAuthPrepRes =
+  | PrivateGetAuthPrepResYesSignedIn
+  | PrivateGetAuthPrepResNoSignedIn

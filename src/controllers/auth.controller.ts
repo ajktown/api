@@ -8,7 +8,7 @@ import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.l
 export enum AuthControllerPath {
   PostDevTokenAuth = `auth/dev-token`,
   PostGoogleAuth = `auth/google`,
-  GetWhoAmI = `auth/who-am-i`, // TODO: will become auth/prep (GetAuthPrep)
+  GetAuthPrep = `auth/prep`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -30,8 +30,8 @@ export class AuthController {
     getResWithHttpCookieLambda(response, data).send({ message: 'OK' })
   }
 
-  @Get(AuthControllerPath.GetWhoAmI)
-  async getWhoAmI(@Req() req: Request) {
-    return this.authService.getWhoAmi(req)
+  @Get(AuthControllerPath.GetAuthPrep)
+  async getAuthPrep(@Req() req: Request) {
+    return this.authService.getAuthPrep(req)
   }
 }
