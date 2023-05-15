@@ -1,6 +1,10 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { envLambda } from '@/lambdas/get-env.lambda'
-import { Injectable, NestMiddleware } from '@nestjs/common'
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { NextFunction, Request, Response } from 'express'
 
@@ -13,8 +17,9 @@ export class AuthMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       await AccessTokenDomain.fromReq(req, this.jwtService)
-    } catch (err) {
-      return res.status(403).send(err)
+    } catch {
+      const err = new UnauthorizedException()
+      return res.status(err.getStatus()).send(err)
     }
 
     if (envLambda.mode.isProduct()) next()
