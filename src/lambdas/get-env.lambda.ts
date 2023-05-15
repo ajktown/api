@@ -29,11 +29,21 @@ export const envLambda = {
     return envLambda.get(SupportedEnvAttr.JwtTokenSecret)
   },
   mode: {
-    isProduct: () =>
-      envLambda.get(SupportedEnvAttr.StrictlyEnv) === StrictlyEnv.ProductMode,
-    isLocal: () =>
-      envLambda.get(SupportedEnvAttr.StrictlyEnv, PRIVATE_DEFAULT_ENV_MODE) ===
-      StrictlyEnv.LocalMode,
+    get: (): StrictlyEnv => {
+      const got = envLambda.get(
+        SupportedEnvAttr.StrictlyEnv,
+        PRIVATE_DEFAULT_ENV_MODE,
+      )
+      switch (got) {
+        case StrictlyEnv.ProductMode:
+        case StrictlyEnv.LocalMode:
+          return got
+        default:
+          return StrictlyEnv.LocalMode
+      }
+    },
+    isProduct: () => envLambda.mode.get() === StrictlyEnv.ProductMode,
+    isLocal: () => envLambda.mode.get() === StrictlyEnv.LocalMode,
   },
   isChatGptAllowed: () => {
     if (!envLambda.mode.isLocal()) return false
