@@ -1,6 +1,6 @@
 import { UserDomain } from '@/domains/user/user.domain'
 import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
-import { Injectable, Req } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
 import { PostOauthRes } from '@/responses/post-auth-oauth.res'
@@ -55,9 +55,9 @@ export class AuthService {
 
   /** Attaches HttpOnly Token for dev-user */
   async byDevToken(): Promise<PostOauthRes> {
-    return AccessTokenDomain.fromUser(
-      UserDomain.underDevEnv(),
-    ).toAccessToken(this.jwtService)
+    return AccessTokenDomain.fromUser(UserDomain.underDevEnv()).toAccessToken(
+      this.jwtService,
+    )
   }
 
   async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {

@@ -4,8 +4,10 @@ import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { AuthService } from '@/services/auth.service'
 import { Request, Response } from 'express'
 import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.lambda'
+import { getResWithRemovedHttpCookieLambda } from '@/lambdas/get-res-with-removed-http-cookie.lambda'
 
 export enum AuthControllerPath {
+  PostSignOut = `auth/sign-out`,
   PostDevTokenAuth = `auth/dev-token`,
   PostGoogleAuth = `auth/google`,
   GetAuthPrep = `auth/prep`,
@@ -14,6 +16,11 @@ export enum AuthControllerPath {
 @Controller(AjkTownApiVersion.V1)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post(AuthControllerPath.PostSignOut)
+  async postSignOut(@Res() response: Response) {
+    getResWithRemovedHttpCookieLambda(response).send({ message: 'Signed Out' })
+  }
 
   @Post(AuthControllerPath.PostGoogleAuth)
   async postGoogleAuth(
