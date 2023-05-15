@@ -35,6 +35,10 @@ export class MainModule implements NestModule {
       .exclude(
         // TODO: This should be handled by other source with a good list.
         {
+          path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.PostSignOut,
+          method: RequestMethod.POST,
+        },
+        {
           path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.GetAuthPrep,
           method: RequestMethod.GET,
         },

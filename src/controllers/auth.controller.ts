@@ -19,7 +19,9 @@ export class AuthController {
 
   @Post(AuthControllerPath.PostSignOut)
   async postSignOut(@Res() response: Response) {
-    getResWithRemovedHttpCookieLambda(response).send({ message: 'Signed Out' })
+    getResWithRemovedHttpCookieLambda(response).send({
+      message: 'Successfully Signed Out',
+    })
   }
 
   @Post(AuthControllerPath.PostGoogleAuth)
