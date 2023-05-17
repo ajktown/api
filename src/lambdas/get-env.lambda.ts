@@ -29,6 +29,10 @@ export const envLambda = {
     return envLambda.get(SupportedEnvAttr.JwtTokenSecret)
   },
   mode: {
+    // TODO: Type that enforces every value of StrictlyEnv?
+    getList: (): StrictlyEnv[] => {
+      return [StrictlyEnv.ProductMode, StrictlyEnv.LocalMode]
+    },
     get: (): StrictlyEnv => {
       const got = envLambda.get(
         SupportedEnvAttr.StrictlyEnv,

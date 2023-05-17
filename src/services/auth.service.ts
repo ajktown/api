@@ -14,6 +14,7 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
+import { envLambda } from '@/lambdas/get-env.lambda'
 
 @Injectable()
 export class AuthService {
@@ -65,11 +66,20 @@ export class AuthService {
       const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
       return {
         isSignedIn: true,
-        detailedInfo: atd.toDetailedInfo(),
+        signedInUserInfo: atd.toDetailedInfo(),
+        env: {
+          currentEnv: envLambda.mode.get(),
+          available: envLambda.mode.getList(),
+        },
       }
     } catch {
       return {
         isSignedIn: false,
+        signedInUserInfo: null,
+        env: {
+          currentEnv: envLambda.mode.get(),
+          available: envLambda.mode.getList(),
+        },
       }
     }
   }

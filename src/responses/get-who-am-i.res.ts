@@ -1,12 +1,19 @@
 import { IOauthPayload } from '@/domains/auth/access-token.domain'
 
-interface PrivateGetAuthPrepResYesSignedIn {
+interface GetAuthPrepResInfo {
+  env: {
+    currentEnv: string // StrictlyEnv
+    available: string[]
+  }
+}
+interface PrivateGetAuthPrepResYesSignedIn extends GetAuthPrepResInfo {
   isSignedIn: true
-  detailedInfo: IOauthPayload
+  signedInUserInfo: IOauthPayload
 }
 
-interface PrivateGetAuthPrepResNoSignedIn {
+interface PrivateGetAuthPrepResNoSignedIn extends GetAuthPrepResInfo {
   isSignedIn: false
+  signedInUserInfo: null
 }
 
 export type GetAuthPrepRes =
