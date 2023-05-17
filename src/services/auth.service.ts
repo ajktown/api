@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
 import { PostOauthRes } from '@/responses/post-auth-oauth.res'
-import { GetAuthPrepRes as GetAuthPrepRes } from '@/responses/get-who-am-i.res'
+import { GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
   DeprecatedUserDocument,
