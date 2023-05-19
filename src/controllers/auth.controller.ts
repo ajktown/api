@@ -4,16 +4,25 @@ import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { AuthService } from '@/services/auth.service'
 import { Request, Response } from 'express'
 import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.lambda'
+import { getResWithRemovedHttpCookieLambda } from '@/lambdas/get-res-with-removed-http-cookie.lambda'
 
 export enum AuthControllerPath {
+  PostSignOut = `auth/sign-out`,
   PostDevTokenAuth = `auth/dev-token`,
   PostGoogleAuth = `auth/google`,
-  GetWhoAmI = `auth/who-am-i`, // TODO: will become auth/prep (GetAuthPrep)
+  GetAuthPrep = `auth/prep`,
 }
 
 @Controller(AjkTownApiVersion.V1)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post(AuthControllerPath.PostSignOut)
+  async postSignOut(@Res() response: Response) {
+    getResWithRemovedHttpCookieLambda(response).send({
+      message: 'Successfully Signed Out',
+    })
+  }
 
   @Post(AuthControllerPath.PostGoogleAuth)
   async postGoogleAuth(
@@ -30,8 +39,8 @@ export class AuthController {
     getResWithHttpCookieLambda(response, data).send({ message: 'OK' })
   }
 
-  @Get(AuthControllerPath.GetWhoAmI)
-  async getWhoAmI(@Req() req: Request) {
-    return this.authService.getWhoAmi(req)
+  @Get(AuthControllerPath.GetAuthPrep)
+  async getAuthPrep(@Req() req: Request) {
+    return this.authService.getAuthPrep(req)
   }
 }

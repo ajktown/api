@@ -1,10 +1,10 @@
 import { UserDomain } from '@/domains/user/user.domain'
 import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
-import { Injectable, Req } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
 import { PostOauthRes } from '@/responses/post-auth-oauth.res'
-import { GetWhoAmIRes } from '@/responses/get-who-am-i.res'
+import { GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
   DeprecatedUserDocument,
@@ -14,6 +14,7 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
+import { envLambda } from '@/lambdas/get-env.lambda'
 
 @Injectable()
 export class AuthService {
@@ -55,21 +56,30 @@ export class AuthService {
 
   /** Attaches HttpOnly Token for dev-user */
   async byDevToken(): Promise<PostOauthRes> {
-    return AccessTokenDomain.fromUser(
-      UserDomain.underDevEnv(),
-    ).toAccessToken(this.jwtService)
+    return AccessTokenDomain.fromUser(UserDomain.underDevEnv()).toAccessToken(
+      this.jwtService,
+    )
   }
 
-  async getWhoAmi(@Req() req: Request): Promise<GetWhoAmIRes> {
+  async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {
     try {
       const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
       return {
         isSignedIn: true,
-        detailedInfo: atd.toDetailedInfo(),
+        signedInUserInfo: atd.toDetailedInfo(),
+        env: {
+          currentEnv: envLambda.mode.get(),
+          available: envLambda.mode.getList(),
+        },
       }
     } catch {
       return {
         isSignedIn: false,
+        signedInUserInfo: null,
+        env: {
+          currentEnv: envLambda.mode.get(),
+          available: envLambda.mode.getList(),
+        },
       }
     }
   }
