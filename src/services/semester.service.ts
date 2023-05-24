@@ -38,4 +38,16 @@ export class SemesterService {
 
     return found.toResDTO()
   }
+
+  async syncSemesters(
+    word: WordDomain
+  ): Promise<void> {
+    // TODO: Get data from deprecatedSupportModel
+
+    // TODO: Get the current semester of the given wordDomain
+
+    // TODO: Somehow create/modify semester data if not exist
+
+    // TODO: Return void representing the success of the operation
+  }
 }
