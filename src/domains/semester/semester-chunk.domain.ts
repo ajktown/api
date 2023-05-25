@@ -13,7 +13,9 @@ export class SemesterChunkDomain {
   static fromWordDomains(wordDomains: WordDomain[], atd: AccessTokenDomain) {
     const codeSet = new Set<number>()
     wordDomains.forEach((word) => codeSet.add(word.toResDTO(atd).semester))
-    const sortedCodes = Array.from(codeSet).sort((a, b) => a - b)
+    const sortedCodes = Array.from(codeSet)
+      .sort((a, b) => a - b)
+      .filter((el) => Number.isInteger(el)) // Just in case if there is a non-integer value for semester
 
     return new SemesterChunkDomain(
       sortedCodes.map((code) => SemesterDomain.fromSemesterCode(code, atd)),
