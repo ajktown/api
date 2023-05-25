@@ -26,10 +26,10 @@ export class SemesterController {
   }
 
   @Get(SemesterControllerPath.GetSemesterById)
-  async getSemesterById(@Param('id') id: string, @Req() req: Request) {
+  async getSemesterById(@Param('id') code: string, @Req() req: Request) {
     return (
-      await this.semesterService.getSemesterById(
-        id,
+      await this.semesterService.getSemesterByCode(
+        parseInt(code),
         await AccessTokenDomain.fromReq(req, this.jwtService),
       )
     ).toResDTO()

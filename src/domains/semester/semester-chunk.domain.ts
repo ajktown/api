@@ -22,8 +22,8 @@ export class SemesterChunkDomain {
     )
   }
 
-  getSemesterById(id: string): SemesterDomain {
-    const found = this.semesterDomains.find((e) => e.id === id)
+  getSemesterByCode(code: number): SemesterDomain {
+    const found = this.semesterDomains.find((e) => e.semester === code)
     if (!found) throw new Error('Not found!')
     return found
   }

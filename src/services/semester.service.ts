@@ -31,14 +31,19 @@ export class SemesterService {
     return SemesterChunkDomain.fromWordDomains(wordDomains, atd)
   }
 
-  async getSemesterById(
-    id: string,
+  async getSemesterByCode(
+    code: number,
     atd: AccessTokenDomain,
   ): Promise<SemesterDomain> {
-    const semester = (await this.getSemesters(atd)).getSemesterById(id)
+    const semester = (await this.getSemesters(atd)).getSemesterByCode(code)
+
+    const query = new GetWordQueryDTO()
+    query.semester = semester.semester
 
     const words = (
-      await this.deprecatedWordModel.find({ sem: semester.semester }).exec()
+      await this.deprecatedWordModel
+        .find(this.getWordQueryFactory.getFilter(atd, query))
+        .exec()
     ).map((props) => WordDomain.fromMdb(props))
 
     return semester.insertDetails(SemesterDetailsDomain.fromWords(words, atd))
