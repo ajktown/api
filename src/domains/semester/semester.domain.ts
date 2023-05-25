@@ -1,4 +1,7 @@
+import { semesterLambda } from '@/lambdas/semester.lambda'
+import { AccessTokenDomain } from '../auth/access-token.domain'
 import { ISemester, ISemesterDetailedInfo } from './index.interface'
+import { SemesterDetailsDomain } from './semester-details.domain'
 
 export class SemesterDomain {
   private readonly props: Partial<ISemester>
@@ -16,13 +19,24 @@ export class SemesterDomain {
     return this.props.code
   }
 
-  // TODO: Probably not the best method to provide. Consider deleting it.
-  static fromRaw(props: Partial<ISemester>) {
-    return new SemesterDomain(props)
+  /** Build and return unique id of semester */
+  static buildId(semesterCode: number, atd: AccessTokenDomain) {
+    return `${atd.userId}-${semesterCode}`
   }
 
-  insertDetails(props: ISemesterDetailedInfo) {
-    this.details = props
+  static fromSemesterCode(semesterCode: number, atd: AccessTokenDomain) {
+    const { year, quarter } = semesterLambda.toYearAndQuarter(semesterCode)
+    return new SemesterDomain({
+      id: this.buildId(semesterCode, atd),
+      code: semesterCode,
+      year,
+      quarter,
+    })
+  }
+
+  insertDetails(detailsDomain: SemesterDetailsDomain): this {
+    this.details = detailsDomain.toDetails()
+    return this
   }
 
   // static fromPostReqDto(dto: PostWordBodyDTO): WordDomain {

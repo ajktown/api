@@ -6,6 +6,7 @@ import {
 } from '@/schemas/deprecated-word.schema'
 import { SemesterController } from '@/controllers/semester.controller'
 import { SemesterService } from '@/services/semester.service'
+import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { SemesterService } from '@/services/semester.service'
     ]),
   ],
   controllers: [SemesterController],
-  providers: [SemesterService],
+  providers: [SemesterService, GetWordQueryFactory],
 })
 export class SemesterModule {}
