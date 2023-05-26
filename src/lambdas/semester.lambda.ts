@@ -11,4 +11,7 @@ export const semesterLambda = {
     const quarter = semester % 10
     return { year, quarter }
   },
+  now: () => {
+    return semesterLambda.fromDate(new Date())
+  },
 }

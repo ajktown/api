@@ -7,6 +7,7 @@ import {
 import { Model } from 'mongoose'
 import { IWord } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
+import { semesterLambda } from '@/lambdas/semester.lambda'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -38,7 +39,7 @@ export class WordDomain {
     return new WordDomain({
       userId: atd.userId,
       languageCode: dto.languageCode,
-      semester: dto.semester,
+      semester: semesterLambda.now(),
       isFavorite: dto.isFavorite,
       term: dto.term,
       pronunciation: dto.pronunciation,

@@ -29,6 +29,8 @@ export class SemesterChunkDomain {
   }
 
   toResDTO(): Array<Partial<ISemester>> {
-    return this.semesterDomains.map((e) => e.toResDTO())
+    return this.semesterDomains
+      .sort((a, b) => b.semester - a.semester)
+      .map((e) => e.toResDTO())
   }
 }
