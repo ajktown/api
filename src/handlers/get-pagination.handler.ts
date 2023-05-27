@@ -2,7 +2,7 @@
 
 import { GetReqDTORoot } from '@/dto/index.root'
 
-const PRIVATE_DEFAULT_ITEMS_PER_PAGE = 100
+const PRIVATE_DEFAULT_ITEMS_PER_PAGE = 1000
 
 // ! Warning: Although the GetPagination is not used by the code, Nest JS requires it to be exported for TS check.
 // ! Leave it exported, even if not used
