@@ -5,7 +5,6 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
-import { GetWordIdsRes } from '@/responses/get-word-ids.res'
 import {
   DeprecatedWordDocument,
   DeprecatedWordSchemaProps,
@@ -40,7 +39,7 @@ export class WordService {
     ).toResDTO(atd)
   }
 
-  /** Get words by given query */
+  /** Get words with given query */
   async get(
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
@@ -53,24 +52,20 @@ export class WordService {
           this.getWordQueryFactory.getOptions(query),
         )
         .sort(this.getWordQueryFactory.toSort())
-        .limit(query.limit)
         .exec()
     ).map((wordRaw) => WordDomain.fromMdb(wordRaw).toResDTO(atd))
   }
 
-  /** Get word ids by given query */
+  /** Get word ids with given query */
   async getWordIds(
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
-  ): Promise<GetWordIdsRes> {
+  ): Promise<string[]> {
     const words = await this.get(atd, query)
-    return {
-      length: words.length,
-      wordIds: words.map((e) => e.id),
-    }
+    return words.map((e) => e.id)
   }
 
-  /** Get word data by given id */
+  /** Get word data with given id */
   async getById(id: string, atd: AccessTokenDomain): Promise<Partial<IWord>> {
     return WordDomain.fromMdb(
       await this.deprecatedWordModel.findById(id).exec(),

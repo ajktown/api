@@ -8,7 +8,13 @@ export class GetReqDTORoot {
   @IsOptional()
   searchInput: string
 
+  // TODO: This was not parsed...
   @IsNumber()
   @IsOptional()
-  limit: number
+  pageIndex: string
+
+  // TODO: This was not parsed...
+  @IsNumber()
+  @IsOptional()
+  itemsPerPage: string
 }
