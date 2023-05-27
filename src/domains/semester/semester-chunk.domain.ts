@@ -1,6 +1,6 @@
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { WordDomain } from '../word/word.domain'
-import { ISemester } from './index.interface'
+import { GetSemestersResDTO } from './index.interface'
 import { SemesterDomain } from './semester.domain'
 
 export class SemesterChunkDomain {
@@ -28,9 +28,19 @@ export class SemesterChunkDomain {
     return found
   }
 
-  toResDTO(): Array<Partial<ISemester>> {
-    return this.semesterDomains
+  toResDTO(): GetSemestersResDTO {
+    if (this.semesterDomains.length === 0) {
+      return {
+        latestSemesterCode: undefined,
+        semesters: [],
+      }
+    }
+    const sortedSemestersRes = this.semesterDomains
       .sort((a, b) => b.semester - a.semester)
       .map((e) => e.toResDTO())
+    return {
+      latestSemesterCode: sortedSemestersRes[0].code,
+      semesters: sortedSemestersRes,
+    }
   }
 }

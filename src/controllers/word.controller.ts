@@ -6,7 +6,6 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
-import { getPaginationHandler } from '@/handlers/get-pagination.handler'
 
 export enum WordControllerPath {
   PostWord = `words`,
@@ -40,11 +39,8 @@ export class WordController {
 
   @Get(WordControllerPath.GetWordIds)
   async getWordIds(@Req() req: Request, @Query() query: GetWordQueryDTO) {
-    return getPaginationHandler(
-      await this.wordService.getWordIds(
-        await AccessTokenDomain.fromReq(req, this.jwtService),
-        query,
-      ),
+    return this.wordService.getWordIds(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
       query,
     )
   }
