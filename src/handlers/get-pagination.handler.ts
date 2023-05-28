@@ -2,17 +2,20 @@
 
 import { GetReqDTORoot } from '@/dto/index.root'
 
-const PRIVATE_DEFAULT_ITEMS_PER_PAGE = 1000
+const PRIVATE_DEFAULT_ITEMS_PER_PAGE = 100
 
 // ! Warning: Although the GetPagination is not used by the code, Nest JS requires it to be exported for TS check.
 // ! Leave it exported, even if not used
-export interface PaginationRoot {
+interface PrivatePaginationProps {
   pageIndex: number
   lastPageIndex: number
   isNextPageExist: boolean
   totalPages: number
   totalItems: number
   itemPerPage: number
+}
+export interface PaginationRoot {
+  pagination: PrivatePaginationProps
   dataLength: number
 }
 
@@ -40,12 +43,14 @@ export function getPaginationHandler<T extends any[]>(
   ) as T
 
   return {
-    pageIndex: confirmedPageIndex,
-    lastPageIndex: confirmedTotalPages - 1,
-    isNextPageExist: confirmedPageIndex < confirmedTotalPages - 1,
-    totalPages: confirmedTotalPages,
-    totalItems: data.length,
-    itemPerPage: confirmedLimit,
+    pagination: {
+      pageIndex: confirmedPageIndex,
+      lastPageIndex: confirmedTotalPages - 1,
+      isNextPageExist: confirmedPageIndex < confirmedTotalPages - 1,
+      totalPages: confirmedTotalPages,
+      totalItems: data.length,
+      itemPerPage: confirmedLimit,
+    },
     dataLength: confirmedData.length,
     data: confirmedData,
   }
