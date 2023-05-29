@@ -5,8 +5,8 @@ import {
   defaultSchemaTimestampsConfig,
   SchemaCollectionName,
 } from './index.collections'
+
 // TODO: This is deprecated MongoDB Schema of WordData
-// ! Document, Props, Schema
 
 export type DeprecatedWordDocument = HydratedDocument<
   DeprecatedWordSchemaProps,

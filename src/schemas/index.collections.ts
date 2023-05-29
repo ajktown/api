@@ -3,6 +3,7 @@ import { SchemaTimestampsConfig } from 'mongoose'
 export enum SchemaCollectionName {
   DeprecatedWords = `words`,
   DeprecatedUser = `users`,
+  DeprecatedSupport = `supports`,
 }
 
 export enum DiscriminatorKey {
