@@ -12,23 +12,31 @@ import { SemesterChunkDomain } from '@/domains/semester/semester-chunk.domain'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { SemesterDomain } from '@/domains/semester/semester.domain'
+import {
+  DeprecatedSupportSchemaProps,
+  DeprecatedSupportsDocument,
+} from '@/schemas/deprecated-supports.schema'
+import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
+import { SupportDomain } from '@/domains/support/support.domain'
 
 @Injectable()
 export class SemesterService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
     private deprecatedWordModel: Model<DeprecatedWordDocument>,
+    @InjectModel(DeprecatedSupportSchemaProps.name)
+    private deprecatedSupportsSchema: Model<DeprecatedSupportsDocument>,
     private getWordQueryFactory: GetWordQueryFactory,
+    private getSemesterQueryFactory: GetSemesterQueryFactory,
   ) {}
 
   async getSemesters(atd: AccessTokenDomain): Promise<SemesterChunkDomain> {
-    const emptyQuery = new GetWordQueryDTO()
-    const wordDomains = (
-      await this.deprecatedWordModel
-        .find(this.getWordQueryFactory.getFilter(atd, emptyQuery))
-        .exec()
-    ).map((props) => WordDomain.fromMdb(props))
-    return SemesterChunkDomain.fromWordDomains(wordDomains, atd)
+    const supportDomain = SupportDomain.fromMdb(
+      await this.deprecatedSupportsSchema
+        .find(this.getSemesterQueryFactory.getFilter(atd))
+        .exec(),
+    )
+    return SemesterChunkDomain.fromSupportDomain(supportDomain, atd)
   }
 
   async getSemesterByCode(

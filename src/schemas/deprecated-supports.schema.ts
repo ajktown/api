@@ -25,45 +25,45 @@ export class DeprecatedSupportSchemaProps {
   deletedWordCnt: number
 
   // ! Not used by Wordnote v2.0.0 or later below:
+  // ! They are just recorded here for reference sake
+  // @Prop()
+  // wordDisplayPref: string // wordcard, list
 
-  @Prop()
-  wordDisplayPref: string // wordcard, list
+  // @Prop()
+  // wordOrderPref: string // asc, desc
 
-  @Prop()
-  wordOrderPref: string // asc, desc
+  // @Prop()
+  // yearOrderPref: string // asc, desc
 
-  @Prop()
-  yearOrderPref: string // asc, desc
+  // @Prop()
+  // recommandedTags: string[] // ["tag-name-1", "tag-name-2"]
 
-  @Prop()
-  recommandedTags: string[] // ["tag-name-1", "tag-name-2"]
+  // @Prop()
+  // lastTags: string[] // ["tag-name-1", "tag-name-2"] (Not even used in Wordy 1.0)
 
-  @Prop()
-  lastTags: string[] // ["tag-name-1", "tag-name-2"] (Not even used in Wordy 1.0)
+  // @Prop()
+  // status: string // admin, or undefined
 
-  @Prop()
-  status: string // admin, or undefined
+  // @Prop()
+  // isDarkMode: boolean
 
-  @Prop()
-  isDarkMode: boolean
+  // @Prop()
+  // addWordLangPref: string // en, ja, ko
 
-  @Prop()
-  addWordLangPref: string // en, ja, ko
+  // @Prop()
+  // newWordAddingType: string // mass or one
 
-  @Prop()
-  newWordAddingType: string // mass or one
+  // @Prop()
+  // searchOnlyDownloaded: boolean
 
-  @Prop()
-  searchOnlyDownloaded: boolean
+  // @Prop()
+  // languageDetectionEnabled: boolean
 
-  @Prop()
-  languageDetectionEnabled: boolean
+  // @Prop()
+  // highlightSearched: boolean
 
-  @Prop()
-  highlightSearched: boolean
-
-  @Prop()
-  lastReadVersion: string // v0.5.4
+  // @Prop()
+  // lastReadVersion: string // v0.5.4
 }
 
 export const DeprecatedSupportsSchema = SchemaFactory.createForClass(

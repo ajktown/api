@@ -1,4 +1,5 @@
 import { AccessTokenDomain } from '../auth/access-token.domain'
+import { SupportDomain } from '../support/support.domain'
 import { WordDomain } from '../word/word.domain'
 import { GetSemestersResDTO } from './index.interface'
 import { SemesterDomain } from './semester.domain'
@@ -16,6 +17,18 @@ export class SemesterChunkDomain {
     const sortedCodes = Array.from(codeSet)
       .sort((a, b) => a - b)
       .filter((el) => Number.isInteger(el)) // Just in case if there is a non-integer value for semester
+
+    return new SemesterChunkDomain(
+      sortedCodes.map((code) => SemesterDomain.fromSemesterCode(code, atd)),
+    )
+  }
+
+  static fromSupportDomain(
+    supportDomain: SupportDomain,
+    atd: AccessTokenDomain,
+  ) {
+    const { semesters } = supportDomain.toResDTO(atd)
+    const sortedCodes = Array.from(new Set(semesters)).sort((a, b) => a - b)
 
     return new SemesterChunkDomain(
       sortedCodes.map((code) => SemesterDomain.fromSemesterCode(code, atd)),
