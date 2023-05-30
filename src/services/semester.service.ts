@@ -35,6 +35,7 @@ export class SemesterService {
       await this.deprecatedSupportsSchema
         .find(this.getSemesterQueryFactory.getFilter(atd))
         .exec(),
+      atd,
     )
     return SemesterChunkDomain.fromSupportDomain(supportDomain, atd)
   }

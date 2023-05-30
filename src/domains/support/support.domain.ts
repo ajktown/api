@@ -15,10 +15,23 @@ export class SupportDomain {
     this.props = props
   }
 
-  static fromMdb(props: DeprecatedSupportsDocument[]): SupportDomain {
-    if (typeof props !== 'object') throw new Error('Not Object!')
-    if (props.length === 0) throw new Error('No data!')
+  static fromMdb(
+    props: DeprecatedSupportsDocument[],
+    atd: AccessTokenDomain,
+  ): SupportDomain {
     if (props.length > 2) throw new Error('Too many data!')
+
+    // If no data found, it means the user has never created word.
+    // Support will be automatically created when user creates his/her first word.
+    if (props.length === 0) {
+      return new SupportDomain({
+        id: atd.userId + 'temporary_support_id',
+        userId: atd.userId,
+        semesters: [],
+        newWordCount: 0,
+        deletedWordCount: 0,
+      })
+    }
 
     return new SupportDomain({
       id: props[0].id,
