@@ -5,6 +5,7 @@ import {
   DeprecatedSupportSchemaProps,
   DeprecatedSupportsDocument,
 } from '@/schemas/deprecated-supports.schema'
+import { DeprecatedWordDocument } from '@/schemas/deprecated-word.schema'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
@@ -13,6 +14,10 @@ export class SupportDomain {
     if (!props) throw new Error('No userId (OwnerID)!')
 
     this.props = props
+  }
+
+  get id() {
+    return this.props.id
   }
 
   static fromMdb(
@@ -42,14 +47,35 @@ export class SupportDomain {
     })
   }
 
-  toDocument(deprecatedWordModel: Model<DeprecatedSupportsDocument>) {
+  updateWithWordDocument(document: DeprecatedWordDocument): void {
+    if (document.ownerID !== this.props.userId) {
+      throw new Error('No access')
+    }
+
+    const newSemesters = new Set(this.props.semesters)
+    newSemesters.add(document.sem)
+
+    this.props.semesters = Array.from(newSemesters)
+    this.props.newWordCount += 1
+  }
+
+  toMdbUpdate() {
+    return {
+      // ownerID: this.props.userId,
+      sems: this.props.semesters,
+      newWordCnt: this.props.newWordCount,
+      deletedWordCnt: this.props.deletedWordCount,
+    }
+  }
+
+  toDocument(deprecatedSupportModel: Model<DeprecatedSupportsDocument>) {
     const docProps: DeprecatedSupportSchemaProps = {
       ownerID: this.props.userId,
       sems: this.props.semesters,
       newWordCnt: this.props.newWordCount,
       deletedWordCnt: this.props.deletedWordCount,
     }
-    return new deprecatedWordModel(docProps)
+    return new deprecatedSupportModel(docProps)
   }
 
   toResDTO(atd: AccessTokenDomain): Partial<ISupport> {

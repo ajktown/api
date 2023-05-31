@@ -6,12 +6,12 @@ import {
 } from '@/schemas/deprecated-word.schema'
 import { SemesterController } from '@/controllers/semester.controller'
 import { SemesterService } from '@/services/semester.service'
-import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import {
   DeprecatedSupportSchemaProps,
   DeprecatedSupportsSchema,
 } from '@/schemas/deprecated-supports.schema'
 import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
+import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 
 @Module({
   imports: [
@@ -24,6 +24,6 @@ import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
     ]),
   ],
   controllers: [SemesterController],
-  providers: [SemesterService, GetWordQueryFactory, GetSemesterQueryFactory],
+  providers: [SemesterService, GetSemesterQueryFactory, GetWordQueryFactory],
 })
 export class SemesterModule {}
