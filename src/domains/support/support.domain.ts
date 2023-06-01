@@ -47,7 +47,7 @@ export class SupportDomain {
     })
   }
 
-  updateWithWordDocument(document: DeprecatedWordDocument): void {
+  updateWithWordDoc(document: DeprecatedWordDocument): void {
     if (document.ownerID !== this.props.userId) {
       throw new Error('No access')
     }

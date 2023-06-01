@@ -57,7 +57,7 @@ export class WordService {
     const wordDoc = await WordDomain.fromPostReqDto(atd, postReqDto)
       .toDocument(this.deprecatedWordModel)
       .save()
-    supportDomain.updateWithWordDocument(wordDoc)
+    supportDomain.updateWithWordDoc(wordDoc)
 
     try {
       await this.deprecatedSupportsModel
