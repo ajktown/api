@@ -47,7 +47,7 @@ export class SupportDomain {
     })
   }
 
-  updateWithWordDoc(document: DeprecatedWordDocument): void {
+  updateWithWordDoc(document: DeprecatedWordDocument): this {
     if (document.ownerID !== this.props.userId) {
       throw new Error('No access')
     }
@@ -57,6 +57,19 @@ export class SupportDomain {
 
     this.props.semesters = Array.from(newSemesters)
     this.props.newWordCount += 1
+
+    return this
+  }
+
+  /** Removes given semester within the support */
+  removeSemester(semester: number | string): this {
+    const newSemesters = new Set(this.props.semesters)
+    newSemesters.delete(
+      typeof semester === 'number' ? semester : parseInt(semester),
+    )
+    this.props.semesters = Array.from(newSemesters)
+
+    return this
   }
 
   toMdbUpdate() {

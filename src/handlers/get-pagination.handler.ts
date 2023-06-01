@@ -35,7 +35,10 @@ export function getPaginationHandler<T extends any[]>(
 
   const confirmedSliceIndex = confirmedPageIndex * confirmedLimit
   const confirmedSliceEndIndex = confirmedSliceIndex + confirmedLimit
-  const confirmedTotalPages = Math.ceil(data.length / confirmedLimit)
+  const confirmedTotalPages = Math.max(
+    0,
+    Math.ceil(data.length / confirmedLimit),
+  )
 
   const confirmedData = data.slice(
     confirmedSliceIndex,

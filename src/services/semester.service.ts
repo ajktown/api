@@ -44,7 +44,7 @@ export class SemesterService {
     code: number,
     atd: AccessTokenDomain,
   ): Promise<SemesterDomain> {
-    const semester = (await this.getSemesters(atd)).getSemesterByCode(code)
+    const semester = (await this.getSemesters(atd)).getSemesterByCode(code, atd)
 
     const query = new GetWordQueryDTO()
     query.semester = semester.semester

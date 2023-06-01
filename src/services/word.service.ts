@@ -76,7 +76,7 @@ export class WordService {
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
   ): Promise<Partial<IWord>[]> {
-    return (
+    const response = (
       await this.deprecatedWordModel
         .find(
           this.getWordQueryFactory.getFilter(atd, query),
@@ -86,6 +86,30 @@ export class WordService {
         .sort(this.getWordQueryFactory.toSort())
         .exec()
     ).map((wordRaw) => WordDomain.fromMdb(wordRaw).toResDTO(atd))
+
+    if (
+      // TODO: The condition here is not 100% accurate. But then
+      // TODO: Deleting semester is not really important.
+      response.length === 0 &&
+      Object.keys(query).length === 1 &&
+      query.semester
+    ) {
+      const semesterRemovedSupportDomain = SupportDomain.fromMdb(
+        await this.deprecatedSupportsModel
+          .find(this.getSemesterQueryFactory.getFilter(atd))
+          .exec(),
+        atd,
+      ).removeSemester(query.semester)
+
+      await this.deprecatedSupportsModel
+        .findByIdAndUpdate(
+          semesterRemovedSupportDomain.id,
+          semesterRemovedSupportDomain.toMdbUpdate(),
+        )
+        .exec()
+    }
+
+    return response
   }
 
   /** Get word ids with given query */

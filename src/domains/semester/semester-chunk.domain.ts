@@ -35,10 +35,12 @@ export class SemesterChunkDomain {
     )
   }
 
-  getSemesterByCode(code: number): SemesterDomain {
-    const found = this.semesterDomains.find((e) => e.semester === code)
-    if (!found) throw new Error('Not found!')
-    return found
+  /** Returns semester if found; else returns empty semester that does not exist in DB */
+  getSemesterByCode(code: number, atd: AccessTokenDomain): SemesterDomain {
+    return (
+      this.semesterDomains.find((e) => e.semester === code) ||
+      SemesterDomain.fromSemesterCode(code, atd)
+    )
   }
 
   toResDTO(): GetSemestersResDTO {
