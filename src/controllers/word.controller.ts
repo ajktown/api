@@ -42,8 +42,13 @@ export class WordController {
 
   @Get(WordControllerPath.GetWords)
   async getWords(@Req() req: Request, @Query() query: GetWordQueryDTO) {
-    return this.wordService.get(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
+    return getPaginationHandler(
+      (
+        await this.wordService.get(
+          await AccessTokenDomain.fromReq(req, this.jwtService),
+          query,
+        )
+      ).toResDTO(),
       query,
     )
   }
@@ -51,10 +56,12 @@ export class WordController {
   @Get(WordControllerPath.GetWordIds)
   async getWordIds(@Req() req: Request, @Query() query: GetWordQueryDTO) {
     return getPaginationHandler(
-      await this.wordService.getWordIds(
-        await AccessTokenDomain.fromReq(req, this.jwtService),
-        query,
-      ),
+      (
+        await this.wordService.get(
+          await AccessTokenDomain.fromReq(req, this.jwtService),
+          query,
+        )
+      ).toGetWordIdsResDTO(),
       query,
     )
   }
