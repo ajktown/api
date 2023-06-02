@@ -3,6 +3,7 @@ import { GlobalLanguageCode } from '@/global.interface'
 import {
   DeprecatedWordDocument,
   DeprecatedWordSchemaProps,
+  WordModel,
 } from '@/schemas/deprecated-word.schema'
 import { Model } from 'mongoose'
 import { IWord } from './index.interface'
@@ -27,20 +28,6 @@ export class WordDomain {
 
   get id() {
     return this.props.id
-  }
-
-  async delete(
-    atd: AccessTokenDomain,
-    wordModel: Model<DeprecatedWordDocument>,
-    supportModel: SupportModel,
-  ): Promise<void> {
-    if (atd.userId !== this.props.userId) {
-      throw new Error('No access to delete')
-    }
-
-    await wordModel.findByIdAndDelete(this.props.id)
-    const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
-    await supportDomain.updateWithWordDeleted(supportModel)
   }
 
   // TODO: Probably not the best method to provide. Consider deleting it.
@@ -84,7 +71,7 @@ export class WordDomain {
     })
   }
 
-  toDocument(deprecatedWordModel: Model<DeprecatedWordDocument>) {
+  toDocument(deprecatedWordModel: WordModel) {
     const docProps: DeprecatedWordSchemaProps = {
       language: this.props.languageCode,
       sem: this.props.semester,
@@ -114,5 +101,19 @@ export class WordDomain {
     }
 
     return this.props
+  }
+
+  async delete(
+    atd: AccessTokenDomain,
+    wordModel: Model<DeprecatedWordDocument>,
+    supportModel: SupportModel,
+  ): Promise<void> {
+    if (atd.userId !== this.props.userId) {
+      throw new Error('No access to delete')
+    }
+
+    await wordModel.findByIdAndDelete(this.props.id)
+    const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
+    await supportDomain.updateWithWordDeleted(supportModel)
   }
 }
