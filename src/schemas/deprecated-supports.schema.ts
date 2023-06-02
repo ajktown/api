@@ -1,12 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument } from 'mongoose'
+import { HydratedDocument, Model } from 'mongoose'
 import { SchemaCollectionName } from './index.collections'
 
 // TODO: This is deprecated MongoDB Schema of SupportsData
 // ! Supports do not have timestamps
-
+// TODO: Apply ~Model to all and remove Model<blah blah> from all
+// TODO: Remove deprecated as it is too long ... ( just write TODO in the file)
 export type DeprecatedSupportsDocument =
   HydratedDocument<DeprecatedSupportSchemaProps>
+
+export type SupportModel = Model<DeprecatedSupportsDocument>
 
 @Schema({
   collection: SchemaCollectionName.DeprecatedSupport,

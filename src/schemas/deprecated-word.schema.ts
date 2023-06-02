@@ -1,6 +1,6 @@
 import { DataBasicsDate } from '@/global.interface'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument } from 'mongoose'
+import { HydratedDocument, Model } from 'mongoose'
 import {
   defaultSchemaTimestampsConfig,
   SchemaCollectionName,
@@ -12,6 +12,8 @@ export type DeprecatedWordDocument = HydratedDocument<
   DeprecatedWordSchemaProps,
   DataBasicsDate
 >
+
+export type WordModel = Model<DeprecatedWordDocument>
 
 @Schema({
   collection: SchemaCollectionName.DeprecatedWords,

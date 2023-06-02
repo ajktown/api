@@ -9,23 +9,22 @@ import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
   DeprecatedSupportSchemaProps,
-  DeprecatedSupportsDocument,
+  SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import {
-  DeprecatedWordDocument,
   DeprecatedWordSchemaProps,
+  WordModel,
 } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 
 @Injectable()
 export class WordService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
-    private deprecatedWordModel: Model<DeprecatedWordDocument>,
+    private wordModel: WordModel,
     @InjectModel(DeprecatedSupportSchemaProps.name)
-    private deprecatedSupportsModel: Model<DeprecatedSupportsDocument>,
+    private supportModel: SupportModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,
     private getSemesterQueryFactory: GetSemesterQueryFactory,
@@ -42,20 +41,20 @@ export class WordService {
     }
 
     const wordDoc = await WordDomain.fromPostReqDto(atd, postReqDto)
-      .toDocument(this.deprecatedWordModel)
+      .toDocument(this.wordModel)
       .save()
 
     const supportDomain = await SupportDomain.fromMdb(
-      await this.deprecatedSupportsModel
+      await this.supportModel
         .find(this.getSemesterQueryFactory.getFilter(atd))
         .exec(),
       atd,
-      this.deprecatedSupportsModel,
+      this.supportModel,
     )
     supportDomain.updateWithWordDoc(wordDoc)
 
     try {
-      await this.deprecatedSupportsModel
+      await this.supportModel
         .findByIdAndUpdate(supportDomain.id, supportDomain.toMdbUpdate(), {
           upsert: true,
         })
@@ -74,7 +73,7 @@ export class WordService {
     query: GetWordQueryDTO,
   ): Promise<Partial<IWord>[]> {
     const response = (
-      await this.deprecatedWordModel
+      await this.wordModel
         .find(
           this.getWordQueryFactory.getFilter(atd, query),
           this.getWordQueryFactory.getProjection(),
@@ -93,15 +92,15 @@ export class WordService {
     ) {
       const semesterRemovedSupportDomain = (
         await SupportDomain.fromMdb(
-          await this.deprecatedSupportsModel
+          await this.supportModel
             .find(this.getSemesterQueryFactory.getFilter(atd))
             .exec(),
           atd,
-          this.deprecatedSupportsModel,
+          this.supportModel,
         )
       ).removeSemester(query.semester)
 
-      await this.deprecatedSupportsModel
+      await this.supportModel
         .findByIdAndUpdate(
           semesterRemovedSupportDomain.id,
           semesterRemovedSupportDomain.toMdbUpdate(),
@@ -122,9 +121,12 @@ export class WordService {
   }
 
   /** Get word data with given id */
-  async getById(id: string, atd: AccessTokenDomain): Promise<Partial<IWord>> {
-    return WordDomain.fromMdb(
-      await this.deprecatedWordModel.findById(id).exec(),
-    ).toResDTO(atd)
+  async getById(id: string): Promise<WordDomain> {
+    return WordDomain.fromMdb(await this.wordModel.findById(id).exec())
+  }
+
+  async deleteById(id: string, atd: AccessTokenDomain): Promise<void> {
+    const deletingWordDomain = await this.getById(id)
+    await deletingWordDomain.delete(atd, this.wordModel, this.supportModel)
   }
 }

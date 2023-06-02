@@ -8,6 +8,8 @@ import { Model } from 'mongoose'
 import { IWord } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { semesterLambda } from '@/lambdas/semester.lambda'
+import { SupportModel } from '@/schemas/deprecated-supports.schema'
+import { SupportDomain } from '../support/support.domain'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -25,6 +27,24 @@ export class WordDomain {
 
   get id() {
     return this.props.id
+  }
+
+  async delete(
+    atd: AccessTokenDomain,
+    wordModel: Model<DeprecatedWordDocument>,
+    supportModel: SupportModel,
+  ): Promise<void> {
+    if (atd.userId !== this.props.userId) {
+      throw new Error('No access to delete')
+    }
+
+    await wordModel.findByIdAndDelete(this.props.id)
+    const supportDomain = await SupportDomain.fromMdb(
+      await supportModel.find({ ownerID: atd.userId }).exec(),
+      atd,
+      supportModel,
+    )
+    await supportDomain.updateWithWordDeleted(supportModel)
   }
 
   // TODO: Probably not the best method to provide. Consider deleting it.

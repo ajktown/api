@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common'
 import { WordService } from '@/services/word.service'
 import { AjkTownApiVersion } from './index.interface'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
@@ -13,6 +22,7 @@ export enum WordControllerPath {
   GetWords = `words`,
   GetWordIds = `word-ids`,
   GetWordById = `words/:id`,
+  DeleteWordById = `words/:id`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -54,7 +64,17 @@ export class WordController {
     @Req() req: Request,
     @Param('id') id: string, // TODO: Put validation here
   ) {
-    return this.wordService.getById(
+    return (await this.wordService.getById(id)).toResDTO(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+    )
+  }
+
+  @Delete(WordControllerPath.DeleteWordById)
+  async deleteWordById(
+    @Req() req: Request,
+    @Param('id') id: string, // TODO: Put validation here
+  ) {
+    return this.wordService.deleteById(
       id,
       await AccessTokenDomain.fromReq(req, this.jwtService),
     )

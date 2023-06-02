@@ -4,6 +4,7 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import {
   DeprecatedSupportSchemaProps,
   DeprecatedSupportsDocument,
+  SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { DeprecatedWordDocument } from '@/schemas/deprecated-word.schema'
 
@@ -72,6 +73,12 @@ export class SupportDomain {
     this.props.semesters = Array.from(newSemesters)
     this.props.newWordCount += 1
 
+    return this
+  }
+
+  async updateWithWordDeleted(model: SupportModel): Promise<this> {
+    this.props.deletedWordCount += 1
+    await model.findByIdAndUpdate(this.props.id, this.toMdbUpdate())
     return this
   }
 
