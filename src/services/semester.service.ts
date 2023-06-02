@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { WordDomain } from '@/domains/word/word.domain'
 import {
-  DeprecatedWordDocument,
   DeprecatedWordSchemaProps,
+  WordModel,
 } from '@/schemas/deprecated-word.schema'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 import { SemesterDetailsDomain } from '@/domains/semester/semester-details.domain'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { SemesterChunkDomain } from '@/domains/semester/semester-chunk.domain'
@@ -14,7 +13,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { SemesterDomain } from '@/domains/semester/semester.domain'
 import {
   DeprecatedSupportSchemaProps,
-  DeprecatedSupportsDocument,
+  SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
 import { SupportDomain } from '@/domains/support/support.domain'
@@ -23,21 +22,15 @@ import { SupportDomain } from '@/domains/support/support.domain'
 export class SemesterService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
-    private deprecatedWordModel: Model<DeprecatedWordDocument>,
+    private wordModel: WordModel,
     @InjectModel(DeprecatedSupportSchemaProps.name)
-    private deprecatedSupportsModel: Model<DeprecatedSupportsDocument>,
+    private supportModel: SupportModel,
     private getWordQueryFactory: GetWordQueryFactory,
     private getSemesterQueryFactory: GetSemesterQueryFactory,
   ) {}
 
   async getSemesters(atd: AccessTokenDomain): Promise<SemesterChunkDomain> {
-    const supportDomain = await SupportDomain.fromMdb(
-      await this.deprecatedSupportsModel
-        .find(this.getSemesterQueryFactory.getFilter(atd))
-        .exec(),
-      atd,
-      this.deprecatedSupportsModel,
-    )
+    const supportDomain = await SupportDomain.fromMdb(atd, this.supportModel)
     return SemesterChunkDomain.fromSupportDomain(supportDomain, atd)
   }
 
@@ -51,7 +44,7 @@ export class SemesterService {
     query.semester = semester.semester
 
     const words = (
-      await this.deprecatedWordModel
+      await this.wordModel
         .find(this.getWordQueryFactory.getFilter(atd, query))
         .exec()
     ).map((props) => WordDomain.fromMdb(props))

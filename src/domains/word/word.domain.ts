@@ -39,11 +39,7 @@ export class WordDomain {
     }
 
     await wordModel.findByIdAndDelete(this.props.id)
-    const supportDomain = await SupportDomain.fromMdb(
-      await supportModel.find({ ownerID: atd.userId }).exec(),
-      atd,
-      supportModel,
-    )
+    const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
     await supportDomain.updateWithWordDeleted(supportModel)
   }
 

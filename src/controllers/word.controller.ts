@@ -60,20 +60,14 @@ export class WordController {
   }
 
   @Get(WordControllerPath.GetWordById)
-  async getWordById(
-    @Req() req: Request,
-    @Param('id') id: string, // TODO: Put validation here
-  ) {
+  async getWordById(@Req() req: Request, @Param('id') id: string) {
     return (await this.wordService.getById(id)).toResDTO(
       await AccessTokenDomain.fromReq(req, this.jwtService),
     )
   }
 
   @Delete(WordControllerPath.DeleteWordById)
-  async deleteWordById(
-    @Req() req: Request,
-    @Param('id') id: string, // TODO: Put validation here
-  ) {
+  async deleteWordById(@Req() req: Request, @Param('id') id: string) {
     return this.wordService.deleteById(
       id,
       await AccessTokenDomain.fromReq(req, this.jwtService),

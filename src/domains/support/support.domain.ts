@@ -21,22 +21,20 @@ export class SupportDomain {
     return this.props.id
   }
 
-  /** Gets  */
+  /** Returns SupportDomain from MongoDB. It also creates SupportDomain if it doesn't exist. */
   static async fromMdb(
-    props: DeprecatedSupportsDocument[],
     atd: AccessTokenDomain,
-    model: Model<DeprecatedSupportsDocument>,
+    model: SupportModel,
     avoidRecursiveCall = false,
   ): Promise<SupportDomain> {
-    if (avoidRecursiveCall && props.length !== 1) {
+    const supportDocs = await model.find({ ownerID: atd.userId }).exec()
+    if (avoidRecursiveCall && supportDocs.length !== 1) {
       throw new Error('Something went really wrong while creating support')
     }
 
-    if (props.length > 2) throw new Error('Too much data!')
+    if (supportDocs.length > 2) throw new Error('Too much data!')
 
-    // If no data found, it means the user's support has never been created.
-    // So create a new one.
-    if (!avoidRecursiveCall && props.length === 0) {
+    if (!avoidRecursiveCall && supportDocs.length === 0) {
       const temp = new SupportDomain({
         id: atd.userId + 'temporary_support_id',
         userId: atd.userId,
@@ -45,20 +43,16 @@ export class SupportDomain {
         deletedWordCount: 0,
       })
 
-      return this.fromMdb(
-        [await temp.toDocument(model).save()],
-        atd,
-        model,
-        true,
-      )
+      await temp.toDocument(model).save()
+      return this.fromMdb(atd, model, true)
     }
 
     return new SupportDomain({
-      id: props[0].id,
-      userId: props[0].ownerID,
-      semesters: props[0].sems,
-      newWordCount: props[0].newWordCnt,
-      deletedWordCount: props[0].deletedWordCnt,
+      id: supportDocs[0].id,
+      userId: supportDocs[0].ownerID,
+      semesters: supportDocs[0].sems,
+      newWordCount: supportDocs[0].newWordCnt,
+      deletedWordCount: supportDocs[0].deletedWordCnt,
     })
   }
 

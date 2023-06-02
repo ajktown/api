@@ -44,13 +44,7 @@ export class WordService {
       .toDocument(this.wordModel)
       .save()
 
-    const supportDomain = await SupportDomain.fromMdb(
-      await this.supportModel
-        .find(this.getSemesterQueryFactory.getFilter(atd))
-        .exec(),
-      atd,
-      this.supportModel,
-    )
+    const supportDomain = await SupportDomain.fromMdb(atd, this.supportModel)
     supportDomain.updateWithWordDoc(wordDoc)
 
     try {
@@ -91,13 +85,7 @@ export class WordService {
       query.semester
     ) {
       const semesterRemovedSupportDomain = (
-        await SupportDomain.fromMdb(
-          await this.supportModel
-            .find(this.getSemesterQueryFactory.getFilter(atd))
-            .exec(),
-          atd,
-          this.supportModel,
-        )
+        await SupportDomain.fromMdb(atd, this.supportModel)
       ).removeSemester(query.semester)
 
       await this.supportModel
