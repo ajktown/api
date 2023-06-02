@@ -103,6 +103,7 @@ export class WordDomain {
     return this.props
   }
 
+  /** Deletes word from persistence, if access is given */
   async delete(
     atd: AccessTokenDomain,
     wordModel: Model<DeprecatedWordDocument>,
