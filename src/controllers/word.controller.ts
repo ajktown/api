@@ -34,10 +34,8 @@ export class WordController {
 
   @Post(WordControllerPath.PostWord)
   async post(@Req() req: Request, @Body() reqDto: PostWordBodyDTO) {
-    return this.wordService.post(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-      reqDto,
-    )
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.wordService.post(atd, reqDto)).toResDTO(atd)
   }
 
   @Get(WordControllerPath.GetWords)

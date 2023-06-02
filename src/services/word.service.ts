@@ -1,6 +1,5 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { SupportDomain } from '@/domains/support/support.domain'
-import { IWord } from '@/domains/word/index.interface'
 import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
@@ -30,11 +29,10 @@ export class WordService {
   ) {}
 
   /** Post a new word */
-  // TODO: return WordDomain
   async post(
     atd: AccessTokenDomain,
     postReqDto: PostWordBodyDTO,
-  ): Promise<Partial<IWord>> {
+  ): Promise<WordDomain> {
     if (!postReqDto.example) {
       // If no example given, Ask Chat GPT to generate one, if allowed.
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
@@ -58,7 +56,7 @@ export class WordService {
       // TODO: And raise an error.
     }
 
-    return WordDomain.fromMdb(wordDoc).toResDTO(atd)
+    return WordDomain.fromMdb(wordDoc)
   }
 
   /** Get words with given query */
