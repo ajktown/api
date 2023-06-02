@@ -41,27 +41,24 @@ export class WordService {
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
-    let supportDomain: SupportDomain | undefined
-    try {
-      supportDomain = SupportDomain.fromMdb(
-        await this.deprecatedSupportsModel
-          .find(this.getSemesterQueryFactory.getFilter(atd))
-          .exec(),
-        atd,
-      )
-    } catch {
-      // TODO: Post a new support domain for this user.
-    }
-    if (!supportDomain) throw new Error('Failed to create support domain')
-
     const wordDoc = await WordDomain.fromPostReqDto(atd, postReqDto)
       .toDocument(this.deprecatedWordModel)
       .save()
+
+    const supportDomain = await SupportDomain.fromMdb(
+      await this.deprecatedSupportsModel
+        .find(this.getSemesterQueryFactory.getFilter(atd))
+        .exec(),
+      atd,
+      this.deprecatedSupportsModel,
+    )
     supportDomain.updateWithWordDoc(wordDoc)
 
     try {
       await this.deprecatedSupportsModel
-        .findByIdAndUpdate(supportDomain.id, supportDomain.toMdbUpdate())
+        .findByIdAndUpdate(supportDomain.id, supportDomain.toMdbUpdate(), {
+          upsert: true,
+        })
         .exec()
     } catch {
       // TODO: If somehow fails to add, we need to delete the word.
@@ -94,11 +91,14 @@ export class WordService {
       Object.keys(query).length === 1 &&
       query.semester
     ) {
-      const semesterRemovedSupportDomain = SupportDomain.fromMdb(
-        await this.deprecatedSupportsModel
-          .find(this.getSemesterQueryFactory.getFilter(atd))
-          .exec(),
-        atd,
+      const semesterRemovedSupportDomain = (
+        await SupportDomain.fromMdb(
+          await this.deprecatedSupportsModel
+            .find(this.getSemesterQueryFactory.getFilter(atd))
+            .exec(),
+          atd,
+          this.deprecatedSupportsModel,
+        )
       ).removeSemester(query.semester)
 
       await this.deprecatedSupportsModel

@@ -25,17 +25,18 @@ export class SemesterService {
     @InjectModel(DeprecatedWordSchemaProps.name)
     private deprecatedWordModel: Model<DeprecatedWordDocument>,
     @InjectModel(DeprecatedSupportSchemaProps.name)
-    private deprecatedSupportsSchema: Model<DeprecatedSupportsDocument>,
+    private deprecatedSupportsModel: Model<DeprecatedSupportsDocument>,
     private getWordQueryFactory: GetWordQueryFactory,
     private getSemesterQueryFactory: GetSemesterQueryFactory,
   ) {}
 
   async getSemesters(atd: AccessTokenDomain): Promise<SemesterChunkDomain> {
-    const supportDomain = SupportDomain.fromMdb(
-      await this.deprecatedSupportsSchema
+    const supportDomain = await SupportDomain.fromMdb(
+      await this.deprecatedSupportsModel
         .find(this.getSemesterQueryFactory.getFilter(atd))
         .exec(),
       atd,
+      this.deprecatedSupportsModel,
     )
     return SemesterChunkDomain.fromSupportDomain(supportDomain, atd)
   }

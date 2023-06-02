@@ -20,22 +20,36 @@ export class SupportDomain {
     return this.props.id
   }
 
-  static fromMdb(
+  /** Gets  */
+  static async fromMdb(
     props: DeprecatedSupportsDocument[],
     atd: AccessTokenDomain,
-  ): SupportDomain {
-    if (props.length > 2) throw new Error('Too many data!')
+    model: Model<DeprecatedSupportsDocument>,
+    avoidRecursiveCall = false,
+  ): Promise<SupportDomain> {
+    if (avoidRecursiveCall && props.length !== 1) {
+      throw new Error('Something went really wrong while creating support')
+    }
 
-    // If no data found, it means the user has never created word.
-    // Support will be automatically created when user creates his/her first word.
-    if (props.length === 0) {
-      return new SupportDomain({
+    if (props.length > 2) throw new Error('Too much data!')
+
+    // If no data found, it means the user's support has never been created.
+    // So create a new one.
+    if (!avoidRecursiveCall && props.length === 0) {
+      const temp = new SupportDomain({
         id: atd.userId + 'temporary_support_id',
         userId: atd.userId,
         semesters: [],
         newWordCount: 0,
         deletedWordCount: 0,
       })
+
+      return this.fromMdb(
+        [await temp.toDocument(model).save()],
+        atd,
+        model,
+        true,
+      )
     }
 
     return new SupportDomain({
