@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import { WordDomain } from '@/domains/word/word.domain'
 import {
   DeprecatedWordSchemaProps,
   WordModel,
@@ -15,8 +14,8 @@ import {
   DeprecatedSupportSchemaProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
-import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
 import { SupportDomain } from '@/domains/support/support.domain'
+import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 
 @Injectable()
 export class SemesterService {
@@ -26,7 +25,6 @@ export class SemesterService {
     @InjectModel(DeprecatedSupportSchemaProps.name)
     private supportModel: SupportModel,
     private getWordQueryFactory: GetWordQueryFactory,
-    private getSemesterQueryFactory: GetSemesterQueryFactory,
   ) {}
 
   async getSemesters(atd: AccessTokenDomain): Promise<SemesterChunkDomain> {
@@ -43,20 +41,16 @@ export class SemesterService {
     const query = new GetWordQueryDTO()
     query.semester = semester.semester
 
-    const words = (
-      await this.wordModel
-        .find(this.getWordQueryFactory.getFilter(atd, query))
-        .exec()
-    ).map((props) => WordDomain.fromMdb(props))
-
-    return semester.insertDetails(SemesterDetailsDomain.fromWords(words, atd))
-  }
-
-  async syncSemesters(): // word: WordDomain
-  Promise<void> {
-    // TODO: Get data from deprecatedSupportModel
-    // TODO: Get the current semester of the given wordDomain
-    // TODO: Somehow create/modify semester data if not exist
-    // TODO: Return void representing the success of the operation
+    return semester.insertDetails(
+      SemesterDetailsDomain.fromWordChunk(
+        await WordChunkDomain.get(
+          atd,
+          query,
+          this.wordModel,
+          this.supportModel,
+          this.getWordQueryFactory,
+        ),
+      ),
+    )
   }
 }
