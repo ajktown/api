@@ -30,12 +30,11 @@ export class WordDomain {
     return this.props.id
   }
 
-  // TODO: Probably not the best method to provide. Consider deleting it.
-  static fromRaw(props: Partial<IWord>) {
+  static fromRawDangerously(props: Partial<IWord>): WordDomain {
     return new WordDomain(props)
   }
 
-  static fromPostReqDto(
+  private static fromPostDto(
     atd: AccessTokenDomain,
     dto: PostWordBodyDTO,
   ): WordDomain {
@@ -71,7 +70,27 @@ export class WordDomain {
     })
   }
 
-  toDocument(deprecatedWordModel: WordModel) {
+  static async post(
+    atd: AccessTokenDomain,
+    dto: PostWordBodyDTO,
+    model: WordModel,
+    supportModel: SupportModel,
+  ): Promise<WordDomain> {
+    const wordDoc = await this.fromPostDto(atd, dto).toModel(model).save()
+    const wordDom = this.fromMdb(wordDoc)
+
+    const supportDom = await SupportDomain.fromMdb(atd, supportModel)
+    supportDom.updateWithWordDoc(wordDoc)
+    try {
+      await supportDom.update(supportModel)
+    } catch {
+      // TODO: If somehow fails to add, we need to delete the word.
+      // TODO: And raise an error.
+    }
+    return wordDom
+  }
+
+  toModel(deprecatedWordModel: WordModel) {
     const docProps: DeprecatedWordSchemaProps = {
       language: this.props.languageCode,
       sem: this.props.semester,

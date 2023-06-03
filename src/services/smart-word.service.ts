@@ -19,10 +19,10 @@ export class SmartWordService {
 
   async post(smartPostWordReq: SmartPostWordBodyDTO): Promise<WordDomain> {
     return WordDomain.fromMdb(
-      await WordDomain.fromRaw(
+      await WordDomain.fromRawDangerously(
         await this.randomSampleToWordPrompt.toIWord(smartPostWordReq.givenStr),
       )
-        .toDocument(this.deprecatedWordModel)
+        .toModel(this.deprecatedWordModel)
         .save(),
     )
   }

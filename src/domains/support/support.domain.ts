@@ -72,7 +72,7 @@ export class SupportDomain {
 
   async updateWithWordDeleted(model: SupportModel): Promise<this> {
     this.props.deletedWordCount += 1
-    await model.findByIdAndUpdate(this.props.id, this.toMdbUpdate())
+    await this.update(model)
     return this
   }
 
@@ -85,15 +85,6 @@ export class SupportDomain {
     this.props.semesters = Array.from(newSemesters)
 
     return this
-  }
-
-  toMdbUpdate() {
-    return {
-      // ownerID: this.props.userId,
-      sems: this.props.semesters,
-      newWordCnt: this.props.newWordCount,
-      deletedWordCnt: this.props.deletedWordCount,
-    }
   }
 
   toDocument(deprecatedSupportModel: Model<DeprecatedSupportsDocument>) {
@@ -118,5 +109,26 @@ export class SupportDomain {
       newWordCount: this.props.newWordCount,
       deletedWordCount: this.props.deletedWordCount,
     }
+  }
+
+  toMdbUpdate() {
+    return {
+      // ownerID: this.props.userId,
+      sems: this.props.semesters,
+      newWordCnt: this.props.newWordCount,
+      deletedWordCnt: this.props.deletedWordCount,
+    }
+  }
+  async update(model: SupportModel) {
+    return model.findByIdAndUpdate(
+      this.props.id,
+      {
+        // ownerID: this.props.userId,
+        sems: this.props.semesters,
+        newWordCnt: this.props.newWordCount,
+        deletedWordCnt: this.props.deletedWordCount,
+      },
+      { upsert: true },
+    )
   }
 }

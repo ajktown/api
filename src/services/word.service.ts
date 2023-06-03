@@ -1,5 +1,4 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
-import { SupportDomain } from '@/domains/support/support.domain'
 import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
@@ -38,25 +37,12 @@ export class WordService {
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
-    const wordDoc = await WordDomain.fromPostReqDto(atd, postReqDto)
-      .toDocument(this.wordModel)
-      .save()
-
-    const supportDomain = await SupportDomain.fromMdb(atd, this.supportModel)
-    supportDomain.updateWithWordDoc(wordDoc)
-
-    try {
-      await this.supportModel
-        .findByIdAndUpdate(supportDomain.id, supportDomain.toMdbUpdate(), {
-          upsert: true,
-        })
-        .exec()
-    } catch {
-      // TODO: If somehow fails to add, we need to delete the word.
-      // TODO: And raise an error.
-    }
-
-    return WordDomain.fromMdb(wordDoc)
+    return await WordDomain.post(
+      atd,
+      postReqDto,
+      this.wordModel,
+      this.supportModel,
+    )
   }
 
   /** Get words with given query */

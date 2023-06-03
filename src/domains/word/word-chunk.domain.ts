@@ -55,13 +55,7 @@ export class WordChunkDomain {
     const semesterRemovedSupportDomain = (
       await SupportDomain.fromMdb(this.atd, supportModel)
     ).removeSemester(this.query.semester)
-
-    await supportModel
-      .findByIdAndUpdate(
-        semesterRemovedSupportDomain.id,
-        semesterRemovedSupportDomain.toMdbUpdate(),
-      )
-      .exec()
+    await semesterRemovedSupportDomain.update(supportModel)
   }
 
   toResDTO(): Partial<IWord>[] {
