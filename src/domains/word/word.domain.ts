@@ -77,12 +77,8 @@ export class WordDomain {
     model: WordModel,
     supportModel: SupportModel,
   ): Promise<WordDomain> {
-    console.log(this.toModel(model))
     const wordDoc = await this.toModel(model).save()
-    console.log(wordDoc)
     const wordDomain = WordDomain.fromMdb(wordDoc)
-
-    console.log(wordDomain)
 
     const supportDom = await SupportDomain.fromMdb(atd, supportModel)
     supportDom.updateWithWordDoc(wordDoc)
