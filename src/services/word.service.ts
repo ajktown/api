@@ -37,9 +37,8 @@ export class WordService {
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
-    return await WordDomain.post(
+    return await WordDomain.fromPostDto(atd, postReqDto).post(
       atd,
-      postReqDto,
       this.wordModel,
       this.supportModel,
     )

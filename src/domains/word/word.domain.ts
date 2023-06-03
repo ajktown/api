@@ -34,10 +34,7 @@ export class WordDomain {
     return new WordDomain(props)
   }
 
-  private static fromPostDto(
-    atd: AccessTokenDomain,
-    dto: PostWordBodyDTO,
-  ): WordDomain {
+  static fromPostDto(atd: AccessTokenDomain, dto: PostWordBodyDTO): WordDomain {
     return new WordDomain({
       userId: atd.userId,
       languageCode: dto.languageCode,
@@ -70,14 +67,13 @@ export class WordDomain {
     })
   }
 
-  static async post(
+  async post(
     atd: AccessTokenDomain,
-    dto: PostWordBodyDTO,
     model: WordModel,
     supportModel: SupportModel,
   ): Promise<WordDomain> {
-    const wordDoc = await this.fromPostDto(atd, dto).toModel(model).save()
-    const wordDom = this.fromMdb(wordDoc)
+    const wordDoc = await this.toModel(model).save()
+    const wordDom = WordDomain.fromMdb(wordDoc)
 
     const supportDom = await SupportDomain.fromMdb(atd, supportModel)
     supportDom.updateWithWordDoc(wordDoc)
