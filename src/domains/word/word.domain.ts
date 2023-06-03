@@ -86,7 +86,7 @@ export class WordDomain {
     return wordDom
   }
 
-  toModel(deprecatedWordModel: WordModel) {
+  private toModel(deprecatedWordModel: WordModel) {
     const docProps: DeprecatedWordSchemaProps = {
       language: this.props.languageCode,
       sem: this.props.semester,
