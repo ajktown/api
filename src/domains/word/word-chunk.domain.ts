@@ -39,7 +39,7 @@ export class WordChunkDomain {
         )
       )
         .sort((a, b) => b.dateAdded - a.dateAdded)
-        .sort((a, b) => a.sem - b.sem)
+        .sort((a, b) => b.sem - a.sem)
         .map((wordRaw) => WordDomain.fromMdb(wordRaw)),
       query,
     )
