@@ -61,4 +61,8 @@ export class GetWordQueryDTO
   @IsOptional()
   @IsArray()
   tags: string[]
+
+  @IsOptional()
+  @IsNumber()
+  dateAdded: number
 }

@@ -24,9 +24,6 @@ export class DeprecatedWordSchemaProps {
   ownerID: string // the owner id 5f85729......
 
   @Prop([String])
-  reviewdOn: string[]
-
-  @Prop([String])
   tag: string[]
 
   @Prop()
@@ -39,19 +36,10 @@ export class DeprecatedWordSchemaProps {
   sem: number //231
 
   @Prop()
-  isPublic: boolean // false most of the time
-
-  @Prop()
   isFavorite: boolean
 
   @Prop()
-  order: number
-
-  @Prop()
   language: string // ko, ja, en
-
-  @Prop()
-  step: number // probably the review record, but not used
 
   @Prop()
   dateAdded: number // 1677483296006
@@ -61,6 +49,21 @@ export class DeprecatedWordSchemaProps {
 
   @Prop()
   pronun: string // pronunciation
+
+  // ! Not used by Wordnote v2.0.0 or later below:
+  // ! They are just recorded here for reference sake
+
+  // @Prop()
+  // order: number
+
+  // @Prop([String])
+  // reviewdOn: string[]
+
+  // @Prop()
+  // isPublic: boolean // false most of the time
+
+  // @Prop()
+  // step: number // probably the review record, but not used
 }
 
 export const DeprecatedWordSchema = SchemaFactory.createForClass(

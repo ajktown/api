@@ -37,7 +37,10 @@ export class WordChunkDomain {
           factory.getProjection(),
           factory.getOptions(query),
         )
-      ).map((wordRaw) => WordDomain.fromMdb(wordRaw)),
+      )
+        .sort((a, b) => b.dateAdded - a.dateAdded)
+        .sort((a, b) => a.sem - b.sem)
+        .map((wordRaw) => WordDomain.fromMdb(wordRaw)),
       query,
     )
 

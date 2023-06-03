@@ -22,8 +22,11 @@ export class WordDomain {
 
   private constructor(props: Partial<IWord>) {
     if (!props.userId) throw new Error('No userId (OwnerID)!')
-
     this.props = props
+
+    // addedDate is used to sort data.
+    const date = props.dateAdded ? new Date(props.dateAdded) : new Date()
+    this.props.dateAdded = date.valueOf()
   }
 
   get id() {
@@ -45,6 +48,7 @@ export class WordDomain {
       definition: dto.definition,
       example: dto.example,
       tags: dto.tags,
+      dateAdded: dto.dateAdded,
     })
   }
 
@@ -62,6 +66,7 @@ export class WordDomain {
       definition: props.meaning,
       example: props.example,
       tags: props.tag,
+      dateAdded: props.dateAdded,
       createdAt: new Date(props.createdAt),
       updatedAt: new Date(props.createdAt),
     })
@@ -72,8 +77,12 @@ export class WordDomain {
     model: WordModel,
     supportModel: SupportModel,
   ): Promise<WordDomain> {
+    console.log(this.toModel(model))
     const wordDoc = await this.toModel(model).save()
-    const wordDom = WordDomain.fromMdb(wordDoc)
+    console.log(wordDoc)
+    const wordDomain = WordDomain.fromMdb(wordDoc)
+
+    console.log(wordDomain)
 
     const supportDom = await SupportDomain.fromMdb(atd, supportModel)
     supportDom.updateWithWordDoc(wordDoc)
@@ -83,10 +92,10 @@ export class WordDomain {
       // TODO: If somehow fails to add, we need to delete the word.
       // TODO: And raise an error.
     }
-    return wordDom
+    return wordDomain
   }
 
-  private toModel(deprecatedWordModel: WordModel) {
+  private toModel(wordModel: WordModel): DeprecatedWordDocument {
     const docProps: DeprecatedWordSchemaProps = {
       language: this.props.languageCode,
       sem: this.props.semester,
@@ -97,14 +106,14 @@ export class WordDomain {
       example: this.props.example,
       tag: this.props.tags,
       ownerID: this.props.userId,
+      dateAdded: this.props.dateAdded,
       // Deprecated Props Below (Not used below from Wordnote, or Wordy v2):
-      reviewdOn: [],
-      order: 1,
-      step: 1,
-      isPublic: true,
-      dateAdded: new Date().valueOf(),
+      // reviewdOn: [],
+      // order: 1,
+      // step: 1,
+      // isPublic: true,
     }
-    return new deprecatedWordModel(docProps)
+    return new wordModel(docProps)
   }
 
   /** Returns props of the WordDomain, and userId (ownerId) must match

@@ -11,4 +11,5 @@ export interface IWord extends DataBasicsDate {
   definition: string
   example: string
   tags: string[]
+  dateAdded: number
 }
