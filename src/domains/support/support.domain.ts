@@ -6,7 +6,7 @@ import {
   DeprecatedSupportsDocument,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
-import { DeprecatedWordDocument } from '@/schemas/deprecated-word.schema'
+import { WordDomain } from '../word/word.domain'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
@@ -56,13 +56,17 @@ export class SupportDomain {
     })
   }
 
-  updateWithWordDoc(document: DeprecatedWordDocument): this {
-    if (document.ownerID !== this.props.userId) {
+  updateWithPostedWord(
+    atd: AccessTokenDomain,
+    newlyPostedWordDomain: WordDomain,
+  ): this {
+    const props = newlyPostedWordDomain.toResDTO(atd)
+    if (props.userId !== this.props.userId) {
       throw new Error('No access')
     }
 
     const newSemesters = new Set(this.props.semesters)
-    newSemesters.add(document.sem)
+    newSemesters.add(props.semester)
 
     this.props.semesters = Array.from(newSemesters)
     this.props.newWordCount += 1

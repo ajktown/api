@@ -77,18 +77,22 @@ export class WordDomain {
     model: WordModel,
     supportModel: SupportModel,
   ): Promise<WordDomain> {
-    const wordDoc = await this.toModel(model).save()
-    const wordDomain = WordDomain.fromMdb(wordDoc)
+    const newlyPostedWordDomain = WordDomain.fromMdb(
+      await this.toModel(model).save(),
+    )
 
-    const supportDom = await SupportDomain.fromMdb(atd, supportModel)
-    supportDom.updateWithWordDoc(wordDoc)
     try {
-      await supportDom.update(supportModel)
+      const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
+      await supportDomain
+        .updateWithPostedWord(atd, newlyPostedWordDomain)
+        .update(supportModel)
     } catch {
-      // TODO: If somehow fails to add, we need to delete the word.
-      // TODO: And raise an error.
+      // Something went wrong, and therefore should delete the word from persistence
+      await newlyPostedWordDomain.delete(atd, model, supportModel)
+      throw new Error('Failed to post word')
     }
-    return wordDomain
+
+    return newlyPostedWordDomain
   }
 
   private toModel(wordModel: WordModel): DeprecatedWordDocument {
