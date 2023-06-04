@@ -34,16 +34,16 @@ export class SemesterDomain {
     })
   }
 
-  insertDetails(detailsDomain: SemesterDetailsDomain): this {
-    this.details = detailsDomain.toDetails()
-    return this
-  }
-
   toResDTO(): Partial<ISemester> {
     return {
       id: this.id,
       ...this.props,
       details: this.details,
     }
+  }
+
+  insertDetails(detailsDomain: SemesterDetailsDomain): this {
+    this.details = detailsDomain.toDetails()
+    return this
   }
 }
