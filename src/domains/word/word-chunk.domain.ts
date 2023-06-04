@@ -32,11 +32,13 @@ export class WordChunkDomain {
     const newWordChunkDomain = new WordChunkDomain(
       atd,
       (
-        await wordModel.find(
-          factory.getFilter(atd, query),
-          factory.getProjection(),
-          factory.getOptions(query),
-        ).exec()
+        await wordModel
+          .find(
+            factory.getFilter(atd, query),
+            factory.getProjection(),
+            factory.getOptions(query),
+          )
+          .exec()
       )
         .sort((a, b) => b.dateAdded - a.dateAdded)
         .sort((a, b) => b.sem - a.sem)

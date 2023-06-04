@@ -8,8 +8,8 @@ export enum SupportedEnvAttr {
   // ! JWT Token Secrets
   JwtTokenSecret = `JWT_TOKEN_SECRET`,
   // ! Mongo DB
-  MdbLocal = `MDB_LOCAL`,
-  MdbProd = `MDB_PROD`,
+  MdbLocalUri = `MDB_LOCAL_URI`,
+  MdbProdUri = `MDB_PROD_URI`,
   // ! Open AI
   StrictlyAllowChatGtp = `IS_CHAT_GPT_ENABLED`,
   OpenAiKey = `OPEN_AI_KEY`,
