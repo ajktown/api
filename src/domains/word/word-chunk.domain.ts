@@ -36,7 +36,7 @@ export class WordChunkDomain {
           factory.getFilter(atd, query),
           factory.getProjection(),
           factory.getOptions(query),
-        )
+        ).exec()
       )
         .sort((a, b) => b.dateAdded - a.dateAdded)
         .sort((a, b) => b.sem - a.sem)
