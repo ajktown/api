@@ -137,7 +137,7 @@ export class WordDomain {
       throw new Error('No access to delete')
     }
 
-    await wordModel.findByIdAndDelete(this.props.id)
+    await wordModel.findByIdAndDelete(this.props.id).exec()
     const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
     await supportDomain.updateWithWordDeleted(supportModel)
   }
