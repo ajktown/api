@@ -1,24 +1,28 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
-import { IWord } from '@/domains/word/index.interface'
+import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
-import { GetWordIdsRes } from '@/responses/get-word-ids.res'
 import {
-  DeprecatedWordDocument,
+  DeprecatedSupportSchemaProps,
+  SupportModel,
+} from '@/schemas/deprecated-supports.schema'
+import {
   DeprecatedWordSchemaProps,
+  WordModel,
 } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 
 @Injectable()
 export class WordService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
-    private deprecatedWordModel: Model<DeprecatedWordDocument>,
+    private wordModel: WordModel,
+    @InjectModel(DeprecatedSupportSchemaProps.name)
+    private supportModel: SupportModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,
   ) {}
@@ -27,53 +31,40 @@ export class WordService {
   async post(
     atd: AccessTokenDomain,
     postReqDto: PostWordBodyDTO,
-  ): Promise<Partial<IWord>> {
+  ): Promise<WordDomain> {
     if (!postReqDto.example) {
       // If no example given, Ask Chat GPT to generate one, if allowed.
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
-    return WordDomain.fromMdb(
-      await WordDomain.fromPostReqDto(atd, postReqDto)
-        .toDocument(this.deprecatedWordModel)
-        .save(),
-    ).toResDTO(atd)
+    return await WordDomain.fromPostDto(atd, postReqDto).post(
+      atd,
+      this.wordModel,
+      this.supportModel,
+    )
   }
 
-  /** Get words by given query */
+  /** Get words with given query */
   async get(
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
-  ): Promise<Partial<IWord>[]> {
-    return (
-      await this.deprecatedWordModel
-        .find(
-          this.getWordQueryFactory.getFilter(atd, query),
-          this.getWordQueryFactory.getProjection(),
-          this.getWordQueryFactory.getOptions(query),
-        )
-        .sort(this.getWordQueryFactory.toSort())
-        .limit(query.limit)
-        .exec()
-    ).map((wordRaw) => WordDomain.fromMdb(wordRaw).toResDTO(atd))
+  ): Promise<WordChunkDomain> {
+    return WordChunkDomain.get(
+      atd,
+      query,
+      this.wordModel,
+      this.supportModel,
+      this.getWordQueryFactory,
+    )
   }
 
-  /** Get word ids by given query */
-  async getWordIds(
-    atd: AccessTokenDomain,
-    query: GetWordQueryDTO,
-  ): Promise<GetWordIdsRes> {
-    const words = await this.get(atd, query)
-    return {
-      length: words.length,
-      wordIds: words.map((e) => e.id),
-    }
+  /** Get word data with given id */
+  async getById(id: string): Promise<WordDomain> {
+    return WordDomain.fromMdb(await this.wordModel.findById(id).exec())
   }
 
-  /** Get word data by given id */
-  async getById(id: string, atd: AccessTokenDomain): Promise<Partial<IWord>> {
-    return WordDomain.fromMdb(
-      await this.deprecatedWordModel.findById(id).exec(),
-    ).toResDTO(atd)
+  async deleteById(id: string, atd: AccessTokenDomain): Promise<void> {
+    const deletingWordDomain = await this.getById(id)
+    await deletingWordDomain.delete(atd, this.wordModel, this.supportModel)
   }
 }

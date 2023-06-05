@@ -1,14 +1,19 @@
 import { GlobalLanguageCode } from '@/global.interface'
-import { IsArray, IsNumber, IsBoolean, IsString } from 'class-validator'
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 
 // ! Security Warning:
 // UserId must not be here. End user cannot set userId with their own.
+
+// Semester cannot be set by end user
 export class PostWordBodyDTO {
   @IsString()
   languageCode: GlobalLanguageCode
-
-  @IsNumber()
-  semester: number
 
   @IsBoolean()
   isFavorite: boolean
@@ -27,4 +32,8 @@ export class PostWordBodyDTO {
 
   @IsArray()
   tags: string[]
+
+  @IsNumber()
+  @IsOptional()
+  dateAdded: number
 }

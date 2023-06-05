@@ -5,7 +5,7 @@ import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 
-enum ApiHomePath {
+enum SemesterControllerPath {
   GetSemesters = `semesters`,
   GetSemesterById = `semesters/:id`,
 }
@@ -16,16 +16,22 @@ export class SemesterController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Get(ApiHomePath.GetSemesters)
-  getSemesters() {
-    return this.semesterService.getSemesters()
+  @Get(SemesterControllerPath.GetSemesters)
+  async getSemesters(@Req() req: Request) {
+    return (
+      await this.semesterService.getSemesters(
+        await AccessTokenDomain.fromReq(req, this.jwtService),
+      )
+    ).toResDTO()
   }
 
-  @Get(ApiHomePath.GetSemesterById)
-  async getSemesterById(@Param('id') id: string, @Req() req: Request) {
-    return this.semesterService.getSemesterById(
-      id,
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-    )
+  @Get(SemesterControllerPath.GetSemesterById)
+  async getSemesterById(@Param('id') code: string, @Req() req: Request) {
+    return (
+      await this.semesterService.getSemesterByCode(
+        parseInt(code),
+        await AccessTokenDomain.fromReq(req, this.jwtService),
+      )
+    ).toResDTO()
   }
 }

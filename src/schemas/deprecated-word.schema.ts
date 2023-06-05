@@ -1,17 +1,19 @@
 import { DataBasicsDate } from '@/global.interface'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument } from 'mongoose'
+import { HydratedDocument, Model } from 'mongoose'
 import {
   defaultSchemaTimestampsConfig,
   SchemaCollectionName,
 } from './index.collections'
+
 // TODO: This is deprecated MongoDB Schema of WordData
-// ! Document, Props, Schema
 
 export type DeprecatedWordDocument = HydratedDocument<
   DeprecatedWordSchemaProps,
   DataBasicsDate
 >
+
+export type WordModel = Model<DeprecatedWordDocument>
 
 @Schema({
   collection: SchemaCollectionName.DeprecatedWords,
@@ -20,9 +22,6 @@ export type DeprecatedWordDocument = HydratedDocument<
 export class DeprecatedWordSchemaProps {
   @Prop({ required: true })
   ownerID: string // the owner id 5f85729......
-
-  @Prop([String])
-  reviewdOn: string[]
 
   @Prop([String])
   tag: string[]
@@ -37,19 +36,10 @@ export class DeprecatedWordSchemaProps {
   sem: number //231
 
   @Prop()
-  isPublic: boolean // false most of the time
-
-  @Prop()
   isFavorite: boolean
 
   @Prop()
-  order: number
-
-  @Prop()
   language: string // ko, ja, en
-
-  @Prop()
-  step: number // probably the review record, but not used
 
   @Prop()
   dateAdded: number // 1677483296006
@@ -59,6 +49,21 @@ export class DeprecatedWordSchemaProps {
 
   @Prop()
   pronun: string // pronunciation
+
+  // ! Not used by Wordnote v2.0.0 or later below:
+  // ! They are just recorded here for reference sake
+
+  // @Prop()
+  // order: number
+
+  // @Prop([String])
+  // reviewdOn: string[]
+
+  // @Prop()
+  // isPublic: boolean // false most of the time
+
+  // @Prop()
+  // step: number // probably the review record, but not used
 }
 
 export const DeprecatedWordSchema = SchemaFactory.createForClass(
