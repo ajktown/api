@@ -18,7 +18,9 @@ export class SemesterChunkDomain {
     const sortedCodes = Array.from(new Set(semesters)).sort((a, b) => a - b)
 
     return new SemesterChunkDomain(
-      sortedCodes.map((code) => SemesterDomain.fromSemesterCode(code, atd)),
+      sortedCodes.map((code) =>
+        SemesterDomain.fromSemesterCode(code, atd, true),
+      ),
     )
   }
 

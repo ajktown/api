@@ -7,36 +7,40 @@ export class SemesterDomain {
   private readonly props: Partial<ISemester>
   private details: undefined | ISemesterDetailedInfo
 
-  private constructor(props: Partial<ISemester>) {
-    this.props = props
+  /** Build and return unique id of semester */
+  // As semester is not individually stored in DB, the id is backend generated.
+  private buildIdConstructor(atd: AccessTokenDomain, semesterCode: number) {
+    return `${atd.userId}-${semesterCode}`
   }
 
-  get id() {
-    return this.props.code.toString()
+  private constructor(atd: AccessTokenDomain, props: Partial<ISemester>) {
+    this.props = {
+      id: this.buildIdConstructor(atd, props.code),
+      ...props,
+    }
   }
 
   get semester() {
     return this.props.code
   }
 
-  /** Build and return unique id of semester */
-  static buildId(semesterCode: number, atd: AccessTokenDomain) {
-    return `${atd.userId}-${semesterCode}`
-  }
-
-  static fromSemesterCode(semesterCode: number, atd: AccessTokenDomain) {
+  /** Create semester domain  */
+  static fromSemesterCode(
+    semesterCode: number,
+    atd: AccessTokenDomain,
+    isExistInDb = false,
+  ) {
     const { year, quarter } = semesterLambda.toYearAndQuarter(semesterCode)
-    return new SemesterDomain({
-      id: this.buildId(semesterCode, atd),
+    return new SemesterDomain(atd, {
       code: semesterCode,
       year,
       quarter,
+      isExistInDb,
     })
   }
 
   toResDTO(): Partial<ISemester> {
     return {
-      id: this.id,
       ...this.props,
       details: this.details,
     }
