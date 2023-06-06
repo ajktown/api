@@ -30,7 +30,9 @@ export class GetWordQueryDTO
   @IsArray()
   languageCodes: GlobalLanguageCode[]
 
-  @IsOptional()
+  // ! For performance reason, semester is required at this point
+  // TODO: This filtering does not really work :(
+  // @IsOptional()
   @IsNumber()
   semester: number
 
