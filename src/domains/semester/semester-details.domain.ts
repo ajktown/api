@@ -1,7 +1,8 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { ISemesterDetailedInfo } from './index.interface'
 import { timeHandler } from '@/handlers/time.handler'
-import { WordChunkDomain } from '../word/word-chunk.domain'
+import { WordDomain } from '../word/word.domain'
+import { AccessTokenDomain } from '../auth/access-token.domain'
 
 export class SemesterDetailsDomain {
   private readonly props: ISemesterDetailedInfo
@@ -10,13 +11,14 @@ export class SemesterDetailsDomain {
     this.props = props
   }
 
-  static fromWordChunk(wordChunk: WordChunkDomain) {
+  static fromWordDomains(atd: AccessTokenDomain, wordDomains: WordDomain[]) {
     const wordIdsSet = new Set<string>()
     const daysAgoSet = new Set<number>()
     const languagesSet = new Set<GlobalLanguageCode>()
     const tagsSet = new Set<string>()
 
-    wordChunk.toResDTO().forEach((word) => {
+    wordDomains.forEach((w) => {
+      const word = w.toResDTO(atd)
       word.id && wordIdsSet.add(word.id)
       word.createdAt && daysAgoSet.add(timeHandler.getDaysAgo(word.createdAt))
       word.languageCode && languagesSet.add(word.languageCode)

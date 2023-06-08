@@ -6,7 +6,7 @@ const PRIVATE_DEFAULT_ITEMS_PER_PAGE = 100
 
 // ! Warning: Although the GetPagination is not used by the code, Nest JS requires it to be exported for TS check.
 // ! Leave it exported, even if not used
-interface PrivatePaginationProps {
+export interface PaginationProps {
   pageIndex: number
   lastPageIndex: number
   isNextPageExist: boolean
@@ -15,8 +15,12 @@ interface PrivatePaginationProps {
   itemPerPage: number
 }
 export interface PaginationRoot {
-  pagination: PrivatePaginationProps
-  dataLength: number
+  pagination: PaginationProps
+}
+
+interface PaginationRes extends PaginationRoot {
+  sliceFrom: number
+  sliceUntil: number
 }
 
 const getConfirmedPageIndex = (query: GetReqDTORoot): number => {
@@ -28,7 +32,7 @@ const getConfirmedPageIndex = (query: GetReqDTORoot): number => {
 export function getPaginationHandler<T extends any[]>(
   data: T,
   query: GetReqDTORoot,
-): PaginationRoot & { data: T } {
+): PaginationRes {
   const confirmedPageIndex = getConfirmedPageIndex(query)
   const confirmedLimit =
     parseInt(query.itemsPerPage) || PRIVATE_DEFAULT_ITEMS_PER_PAGE
@@ -36,14 +40,9 @@ export function getPaginationHandler<T extends any[]>(
   const confirmedSliceIndex = confirmedPageIndex * confirmedLimit
   const confirmedSliceEndIndex = confirmedSliceIndex + confirmedLimit
   const confirmedTotalPages = Math.max(
-    0,
+    1, // with 0 item, the total page is still 1
     Math.ceil(data.length / confirmedLimit),
   )
-
-  const confirmedData = data.slice(
-    confirmedSliceIndex,
-    confirmedSliceEndIndex,
-  ) as T
 
   return {
     pagination: {
@@ -54,7 +53,7 @@ export function getPaginationHandler<T extends any[]>(
       totalItems: data.length,
       itemPerPage: confirmedLimit,
     },
-    dataLength: confirmedData.length,
-    data: confirmedData,
+    sliceFrom: confirmedSliceIndex,
+    sliceUntil: confirmedSliceEndIndex,
   }
 }

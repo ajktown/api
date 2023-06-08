@@ -5,7 +5,11 @@ import { WordModel } from '@/schemas/deprecated-word.schema'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { SupportDomain } from '../support/support.domain'
 import { SupportModel } from '@/schemas/deprecated-supports.schema'
-import { IWord } from './index.interface'
+import { SemesterDomain } from '../semester/semester.domain'
+import { getPaginationHandler } from '@/handlers/get-pagination.handler'
+import { SemesterDetailsDomain } from '../semester/semester-details.domain'
+import { GetWordsRes } from '@/responses/get-words.res'
+import { GetWordIdsRes } from '@/responses/get-word-ids.res'
 
 export class WordChunkDomain {
   private readonly atd: AccessTokenDomain
@@ -20,6 +24,19 @@ export class WordChunkDomain {
     this.atd = atd
     this.words = words
     this.query = query
+  }
+
+  get wordDomains(): WordDomain[] {
+    return this.words
+  }
+
+  get semesterDomain(): SemesterDomain | undefined {
+    if (!this.isSemesterOnlyQuery()) return undefined
+    return SemesterDomain.fromSemesterCode(
+      this.query.semester,
+      this.atd,
+      true,
+    ).insertDetails(SemesterDetailsDomain.fromWordDomains(this.atd, this.words))
   }
 
   static async get(
@@ -50,12 +67,17 @@ export class WordChunkDomain {
     return newWordChunkDomain
   }
 
+  private isSemesterOnlyQuery() {
+    return (
+      Object.keys(this.query).length === 1 && this.query.semester !== undefined
+    )
+  }
+
   /** Delete support from persistence if condition is met. This is an automatic update process and therefore is private */
   private async deleteSemesterIfEmptyQuery(supportModel: SupportModel) {
     // TODO: The condition here is not 100% accurate. But then
     // TODO: Deleting semester is not really important.
-    if (this.words.length > 0) return
-    if (Object.keys(this.query).length !== 1 || !this.query.semester) return
+    if (this.isSemesterOnlyQuery()) return
 
     const semesterRemovedSupportDomain = (
       await SupportDomain.fromMdb(this.atd, supportModel)
@@ -63,11 +85,29 @@ export class WordChunkDomain {
     await semesterRemovedSupportDomain.update(supportModel)
   }
 
-  toResDTO(): Partial<IWord>[] {
-    return this.words.map((word) => word.toResDTO(this.atd))
+  toResDTO(): GetWordsRes {
+    const wordsRes = this.words.map((word) => word.toResDTO(this.atd))
+    const { pagination, sliceFrom, sliceUntil } = getPaginationHandler(
+      wordsRes,
+      this.query,
+    )
+    return {
+      pagination: pagination,
+      semester: this.semesterDomain?.toResDTO(),
+      words: wordsRes.slice(sliceFrom, sliceUntil),
+    }
   }
 
-  toGetWordIdsResDTO(): string[] {
-    return this.words.map((word) => word.id)
+  toGetWordIdsResDTO(): GetWordIdsRes {
+    const wordIds = this.words.map((word) => word.id)
+    const { pagination, sliceFrom, sliceUntil } = getPaginationHandler(
+      wordIds,
+      this.query,
+    )
+    return {
+      pagination: pagination,
+      semester: this.semesterDomain?.toResDTO(),
+      wordIds: wordIds.slice(sliceFrom, sliceUntil),
+    }
   }
 }
