@@ -99,15 +99,11 @@ export class WordChunkDomain {
   }
 
   toGetWordIdsResDTO(): GetWordIdsRes {
-    const wordIds = this.words.map((word) => word.id)
-    const { pagination, sliceFrom, sliceUntil } = getPaginationHandler(
-      wordIds,
-      this.query,
-    )
+    const res = this.toResDTO()
     return {
-      pagination: pagination,
-      semester: this.semesterDomain?.toResDTO(),
-      wordIds: wordIds.slice(sliceFrom, sliceUntil),
+      pagination: res.pagination,
+      semester: res.semester,
+      wordIds: res.words.map((word) => word.id),
     }
   }
 }
