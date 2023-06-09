@@ -20,7 +20,7 @@ export class UserDomain {
       givenName: 'AJ',
       familyName: 'Kim',
       email: 'jkim67cloud@gmail.com',
-      imageUrl: '',
+      imageUrl: 'https://www.shutterstock.com/image-vector/web-developer-design-vector-illustration-600w-314602454.jpg',
       languagePreference: 'en',
       dateAdded: new Date().valueOf(),
     })
