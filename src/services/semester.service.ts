@@ -42,14 +42,17 @@ export class SemesterService {
     query.semester = semester.semester
 
     return semester.insertDetails(
-      SemesterDetailsDomain.fromWordChunk(
-        await WordChunkDomain.get(
-          atd,
-          query,
-          this.wordModel,
-          this.supportModel,
-          this.getWordQueryFactory,
-        ),
+      SemesterDetailsDomain.fromWordDomains(
+        atd,
+        (
+          await WordChunkDomain.get(
+            atd,
+            query,
+            this.wordModel,
+            this.supportModel,
+            this.getWordQueryFactory,
+          )
+        ).wordDomains,
       ),
     )
   }
