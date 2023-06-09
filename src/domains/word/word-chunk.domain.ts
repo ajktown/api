@@ -67,16 +67,18 @@ export class WordChunkDomain {
     return newWordChunkDomain
   }
 
-  private isSemesterOnlyQuery() {
+  private isSemesterOnlyQuery(): boolean {
+    let exemptCount = 0
+    if (this.query.pageIndex) exemptCount++
+    if (this.query.itemsPerPage) exemptCount++
+
     return (
-      Object.keys(this.query).length === 1 && this.query.semester !== undefined
+      Object.keys(this.query).length === 1 + exemptCount && this.query.semester !== undefined
     )
   }
 
   /** Delete support from persistence if condition is met. This is an automatic update process and therefore is private */
   private async deleteSemesterIfEmptyQuery(supportModel: SupportModel) {
-    // TODO: The condition here is not 100% accurate. But then
-    // TODO: Deleting semester is not really important.
     if (this.isSemesterOnlyQuery()) return
 
     const semesterRemovedSupportDomain = (
