@@ -67,6 +67,9 @@ export class WordChunkDomain {
     return newWordChunkDomain
   }
 
+  /** Returns if is semester query. If a query that does not affect the number of words within the semester,
+   * developers must increment the exemptCount in the isSemesterOnlyQuery() function
+   */
   private isSemesterOnlyQuery(): boolean {
     let exemptCount = 0
     if (this.query.pageIndex) exemptCount++
