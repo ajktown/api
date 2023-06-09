@@ -17,6 +17,7 @@ export class SemesterDomain {
     this.props = {
       id: this.buildIdConstructor(atd, props.code),
       ...props,
+      code: typeof props.code === 'string' ? parseInt(props.code) : props.code,
     }
   }
 

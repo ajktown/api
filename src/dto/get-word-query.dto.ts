@@ -32,7 +32,8 @@ export class GetWordQueryDTO
 
   // ! For performance reason, semester is required at this point
   // TODO: This filtering does not really work :(
-  // @IsOptional()
+  // TODO: Any Request DTO must work and convert the data to the correct type ...!!!!!!!!! 
+  @IsOptional()
   @IsNumber()
   semester: number
 
