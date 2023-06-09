@@ -8,6 +8,7 @@ import { envLambda } from '@/lambdas/get-env.lambda'
 export interface IOauthPayload {
   userEmail: string
   userId: string
+  profileImageUrl: string
 }
 
 export class AccessTokenDomain {
@@ -27,10 +28,16 @@ export class AccessTokenDomain {
     return this.props.userId
   }
 
+  get profileImageUrl() {
+    return this.props.profileImageUrl
+  }
+
   static fromUser(user: UserDomain) {
+    const userRes = user.toResDTO()
     return new AccessTokenDomain({
-      userEmail: user.toResDTO().email,
-      userId: user.toResDTO().id,
+      userEmail: userRes.email,
+      userId: userRes.id,
+      profileImageUrl: userRes.imageUrl,
     })
   }
 
@@ -55,6 +62,7 @@ export class AccessTokenDomain {
     return {
       userEmail: this.props.userEmail,
       userId: this.props.userId,
+      profileImageUrl: this.props.profileImageUrl,
     }
   }
 
