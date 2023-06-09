@@ -39,7 +39,7 @@ export class WordChunkDomain {
     ).insertDetails(SemesterDetailsDomain.fromWordDomains(this.atd, this.words))
   }
 
-  static async get(
+  static async fromMdb(
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
     wordModel: WordModel,

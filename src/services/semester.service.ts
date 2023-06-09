@@ -45,7 +45,7 @@ export class SemesterService {
       SemesterDetailsDomain.fromWordDomains(
         atd,
         (
-          await WordChunkDomain.get(
+          await WordChunkDomain.fromMdb(
             atd,
             query,
             this.wordModel,
