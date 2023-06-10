@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ajktown-api
+  namespace: ajktown
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ajktown-api
+  template:
+    metadata:
+      labels:
+        app: ajktown-api
+    spec:
+      containers:
+      - name: ajktown-api
+        image: docker.io/library/ajktown-api:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ajktown-db
+  namespace: ajktown
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ajktown-db
+  template:
+    metadata:
+      labels:
+        app: ajktown-db
+    spec:
+      containers:
+      - name: ajktown-db
+        image: mongo:latest
+        ports:
+        - containerPort: 3000
