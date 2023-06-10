@@ -61,6 +61,10 @@ export class AuthService {
     )
   }
 
+  /** Returns the basic data of the currently signed user, if signed in.
+   * It is important that at this point, this getAuthPrep does NOT depend on the connection
+   * to the database.
+   */
   async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {
     try {
       const atd = await AccessTokenDomain.fromReq(req, this.jwtService)

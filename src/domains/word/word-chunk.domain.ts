@@ -39,7 +39,7 @@ export class WordChunkDomain {
     ).insertDetails(SemesterDetailsDomain.fromWordDomains(this.atd, this.words))
   }
 
-  static async get(
+  static async fromMdb(
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
     wordModel: WordModel,
@@ -76,7 +76,8 @@ export class WordChunkDomain {
     if (this.query.itemsPerPage) exemptCount++
 
     return (
-      Object.keys(this.query).length === 1 + exemptCount && this.query.semester !== undefined
+      Object.keys(this.query).length === 1 + exemptCount &&
+      this.query.semester !== undefined
     )
   }
 

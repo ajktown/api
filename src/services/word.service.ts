@@ -49,7 +49,7 @@ export class WordService {
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
   ): Promise<WordChunkDomain> {
-    return WordChunkDomain.get(
+    return WordChunkDomain.fromMdb(
       atd,
       query,
       this.wordModel,
