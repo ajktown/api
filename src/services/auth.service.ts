@@ -69,6 +69,7 @@ export class AuthService {
         signedInUserInfo: atd.toDetailedInfo(),
         env: {
           currentEnv: envLambda.mode.get(),
+          isProduction: envLambda.mode.isProduct(),
           available: envLambda.mode.getList(),
         },
       }
@@ -78,6 +79,7 @@ export class AuthService {
         signedInUserInfo: null,
         env: {
           currentEnv: envLambda.mode.get(),
+          isProduction: envLambda.mode.isProduct(),
           available: envLambda.mode.getList(),
         },
       }

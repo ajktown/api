@@ -3,6 +3,7 @@ import { IOauthPayload } from '@/domains/auth/access-token.domain'
 interface GetAuthPrepResInfo {
   env: {
     currentEnv: string // StrictlyEnv
+    isProduction: boolean
     available: string[]
   }
 }
