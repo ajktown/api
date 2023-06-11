@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
 } from '@nestjs/common'
@@ -15,12 +16,14 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
+import { PutWordByIdBodyDTO } from '@/dto/put-word-bofy.dto'
 
 export enum WordControllerPath {
   PostWord = `words`,
   GetWords = `words`,
   GetWordIds = `word-ids`,
   GetWordById = `words/:id`,
+  PutWordById = `/words/:id`,
   DeleteWordById = `words/:id`,
 }
 
@@ -62,6 +65,16 @@ export class WordController {
     return (await this.wordService.getById(id)).toResDTO(
       await AccessTokenDomain.fromReq(req, this.jwtService),
     )
+  }
+
+  @Put(WordControllerPath.PutWordById)
+  async putWordById(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() dto: PutWordByIdBodyDTO,
+  ) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.wordService.putWordById(id, atd, dto)).toResDTO(atd)
   }
 
   @Delete(WordControllerPath.DeleteWordById)
