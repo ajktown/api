@@ -3,7 +3,6 @@ import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
-import { PostOauthRes } from '@/responses/post-auth-oauth.res'
 import { GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
@@ -25,7 +24,7 @@ export class AuthService {
   ) {}
 
   /** Get words by given query */
-  async byGoogle(query: PostAuthGoogleBodyDTO): Promise<PostOauthRes> {
+  async byGoogle(query: PostAuthGoogleBodyDTO): Promise<AccessTokenDomain> {
     try {
       const ticket = await new OAuth2Client(query.clientId).verifyIdToken({
         idToken: query.credential,
@@ -46,25 +45,22 @@ export class AuthService {
           `Length of the returned data should be 1, but we got "${doc.length}"`,
         )
 
-      return AccessTokenDomain.fromUser(
-        UserDomain.fromMdb(doc[0]),
-      ).toAccessToken(this.jwtService)
+      return AccessTokenDomain.fromUser(UserDomain.fromMdb(doc[0]))
     } catch (error) {
       throw new Error('Invalid Credential')
     }
   }
 
   /** Attaches HttpOnly Token for dev-user */
-  async byDevToken(): Promise<PostOauthRes> {
-    return AccessTokenDomain.fromUser(UserDomain.underDevEnv()).toAccessToken(
-      this.jwtService,
-    )
+  async byDevToken(): Promise<AccessTokenDomain> {
+    return AccessTokenDomain.fromUser(UserDomain.underDevEnv())
   }
 
   /** Returns the basic data of the currently signed user, if signed in.
    * It is important that at this point, this getAuthPrep does NOT depend on the connection
    * to the database.
    */
+  // TODO: Return AuthPrepDomain with returning logic inside of the domain
   async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {
     try {
       const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
