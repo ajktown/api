@@ -6,10 +6,9 @@ import { JwtService } from '@nestjs/jwt'
 import { GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
-  DeprecatedUserDocument,
   DeprecatedUserSchemaProps,
+  UserModel,
 } from '@/schemas/deprecated-user.schema'
-import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
@@ -20,7 +19,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     @InjectModel(DeprecatedUserSchemaProps.name)
-    private deprecatedUserModel: Model<DeprecatedUserDocument>,
+    private userModel: UserModel,
   ) {}
 
   /** Get words by given query */
@@ -35,17 +34,9 @@ export class AuthService {
         ticket.getPayload(),
       )
 
-      const doc = await this.deprecatedUserModel
-        .find(oauthPayload.toFind())
-        .limit(1)
-        .exec()
-
-      if (doc.length !== 1)
-        throw new Error(
-          `Length of the returned data should be 1, but we got "${doc.length}"`,
-        )
-
-      return AccessTokenDomain.fromUser(UserDomain.fromMdb(doc[0]))
+      return AccessTokenDomain.fromUser(
+        await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
+      )
     } catch (error) {
       throw new Error('Invalid Credential')
     }

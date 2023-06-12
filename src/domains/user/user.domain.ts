@@ -1,6 +1,10 @@
-import { DeprecatedUserDocument } from '@/schemas/deprecated-user.schema'
+import {
+  DeprecatedUserDocument,
+  UserModel,
+} from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
+import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
 
 export class UserDomain {
   private readonly props: Partial<IUser>
@@ -25,6 +29,25 @@ export class UserDomain {
       languagePreference: 'en',
       dateAdded: new Date().valueOf(),
     })
+  }
+
+  /** Returns user domain with payload domain. If no such user exists, it is considered a new user
+   * and will create a user & return the user domain.
+   */
+  static async fromOauthPayload(
+    oauthPayload: OauthPayloadDomain,
+    userModel: UserModel,
+  ): Promise<UserDomain> {
+    const userDoc = await userModel.find(oauthPayload.toFind()).limit(1).exec()
+    if (userDoc.length > 1)
+      throw new Error('Two or more users have the same email addresses')
+    if (userDoc.length === 0) {
+      // no user found. create one
+      return UserDomain.fromMdb(
+        await oauthPayload.toUserModel(userModel).save(),
+      )
+    }
+    return UserDomain.fromMdb(userDoc[0])
   }
 
   static fromMdb(props: DeprecatedUserDocument): UserDomain {
