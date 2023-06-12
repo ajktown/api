@@ -4,21 +4,22 @@ import {
 } from '@/domains/auth/access-token.domain'
 import { envLambda } from '@/lambdas/get-env.lambda'
 
-interface GetAuthPrepResInfo {
-  env: {
-    currentEnv: string // StrictlyEnv
-    isProduction: boolean
-    available: string[]
-  }
-}
-interface PrivateGetAuthPrepResYesSignedIn extends GetAuthPrepResInfo {
-  isSignedIn: true
-  signedInUserInfo: IOauthPayload
+interface GetAuthPrepEnvInfo {
+  currentEnv: string // StrictlyEnv
+  isProduction: boolean
+  available: string[]
 }
 
-interface PrivateGetAuthPrepResNoSignedIn extends GetAuthPrepResInfo {
+interface PrivateGetAuthPrepResYesSignedIn {
+  isSignedIn: true
+  signedInUserInfo: IOauthPayload
+  env: GetAuthPrepEnvInfo
+}
+
+interface PrivateGetAuthPrepResNoSignedIn {
   isSignedIn: false
   signedInUserInfo: null
+  env: GetAuthPrepEnvInfo
 }
 
 export type GetAuthPrepRes =
@@ -32,13 +33,11 @@ export class AuthPrepDomain {
     this.props = props
   }
 
-  private static prepareEnv(): GetAuthPrepResInfo {
+  private static prepareEnv(): GetAuthPrepEnvInfo {
     return {
-      env: {
-        currentEnv: envLambda.mode.get(),
-        isProduction: envLambda.mode.isProduct(),
-        available: envLambda.mode.getList(),
-      },
+      currentEnv: envLambda.mode.get(),
+      isProduction: envLambda.mode.isProduct(),
+      available: envLambda.mode.getList(),
     }
   }
 
@@ -46,7 +45,7 @@ export class AuthPrepDomain {
     return new AuthPrepDomain({
       isSignedIn: true,
       signedInUserInfo: atd.toDetailedInfo(),
-      ...this.prepareEnv(),
+      env: this.prepareEnv(),
     })
   }
 
@@ -54,7 +53,7 @@ export class AuthPrepDomain {
     return new AuthPrepDomain({
       isSignedIn: false,
       signedInUserInfo: null,
-      ...this.prepareEnv(),
+      env: this.prepareEnv(),
     })
   }
 
