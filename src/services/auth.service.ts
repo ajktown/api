@@ -49,8 +49,9 @@ export class AuthService {
   /** Returns AuthPrepDomain that contains sign in information of any requester. */
   async getAuthPrep(req: Request): Promise<AuthPrepDomain> {
     try {
-      const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-      return AuthPrepDomain.fromAtd(atd)
+      return AuthPrepDomain.fromAtd(
+        await AccessTokenDomain.fromReq(req, this.jwtService),
+      )
     } catch {
       return AuthPrepDomain.fromFailedSignIn()
     }
