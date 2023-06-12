@@ -41,7 +41,7 @@ export class AuthPrepDomain {
     }
   }
 
-  static async fromAtd(atd: AccessTokenDomain): Promise<AuthPrepDomain> {
+  static fromAtd(atd: AccessTokenDomain): AuthPrepDomain {
     return new AuthPrepDomain({
       isSignedIn: true,
       signedInUserInfo: atd.toDetailedInfo(),
@@ -49,7 +49,7 @@ export class AuthPrepDomain {
     })
   }
 
-  static async fromFailedSignIn(): Promise<AuthPrepDomain> {
+  static fromFailedSignIn(): AuthPrepDomain {
     return new AuthPrepDomain({
       isSignedIn: false,
       signedInUserInfo: null,
