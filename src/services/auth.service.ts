@@ -3,7 +3,6 @@ import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
-import { GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
   DeprecatedUserSchemaProps,
@@ -12,7 +11,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
-import { envLambda } from '@/lambdas/get-env.lambda'
+import { AuthPrepDomain } from '@/domains/auth/auth-prep.domain'
 
 @Injectable()
 export class AuthService {
@@ -51,29 +50,12 @@ export class AuthService {
    * It is important that at this point, this getAuthPrep does NOT depend on the connection
    * to the database.
    */
-  // TODO: Return AuthPrepDomain with returning logic inside of the domain
-  async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {
+  async getAuthPrep(req: Request): Promise<AuthPrepDomain> {
     try {
       const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-      return {
-        isSignedIn: true,
-        signedInUserInfo: atd.toDetailedInfo(),
-        env: {
-          currentEnv: envLambda.mode.get(),
-          isProduction: envLambda.mode.isProduct(),
-          available: envLambda.mode.getList(),
-        },
-      }
+      return AuthPrepDomain.fromAtd(atd)
     } catch {
-      return {
-        isSignedIn: false,
-        signedInUserInfo: null,
-        env: {
-          currentEnv: envLambda.mode.get(),
-          isProduction: envLambda.mode.isProduct(),
-          available: envLambda.mode.getList(),
-        },
-      }
+      return AuthPrepDomain.fromFailedSignIn()
     }
   }
 }

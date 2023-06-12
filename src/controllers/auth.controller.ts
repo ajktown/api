@@ -51,6 +51,6 @@ export class AuthController {
 
   @Get(AuthControllerPath.GetAuthPrep)
   async getAuthPrep(@Req() req: Request) {
-    return this.authService.getAuthPrep(req)
+    return (await this.authService.getAuthPrep(req)).toResDTO()
   }
 }
