@@ -40,7 +40,7 @@ export class UserDomain {
   ): Promise<UserDomain> {
     const userDoc = await userModel.find(oauthPayload.toFind()).limit(1).exec()
     if (userDoc.length > 1)
-      throw new Error('Two or more users have the same email addresses')
+      throw new Error('[Fatal] Two or more users have the same email addresses')
     if (userDoc.length === 0) {
       // no user found. create one
       return UserDomain.fromMdb(
