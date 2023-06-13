@@ -14,9 +14,6 @@ function cleanup() {
   docker rmi 671093793941.dkr.ecr.$AWS_TOKYO_REGION.amazonaws.com/ajktown/api:latest
 }
 
-# It is a must as this script is contained with the directory "script"
-cd ..
-
 echo "👀 Signing into ECR ..."
 AWS_TOKYO_REGION="ap-northeast-1"
 aws ecr get-login-password \
