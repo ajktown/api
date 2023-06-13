@@ -5,6 +5,7 @@ import { AuthService } from '@/services/auth.service'
 import { Request, Response } from 'express'
 import { getResWithHttpCookieLambda } from '@/lambdas/get-res-with-http-cookie.lambda'
 import { getResWithRemovedHttpCookieLambda } from '@/lambdas/get-res-with-removed-http-cookie.lambda'
+import { JwtService } from '@nestjs/jwt'
 
 export enum AuthControllerPath {
   PostSignOut = `auth/sign-out`,
@@ -15,7 +16,10 @@ export enum AuthControllerPath {
 
 @Controller(AjkTownApiVersion.V1)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post(AuthControllerPath.PostSignOut)
   async postSignOut(@Res() response: Response) {
@@ -29,18 +33,24 @@ export class AuthController {
     @Body() reqDto: PostAuthGoogleBodyDTO,
     @Res() response: Response,
   ) {
-    const data = await this.authService.byGoogle(reqDto)
-    getResWithHttpCookieLambda(response, data).send({ message: 'OK' })
+    const atd = await this.authService.byGoogle(reqDto)
+    getResWithHttpCookieLambda(
+      response,
+      await atd.toAccessToken(this.jwtService),
+    ).send({ message: 'OK' })
   }
 
   @Post(AuthControllerPath.PostDevTokenAuth)
   async postDevAuth(@Res() response: Response) {
-    const data = await this.authService.byDevToken()
-    getResWithHttpCookieLambda(response, data).send({ message: 'OK' })
+    const atd = await this.authService.byDevToken()
+    getResWithHttpCookieLambda(
+      response,
+      await atd.toAccessToken(this.jwtService),
+    ).send({ message: 'OK' })
   }
 
   @Get(AuthControllerPath.GetAuthPrep)
   async getAuthPrep(@Req() req: Request) {
-    return this.authService.getAuthPrep(req)
+    return (await this.authService.getAuthPrep(req)).toResDTO()
   }
 }

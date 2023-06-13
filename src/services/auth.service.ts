@@ -3,29 +3,26 @@ import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
 import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
-import { PostOauthRes } from '@/responses/post-auth-oauth.res'
-import { GetAuthPrepRes } from '@/responses/get-who-am-i.res'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
 import {
-  DeprecatedUserDocument,
   DeprecatedUserSchemaProps,
+  UserModel,
 } from '@/schemas/deprecated-user.schema'
-import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
-import { envLambda } from '@/lambdas/get-env.lambda'
+import { AuthPrepDomain } from '@/domains/auth/auth-prep.domain'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     @InjectModel(DeprecatedUserSchemaProps.name)
-    private deprecatedUserModel: Model<DeprecatedUserDocument>,
+    private userModel: UserModel,
   ) {}
 
   /** Get words by given query */
-  async byGoogle(query: PostAuthGoogleBodyDTO): Promise<PostOauthRes> {
+  async byGoogle(query: PostAuthGoogleBodyDTO): Promise<AccessTokenDomain> {
     try {
       const ticket = await new OAuth2Client(query.clientId).verifyIdToken({
         idToken: query.credential,
@@ -36,55 +33,27 @@ export class AuthService {
         ticket.getPayload(),
       )
 
-      const doc = await this.deprecatedUserModel
-        .find(oauthPayload.toFind())
-        .limit(1)
-        .exec()
-
-      if (doc.length !== 1)
-        throw new Error(
-          `Length of the returned data should be 1, but we got "${doc.length}"`,
-        )
-
       return AccessTokenDomain.fromUser(
-        UserDomain.fromMdb(doc[0]),
-      ).toAccessToken(this.jwtService)
+        await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
+      )
     } catch (error) {
       throw new Error('Invalid Credential')
     }
   }
 
   /** Attaches HttpOnly Token for dev-user */
-  async byDevToken(): Promise<PostOauthRes> {
-    return AccessTokenDomain.fromUser(UserDomain.underDevEnv()).toAccessToken(
-      this.jwtService,
-    )
+  async byDevToken(): Promise<AccessTokenDomain> {
+    return AccessTokenDomain.fromUser(UserDomain.underDevEnv())
   }
 
-  /** Returns the basic data of the currently signed user, if signed in.
-   * It is important that at this point, this getAuthPrep does NOT depend on the connection
-   * to the database.
-   */
-  async getAuthPrep(req: Request): Promise<GetAuthPrepRes> {
+  /** Returns AuthPrepDomain that contains sign in information of any requester. */
+  async getAuthPrep(req: Request): Promise<AuthPrepDomain> {
     try {
-      const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-      return {
-        isSignedIn: true,
-        signedInUserInfo: atd.toDetailedInfo(),
-        env: {
-          currentEnv: envLambda.mode.get(),
-          available: envLambda.mode.getList(),
-        },
-      }
+      return AuthPrepDomain.fromAtd(
+        await AccessTokenDomain.fromReq(req, this.jwtService),
+      )
     } catch {
-      return {
-        isSignedIn: false,
-        signedInUserInfo: null,
-        env: {
-          currentEnv: envLambda.mode.get(),
-          available: envLambda.mode.getList(),
-        },
-      }
+      return AuthPrepDomain.fromFailedSignIn()
     }
   }
 }
