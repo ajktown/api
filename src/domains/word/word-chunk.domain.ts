@@ -97,10 +97,13 @@ export class WordChunkDomain {
       wordsRes,
       this.query,
     )
+
+    const slicedWords = wordsRes.slice(sliceFrom, sliceUntil)
     return {
       pagination: pagination,
       semester: this.semesterDomain?.toResDTO(),
-      words: wordsRes.slice(sliceFrom, sliceUntil),
+      wordIds: slicedWords.map((word) => word.id),
+      words: slicedWords,
     }
   }
 
@@ -109,7 +112,7 @@ export class WordChunkDomain {
     return {
       pagination: res.pagination,
       semester: res.semester,
-      wordIds: res.words.map((word) => word.id),
+      wordIds: res.wordIds,
     }
   }
 }
