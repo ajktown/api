@@ -4,5 +4,6 @@ import { PaginationRoot } from '@/handlers/get-pagination.handler'
 
 export interface GetWordsRes extends PaginationRoot {
   semester: Partial<ISemester> | undefined
+  wordIds: string[]
   words: Partial<IWord>[]
 }
