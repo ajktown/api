@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Sign into ECR, build the image, and push it to ECR with latest tag
+# Runs a local container with the latest image.
 # ! Do not contain any information
 # ! Depends on .env file that has no double quotation marks
 # TODO: Only works when the .env ENV is prod, as it fails to connect to local mdb container.
