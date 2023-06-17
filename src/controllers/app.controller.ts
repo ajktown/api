@@ -1,12 +1,13 @@
 import { Controller, Get } from '@nestjs/common'
 import { AppService } from '@/services/app.service'
-import { AjkTownApiVersion } from './index.interface'
 
-enum ApiHomePath {
+export enum ApiHomePath {
+  // Unlike other api paths with mandatory /api prefix, this is the only one that doesn't have it.
+  // Checkout src/main.ts for more details.
   Home = ``,
   HomeHelloWorld = `hello-world`,
 }
-@Controller(AjkTownApiVersion.V1)
+@Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 

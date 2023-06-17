@@ -4,7 +4,7 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common'
-import { AppController } from '@/controllers/app.controller'
+import { ApiHomePath, AppController } from '@/controllers/app.controller'
 import { AppService } from '@/services/app.service'
 import { WordModule } from './modules/word.module'
 import { AuthMiddleware } from './middleware/auth.middleware'
@@ -34,6 +34,14 @@ export class MainModule implements NestModule {
       .apply(AuthMiddleware)
       .exclude(
         // TODO: This should be handled by other source with a good list.
+        {
+          path: ApiHomePath.Home,
+          method: RequestMethod.GET,
+        },
+        {
+          path: ApiHomePath.HomeHelloWorld,
+          method: RequestMethod.GET,
+        },
         {
           path: AjkTownApiVersion.V1 + '/' + AuthControllerPath.PostSignOut,
           method: RequestMethod.POST,
