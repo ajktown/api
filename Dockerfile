@@ -6,5 +6,6 @@ RUN yarn
 
 RUN yarn build
 
-EXPOSE 3000
+# TODO: Should dynamically set the port from the env file
+EXPOSE 8000
 ENTRYPOINT [ "yarn", "start" ]
