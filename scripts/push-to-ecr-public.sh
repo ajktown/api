@@ -22,5 +22,5 @@ docker tag $tag_name $REPOSITORY_URI:latest
 echo "👀 Pushing the image to AWS ECR ..."
 docker push $REPOSITORY_URI:latest
 
-echo "🧹 Cleaning up ..."
+echo "👀 Cleaning up ..."
 docker rmi $REPOSITORY_URI:latest
