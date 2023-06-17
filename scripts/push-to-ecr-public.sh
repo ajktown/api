@@ -7,8 +7,8 @@ REPOSITORY_URI=public.ecr.aws/ajktown/api     #
 AWS_REGION="us-east-1" # Fixed for public ECR #
 ###############################################
 
-echo "👀 Signing into ECR ..."
-aws ecr get-login-password \
+echo "👀 Signing into Public ECR ..."
+aws ecr-public get-login-password \
   --region $AWS_REGION \
   | docker login \
   --username "AWS" \
