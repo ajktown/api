@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { NextFunction, Request, Response } from 'express'
 
-// TODO: When certain request has arrived & has only half of the access token period, 
+// TODO: When certain request has arrived & has only half of the access token period,
 // We should refresh the access token
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
