@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator'
-import { intoBoolean } from './index.validator'
+import { intoBoolean, intoNumber } from './index.validator'
 
 // ! Security Warning:
 // UserId must not be here. End user cannot set userId with their own.
@@ -36,7 +36,7 @@ export class PostWordBodyDTO {
   @IsArray()
   tags: string[]
 
-  @Transform(({ value }) => Number(value))
+  @Transform(intoNumber)
   @IsNumber()
   @IsOptional()
   dateAdded: number

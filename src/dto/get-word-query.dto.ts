@@ -9,7 +9,7 @@ import {
 import { IWord } from '@/domains/word/index.interface'
 import { GetReqDTORoot } from './index.root'
 import { Transform } from 'class-transformer'
-import { intoBoolean } from './index.validator'
+import { intoBoolean, intoNumber } from './index.validator'
 
 type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
 export class GetWordQueryDTO
@@ -32,7 +32,7 @@ export class GetWordQueryDTO
   @IsArray()
   languageCodes: GlobalLanguageCode[]
 
-  @Transform(({ value }) => Number(value))
+  @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
   semester: number
@@ -58,7 +58,7 @@ export class GetWordQueryDTO
   @IsString()
   example: string
 
-  @Transform(({ value }) => Number(value))
+  @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
   daysAgo: number
@@ -67,7 +67,7 @@ export class GetWordQueryDTO
   @IsArray()
   tags: string[]
 
-  @Transform(({ value }) => Number(value))
+  @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
   dateAdded: number
