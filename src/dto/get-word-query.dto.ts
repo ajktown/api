@@ -9,6 +9,7 @@ import {
 import { IWord } from '@/domains/word/index.interface'
 import { GetReqDTORoot } from './index.root'
 import { Transform } from 'class-transformer'
+import { intoBoolean } from './index.validator'
 
 type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
 export class GetWordQueryDTO
@@ -36,6 +37,7 @@ export class GetWordQueryDTO
   @IsNumber()
   semester: number
 
+  @Transform(intoBoolean)
   @IsOptional()
   @IsBoolean()
   isFavorite: boolean

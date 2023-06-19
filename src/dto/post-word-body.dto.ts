@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator'
+import { intoBoolean } from './index.validator'
 
 // ! Security Warning:
 // UserId must not be here. End user cannot set userId with their own.
@@ -16,6 +17,7 @@ export class PostWordBodyDTO {
   @IsString()
   languageCode: GlobalLanguageCode
 
+  @Transform(intoBoolean)
   @IsBoolean()
   isFavorite: boolean
 
