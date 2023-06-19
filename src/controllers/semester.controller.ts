@@ -29,7 +29,7 @@ export class SemesterController {
   async getSemesterByCode(@Param('code') code: string, @Req() req: Request) {
     return (
       await this.semesterService.getSemesterByCode(
-        parseInt(code),
+        parseInt(code), // TODO: Eventually the param will be also converted to number beforehand.
         await AccessTokenDomain.fromReq(req, this.jwtService),
       )
     ).toResDTO()

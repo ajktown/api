@@ -81,11 +81,9 @@ export class SupportDomain {
   }
 
   /** Removes given semester within the support */
-  removeSemester(semester: number | string): this {
+  removeSemester(semester: number): this {
     const newSemesters = new Set(this.props.semesters)
-    newSemesters.delete(
-      typeof semester === 'number' ? semester : parseInt(semester),
-    )
+    newSemesters.delete(semester)
     this.props.semesters = Array.from(newSemesters)
 
     return this

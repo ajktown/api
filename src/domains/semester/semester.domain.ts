@@ -14,11 +14,8 @@ export class SemesterDomain {
   }
 
   private constructor(atd: AccessTokenDomain, props: Partial<ISemester>) {
-    this.props = {
-      id: this.buildIdConstructor(atd, props.code),
-      ...props,
-      code: typeof props.code === 'string' ? parseInt(props.code) : props.code,
-    }
+    this.props = props
+    this.props.id = this.buildIdConstructor(atd, props.code)
   }
 
   get semester() {

@@ -8,12 +8,12 @@ export class PaginationReqDTORoot {
   @Transform(intoNumber)
   @IsNumber()
   @IsOptional()
-  pageIndex: string
+  pageIndex: number
 
   @Transform(intoNumber)
   @IsNumber()
   @IsOptional()
-  itemsPerPage: string
+  itemsPerPage: number
 }
 
 export class GetReqDTORoot extends PaginationReqDTORoot {
