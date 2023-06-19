@@ -7,7 +7,7 @@ import { Request } from 'express'
 
 enum SemesterControllerPath {
   GetSemesters = `semesters`,
-  GetSemesterById = `semesters/:id`,
+  GetSemesterByCode = `semesters/:code`, // TODO: Delete me later
 }
 @Controller(AjkTownApiVersion.V1)
 export class SemesterController {
@@ -25,8 +25,8 @@ export class SemesterController {
     ).toResDTO()
   }
 
-  @Get(SemesterControllerPath.GetSemesterById)
-  async getSemesterById(@Param('id') code: string, @Req() req: Request) {
+  @Get(SemesterControllerPath.GetSemesterByCode)
+  async getSemesterByCode(@Param('code') code: string, @Req() req: Request) {
     return (
       await this.semesterService.getSemesterByCode(
         parseInt(code),
