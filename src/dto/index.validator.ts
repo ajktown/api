@@ -1,7 +1,7 @@
 /** Convert into boolean. Use ONLY after @Transform(intoBoolean) */
 export const intoBoolean = ({ value }: any): boolean => {
-  if (value === 'true') return true
-  if (value === 'false') return false
+  if (value === true || value === 'true') return true
+  if (value === false || value === 'false') return false
   throw new Error('Invalid boolean value')
 }
 
