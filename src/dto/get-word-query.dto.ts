@@ -9,7 +9,7 @@ import {
 import { IWord } from '@/domains/word/index.interface'
 import { GetReqDTORoot } from './index.root'
 import { Transform } from 'class-transformer'
-import { intoBoolean, intoNumber } from './index.validator'
+import { intoBoolean, intoNumber, intoArray } from './index.validator'
 
 type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
 export class GetWordQueryDTO
@@ -28,6 +28,7 @@ export class GetWordQueryDTO
   @IsString()
   languageCode: GlobalLanguageCode
 
+  @Transform(intoArray)
   @IsOptional()
   @IsArray()
   languageCodes: GlobalLanguageCode[]
@@ -63,6 +64,7 @@ export class GetWordQueryDTO
   @IsNumber()
   daysAgo: number
 
+  @Transform(intoArray)
   @IsOptional()
   @IsArray()
   tags: string[]

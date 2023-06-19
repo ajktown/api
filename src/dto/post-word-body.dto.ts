@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator'
-import { intoBoolean, intoNumber } from './index.validator'
+import { intoArray, intoBoolean, intoNumber } from './index.validator'
 
 // ! Security Warning:
 // UserId must not be here. End user cannot set userId with their own.
@@ -33,6 +33,7 @@ export class PostWordBodyDTO {
   @IsString()
   example: string
 
+  @Transform(intoArray)
   @IsArray()
   tags: string[]
 

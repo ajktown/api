@@ -1,6 +1,6 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { IsArray, IsBoolean, IsString } from 'class-validator'
-import { intoBoolean } from './index.validator'
+import { intoArray, intoBoolean } from './index.validator'
 import { Transform } from 'class-transformer'
 
 // ! Security Warning:
@@ -26,6 +26,7 @@ export class PutWordByIdBodyDTO {
   @IsString()
   example: string
 
+  @Transform(intoArray)
   @IsArray()
   tags: string[]
 }
