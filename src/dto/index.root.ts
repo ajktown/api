@@ -1,14 +1,15 @@
+import { Transform } from 'class-transformer'
 import { IsNumber, IsOptional, IsString } from 'class-validator'
 
 // TODO: The limit has to be set by default if not given, for less traffics (i.e 1000).
 
 export class PaginationReqDTORoot {
-  // TODO: This was not parsed...
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   @IsOptional()
   pageIndex: string
 
-  // TODO: This was not parsed...
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   @IsOptional()
   itemsPerPage: string

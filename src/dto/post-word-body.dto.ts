@@ -1,4 +1,5 @@
 import { GlobalLanguageCode } from '@/global.interface'
+import { Transform } from 'class-transformer'
 import {
   IsArray,
   IsBoolean,
@@ -33,6 +34,7 @@ export class PostWordBodyDTO {
   @IsArray()
   tags: string[]
 
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   @IsOptional()
   dateAdded: number

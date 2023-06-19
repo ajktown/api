@@ -8,6 +8,7 @@ import {
 } from 'class-validator'
 import { IWord } from '@/domains/word/index.interface'
 import { GetReqDTORoot } from './index.root'
+import { Transform } from 'class-transformer'
 
 type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
 export class GetWordQueryDTO
@@ -30,8 +31,7 @@ export class GetWordQueryDTO
   @IsArray()
   languageCodes: GlobalLanguageCode[]
 
-  // TODO: This filtering does not really work :(
-  // TODO: Any Request DTO must work and convert the data to the correct type ...!!!!!!!!!
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   @IsNumber()
   semester: number
@@ -56,6 +56,7 @@ export class GetWordQueryDTO
   @IsString()
   example: string
 
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   @IsNumber()
   daysAgo: number
@@ -64,6 +65,7 @@ export class GetWordQueryDTO
   @IsArray()
   tags: string[]
 
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   @IsNumber()
   dateAdded: number

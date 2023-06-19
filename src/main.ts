@@ -3,6 +3,7 @@ import { envLambda, SupportedEnvAttr } from './lambdas/get-env.lambda'
 import { MainModule } from './main.module'
 import * as cookieParser from 'cookie-parser'
 import { ApiHomePath } from './controllers/app.controller'
+import { ValidationPipe } from '@nestjs/common'
 
 const PRIVATE_GLOBAL_PREFIX = '/api'
 const PRIVATE_GLOBAL_PREFIX_EXCLUDE = [
@@ -24,6 +25,7 @@ const bootstrap = async () => {
   })
 
   app.use(cookieParser())
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
 
   const port = envLambda.get(
     SupportedEnvAttr.ListeningPort,
