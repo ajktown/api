@@ -23,10 +23,9 @@ interface PaginationRes extends PaginationRoot {
   sliceUntil: number
 }
 
-const getConfirmedPageIndex = (query: GetReqDTORoot): number => {
-  const parsed = parseInt(query.pageIndex)
-  if (!Number.isInteger(parsed) || parsed < 0) return 0
-  return parsed
+const getConfirmedPageIndex = ({ pageIndex }: GetReqDTORoot): number => {
+  if (!Number.isInteger(pageIndex) || pageIndex < 0) return 0
+  return pageIndex
 }
 
 export function getPaginationHandler<T extends any[]>(
@@ -34,8 +33,7 @@ export function getPaginationHandler<T extends any[]>(
   query: GetReqDTORoot,
 ): PaginationRes {
   const confirmedPageIndex = getConfirmedPageIndex(query)
-  const confirmedLimit =
-    parseInt(query.itemsPerPage) || PRIVATE_DEFAULT_ITEMS_PER_PAGE
+  const confirmedLimit = query.itemsPerPage || PRIVATE_DEFAULT_ITEMS_PER_PAGE
 
   const confirmedSliceIndex = confirmedPageIndex * confirmedLimit
   const confirmedSliceEndIndex = confirmedSliceIndex + confirmedLimit

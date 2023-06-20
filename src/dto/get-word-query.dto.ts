@@ -8,6 +8,8 @@ import {
 } from 'class-validator'
 import { IWord } from '@/domains/word/index.interface'
 import { GetReqDTORoot } from './index.root'
+import { Transform } from 'class-transformer'
+import { intoBoolean, intoNumber, intoArray } from './index.validator'
 
 type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
 export class GetWordQueryDTO
@@ -26,16 +28,17 @@ export class GetWordQueryDTO
   @IsString()
   languageCode: GlobalLanguageCode
 
+  @Transform(intoArray)
   @IsOptional()
   @IsArray()
   languageCodes: GlobalLanguageCode[]
 
-  // TODO: This filtering does not really work :(
-  // TODO: Any Request DTO must work and convert the data to the correct type ...!!!!!!!!!
+  @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
   semester: number
 
+  @Transform(intoBoolean)
   @IsOptional()
   @IsBoolean()
   isFavorite: boolean
@@ -56,14 +59,17 @@ export class GetWordQueryDTO
   @IsString()
   example: string
 
+  @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
   daysAgo: number
 
+  @Transform(intoArray)
   @IsOptional()
   @IsArray()
   tags: string[]
 
+  @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
   dateAdded: number
