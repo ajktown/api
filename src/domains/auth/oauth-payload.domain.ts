@@ -1,6 +1,6 @@
 import {
   UserDoc,
-  UsersProps,
+  UserProps,
   UserModel,
 } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
@@ -52,7 +52,7 @@ export class OauthPayloadDomain {
   }
 
   toUserModel(userModel: UserModel): UserDoc {
-    const props: UsersProps = {
+    const props: UserProps = {
       federalProvider: this.props.federalProvider,
       federalID: this.props.federalId,
       firstName: this.props.firstName,

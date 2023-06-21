@@ -6,7 +6,7 @@ import {
   SchemaCollectionName,
 } from './index.collections'
 
-export type UserDoc = HydratedDocument<UsersProps, DataBasicsDate>
+export type UserDoc = HydratedDocument<UserProps, DataBasicsDate>
 
 export type UserModel = Model<UserDoc>
 
@@ -14,7 +14,7 @@ export type UserModel = Model<UserDoc>
   collection: SchemaCollectionName.Users,
   timestamps: defaultSchemaTimestampsConfig,
 })
-export class UsersProps {
+export class UserProps {
   @Prop()
   federalProvider: string // "google" only
 
@@ -40,4 +40,4 @@ export class UsersProps {
   dateAdded: number // 1602581150116
 }
 
-export const UsersSchema = SchemaFactory.createForClass(UsersProps)
+export const UsersSchema = SchemaFactory.createForClass(UserProps)
