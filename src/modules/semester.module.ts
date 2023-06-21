@@ -7,8 +7,8 @@ import {
 import { SemesterController } from '@/controllers/semester.controller'
 import { SemesterService } from '@/services/semester.service'
 import {
-  DeprecatedSupportSchemaProps,
-  DeprecatedSupportsSchema,
+  SupportProps,
+  SupportsSchema,
 } from '@/schemas/deprecated-supports.schema'
 import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
@@ -18,8 +18,8 @@ import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
     MongooseModule.forFeature([
       { name: DeprecatedWordSchemaProps.name, schema: DeprecatedWordSchema },
       {
-        name: DeprecatedSupportSchemaProps.name,
-        schema: DeprecatedSupportsSchema,
+        name: SupportProps.name,
+        schema: SupportsSchema,
       },
     ]),
   ],

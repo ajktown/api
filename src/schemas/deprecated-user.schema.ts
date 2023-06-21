@@ -16,7 +16,7 @@ export type DeprecatedUserDocument = HydratedDocument<
 export type UserModel = Model<DeprecatedUserDocument>
 
 @Schema({
-  collection: SchemaCollectionName.DeprecatedUser,
+  collection: SchemaCollectionName.Users,
   timestamps: defaultSchemaTimestampsConfig,
 })
 export class DeprecatedUserSchemaProps {

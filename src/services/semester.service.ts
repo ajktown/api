@@ -11,7 +11,7 @@ import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { SemesterDomain } from '@/domains/semester/semester.domain'
 import {
-  DeprecatedSupportSchemaProps,
+  SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '@/domains/support/support.domain'
@@ -22,7 +22,7 @@ export class SemesterService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
     private wordModel: WordModel,
-    @InjectModel(DeprecatedSupportSchemaProps.name)
+    @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
     private getWordQueryFactory: GetWordQueryFactory,
   ) {}

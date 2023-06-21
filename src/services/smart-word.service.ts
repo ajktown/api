@@ -3,7 +3,7 @@ import { WordDomain } from '@/domains/word/word.domain'
 import { SmartPostWordBodyDTO } from '@/dto/smart-post-word-body.dto'
 import { RandomSampleToWordPrompt } from '@/prompts/random-sentence-to-word.prompt'
 import {
-  DeprecatedSupportSchemaProps,
+  SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import {
@@ -18,7 +18,7 @@ export class SmartWordService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
     private deprecatedWordModel: WordModel,
-    @InjectModel(DeprecatedSupportSchemaProps.name)
+    @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
     private randomSampleToWordPrompt: RandomSampleToWordPrompt,
   ) {}

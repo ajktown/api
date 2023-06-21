@@ -16,7 +16,7 @@ export type DeprecatedWordDocument = HydratedDocument<
 export type WordModel = Model<DeprecatedWordDocument>
 
 @Schema({
-  collection: SchemaCollectionName.DeprecatedWords,
+  collection: SchemaCollectionName.Words,
   timestamps: defaultSchemaTimestampsConfig,
 })
 export class DeprecatedWordSchemaProps {

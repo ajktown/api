@@ -7,7 +7,7 @@ import { PutWordByIdBodyDTO } from '@/dto/put-word-bofy.dto'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
-  DeprecatedSupportSchemaProps,
+  SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import {
@@ -22,7 +22,7 @@ export class WordService {
   constructor(
     @InjectModel(DeprecatedWordSchemaProps.name)
     private wordModel: WordModel,
-    @InjectModel(DeprecatedSupportSchemaProps.name)
+    @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,
