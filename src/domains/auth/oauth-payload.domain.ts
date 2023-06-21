@@ -1,6 +1,6 @@
 import {
-  DeprecatedUserDocument,
-  DeprecatedUserSchemaProps,
+  UserDoc,
+  UsersProps,
   UserModel,
 } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
@@ -45,14 +45,14 @@ export class OauthPayloadDomain {
     })
   }
 
-  toFind(): FilterQuery<Partial<DeprecatedUserDocument>> {
+  toFind(): FilterQuery<Partial<UserDoc>> {
     return {
       email: this.email,
     }
   }
 
-  toUserModel(userModel: UserModel): DeprecatedUserDocument {
-    const props: DeprecatedUserSchemaProps = {
+  toUserModel(userModel: UserModel): UserDoc {
+    const props: UsersProps = {
       federalProvider: this.props.federalProvider,
       federalID: this.props.federalId,
       firstName: this.props.firstName,

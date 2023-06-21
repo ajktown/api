@@ -6,20 +6,15 @@ import {
   SchemaCollectionName,
 } from './index.collections'
 
-// TODO: This is deprecated MongoDB Schema of UserData
+export type UserDoc = HydratedDocument<UsersProps, DataBasicsDate>
 
-export type DeprecatedUserDocument = HydratedDocument<
-  DeprecatedUserSchemaProps,
-  DataBasicsDate
->
-
-export type UserModel = Model<DeprecatedUserDocument>
+export type UserModel = Model<UserDoc>
 
 @Schema({
   collection: SchemaCollectionName.Users,
   timestamps: defaultSchemaTimestampsConfig,
 })
-export class DeprecatedUserSchemaProps {
+export class UsersProps {
   @Prop()
   federalProvider: string // "google" only
 
@@ -45,6 +40,4 @@ export class DeprecatedUserSchemaProps {
   dateAdded: number // 1602581150116
 }
 
-export const DeprecatedUserSchema = SchemaFactory.createForClass(
-  DeprecatedUserSchemaProps,
-)
+export const UsersSchema = SchemaFactory.createForClass(UsersProps)

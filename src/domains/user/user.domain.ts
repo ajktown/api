@@ -1,7 +1,4 @@
-import {
-  DeprecatedUserDocument,
-  UserModel,
-} from '@/schemas/deprecated-user.schema'
+import { UserDoc, UserModel } from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
@@ -50,7 +47,7 @@ export class UserDomain {
     return UserDomain.fromMdb(userDoc[0])
   }
 
-  static fromMdb(props: DeprecatedUserDocument): UserDomain {
+  static fromMdb(props: UserDoc): UserDomain {
     if (typeof props !== 'object') throw new Error('Not Object!')
 
     return new UserDomain({
