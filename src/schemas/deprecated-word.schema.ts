@@ -6,20 +6,15 @@ import {
   SchemaCollectionName,
 } from './index.collections'
 
-// TODO: This is deprecated MongoDB Schema of WordData
+export type WordDoc = HydratedDocument<WordProps, DataBasicsDate>
 
-export type DeprecatedWordDocument = HydratedDocument<
-  DeprecatedWordSchemaProps,
-  DataBasicsDate
->
-
-export type WordModel = Model<DeprecatedWordDocument>
+export type WordModel = Model<WordDoc>
 
 @Schema({
   collection: SchemaCollectionName.Words,
   timestamps: defaultSchemaTimestampsConfig,
 })
-export class DeprecatedWordSchemaProps {
+export class WordProps {
   @Prop({ required: true })
   ownerID: string // the owner id 5f85729......
 
@@ -66,6 +61,4 @@ export class DeprecatedWordSchemaProps {
   // step: number // probably the review record, but not used
 }
 
-export const DeprecatedWordSchema = SchemaFactory.createForClass(
-  DeprecatedWordSchemaProps,
-)
+export const WordsSchema = SchemaFactory.createForClass(WordProps)

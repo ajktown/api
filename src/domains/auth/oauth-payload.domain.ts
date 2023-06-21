@@ -1,8 +1,4 @@
-import {
-  UserDoc,
-  UserProps,
-  UserModel,
-} from '@/schemas/deprecated-user.schema'
+import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
 import { FilterQuery } from 'mongoose'
 

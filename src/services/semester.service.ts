@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import {
-  DeprecatedWordSchemaProps,
-  WordModel,
-} from '@/schemas/deprecated-word.schema'
+import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { SemesterDetailsDomain } from '@/domains/semester/semester-details.domain'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
@@ -20,7 +17,7 @@ import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 @Injectable()
 export class SemesterService {
   constructor(
-    @InjectModel(DeprecatedWordSchemaProps.name)
+    @InjectModel(WordProps.name)
     private wordModel: WordModel,
     @InjectModel(SupportProps.name)
     private supportModel: SupportModel,

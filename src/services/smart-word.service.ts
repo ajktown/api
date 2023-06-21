@@ -6,17 +6,14 @@ import {
   SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
-import {
-  DeprecatedWordSchemaProps,
-  WordModel,
-} from '@/schemas/deprecated-word.schema'
+import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
 @Injectable()
 export class SmartWordService {
   constructor(
-    @InjectModel(DeprecatedWordSchemaProps.name)
+    @InjectModel(WordProps.name)
     private deprecatedWordModel: WordModel,
     @InjectModel(SupportProps.name)
     private supportModel: SupportModel,

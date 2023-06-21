@@ -1,12 +1,12 @@
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
-import { DeprecatedWordSchemaProps } from '@/schemas/deprecated-word.schema'
+import { WordProps } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { FactoryRoot } from './index.root'
 import { FilterQuery, ProjectionType, QueryOptions } from 'mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 
 @Injectable()
-export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> {
+export class GetWordQueryFactory extends FactoryRoot<WordProps> {
   private getFilterForSearchInput(query: GetWordQueryDTO) {
     if (!query.searchInput) return {}
 
@@ -19,7 +19,7 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
   getFilter(
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
-  ): FilterQuery<DeprecatedWordSchemaProps> {
+  ): FilterQuery<WordProps> {
     return {
       ownerID: atd.userId,
       ...this.getFilterForSearchInput(query),
@@ -37,11 +37,11 @@ export class GetWordQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> 
     }
   }
 
-  getProjection(): ProjectionType<DeprecatedWordSchemaProps> {
+  getProjection(): ProjectionType<WordProps> {
     return undefined
   }
 
-  getOptions(query: GetWordQueryDTO): QueryOptions<DeprecatedWordSchemaProps> {
+  getOptions(query: GetWordQueryDTO): QueryOptions<WordProps> {
     if (!query.searchInput) return {}
 
     return {

@@ -1,22 +1,22 @@
-import { DeprecatedWordSchemaProps } from '@/schemas/deprecated-word.schema'
+import { WordProps } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { FactoryRoot } from './index.root'
 import { FilterQuery, ProjectionType, QueryOptions } from 'mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 
 @Injectable()
-export class GetSemesterQueryFactory extends FactoryRoot<DeprecatedWordSchemaProps> {
-  getFilter(atd: AccessTokenDomain): FilterQuery<DeprecatedWordSchemaProps> {
+export class GetSemesterQueryFactory extends FactoryRoot<WordProps> {
+  getFilter(atd: AccessTokenDomain): FilterQuery<WordProps> {
     return {
       ownerID: atd.userId,
     }
   }
 
-  getProjection(): ProjectionType<DeprecatedWordSchemaProps> {
+  getProjection(): ProjectionType<WordProps> {
     return undefined
   }
 
-  getOptions(): QueryOptions<DeprecatedWordSchemaProps> {
+  getOptions(): QueryOptions<WordProps> {
     return {}
   }
 }

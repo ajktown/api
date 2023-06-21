@@ -1,10 +1,6 @@
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GlobalLanguageCode } from '@/global.interface'
-import {
-  DeprecatedWordDocument,
-  DeprecatedWordSchemaProps,
-  WordModel,
-} from '@/schemas/deprecated-word.schema'
+import { WordDoc, WordProps, WordModel } from '@/schemas/deprecated-word.schema'
 import { Model } from 'mongoose'
 import { IWord } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
@@ -53,7 +49,7 @@ export class WordDomain {
     })
   }
 
-  static fromMdb(props: DeprecatedWordDocument): WordDomain {
+  static fromMdb(props: WordDoc): WordDomain {
     if (typeof props !== 'object') throw new Error('Not Object!')
 
     return new WordDomain({
@@ -96,8 +92,8 @@ export class WordDomain {
     return newlyPostedWordDomain
   }
 
-  private toModel(wordModel: WordModel): DeprecatedWordDocument {
-    const docProps: DeprecatedWordSchemaProps = {
+  private toModel(wordModel: WordModel): WordDoc {
+    const docProps: WordProps = {
       language: this.props.languageCode,
       sem: this.props.semester,
       isFavorite: this.props.isFavorite,
@@ -158,7 +154,7 @@ export class WordDomain {
   /** Deletes word from persistence, if access is given */
   async delete(
     atd: AccessTokenDomain,
-    wordModel: Model<DeprecatedWordDocument>,
+    wordModel: Model<WordDoc>,
     supportModel: SupportModel,
   ): Promise<void> {
     if (atd.userId !== this.props.userId) {
