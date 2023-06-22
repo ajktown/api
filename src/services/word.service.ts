@@ -7,22 +7,19 @@ import { PutWordByIdBodyDTO } from '@/dto/put-word-bofy.dto'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
-  DeprecatedSupportSchemaProps,
+  SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
-import {
-  DeprecatedWordSchemaProps,
-  WordModel,
-} from '@/schemas/deprecated-word.schema'
+import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
 @Injectable()
 export class WordService {
   constructor(
-    @InjectModel(DeprecatedWordSchemaProps.name)
+    @InjectModel(WordProps.name)
     private wordModel: WordModel,
-    @InjectModel(DeprecatedSupportSchemaProps.name)
+    @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,

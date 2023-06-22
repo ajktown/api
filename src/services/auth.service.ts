@@ -4,10 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
-import {
-  DeprecatedUserSchemaProps,
-  UserModel,
-} from '@/schemas/deprecated-user.schema'
+import { UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
@@ -17,7 +14,7 @@ import { AuthPrepDomain } from '@/domains/auth/auth-prep.domain'
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    @InjectModel(DeprecatedUserSchemaProps.name)
+    @InjectModel(UserProps.name)
     private userModel: UserModel,
   ) {}
 

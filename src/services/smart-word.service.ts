@@ -3,22 +3,19 @@ import { WordDomain } from '@/domains/word/word.domain'
 import { SmartPostWordBodyDTO } from '@/dto/smart-post-word-body.dto'
 import { RandomSampleToWordPrompt } from '@/prompts/random-sentence-to-word.prompt'
 import {
-  DeprecatedSupportSchemaProps,
+  SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
-import {
-  DeprecatedWordSchemaProps,
-  WordModel,
-} from '@/schemas/deprecated-word.schema'
+import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
 @Injectable()
 export class SmartWordService {
   constructor(
-    @InjectModel(DeprecatedWordSchemaProps.name)
-    private deprecatedWordModel: WordModel,
-    @InjectModel(DeprecatedSupportSchemaProps.name)
+    @InjectModel(WordProps.name)
+    private wordModel: WordModel,
+    @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
     private randomSampleToWordPrompt: RandomSampleToWordPrompt,
   ) {}
@@ -31,6 +28,6 @@ export class SmartWordService {
       await this.randomSampleToWordPrompt.toIWord(smartPostWordReq.givenStr),
     )
 
-    return wordDomain.post(atd, this.deprecatedWordModel, this.supportModel)
+    return wordDomain.post(atd, this.wordModel, this.supportModel)
   }
 }

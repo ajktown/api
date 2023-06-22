@@ -1,8 +1,4 @@
-import {
-  DeprecatedUserDocument,
-  DeprecatedUserSchemaProps,
-  UserModel,
-} from '@/schemas/deprecated-user.schema'
+import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
 import { FilterQuery } from 'mongoose'
 
@@ -45,14 +41,14 @@ export class OauthPayloadDomain {
     })
   }
 
-  toFind(): FilterQuery<Partial<DeprecatedUserDocument>> {
+  toFind(): FilterQuery<Partial<UserDoc>> {
     return {
       email: this.email,
     }
   }
 
-  toUserModel(userModel: UserModel): DeprecatedUserDocument {
-    const props: DeprecatedUserSchemaProps = {
+  toUserModel(userModel: UserModel): UserDoc {
+    const props: UserProps = {
       federalProvider: this.props.federalProvider,
       federalID: this.props.federalId,
       firstName: this.props.firstName,
