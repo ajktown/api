@@ -14,7 +14,7 @@ import { InjectModel } from '@nestjs/mongoose'
 export class SmartWordService {
   constructor(
     @InjectModel(WordProps.name)
-    private deprecatedWordModel: WordModel,
+    private wordModel: WordModel,
     @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
     private randomSampleToWordPrompt: RandomSampleToWordPrompt,
@@ -28,6 +28,6 @@ export class SmartWordService {
       await this.randomSampleToWordPrompt.toIWord(smartPostWordReq.givenStr),
     )
 
-    return wordDomain.post(atd, this.deprecatedWordModel, this.supportModel)
+    return wordDomain.post(atd, this.wordModel, this.supportModel)
   }
 }

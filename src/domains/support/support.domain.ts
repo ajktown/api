@@ -1,9 +1,7 @@
-import { Model } from 'mongoose'
 import { ISupport } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import {
   SupportProps,
-  SupportDoc,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
@@ -89,14 +87,14 @@ export class SupportDomain {
     return this
   }
 
-  toDocument(deprecatedSupportModel: Model<SupportDoc>) {
+  toDocument(supportModel: SupportModel) {
     const docProps: SupportProps = {
       ownerID: this.props.userId,
       sems: this.props.semesters,
       newWordCnt: this.props.newWordCount,
       deletedWordCnt: this.props.deletedWordCount,
     }
-    return new deprecatedSupportModel(docProps)
+    return new supportModel(docProps)
   }
 
   toResDTO(atd: AccessTokenDomain): Partial<ISupport> {

@@ -1,7 +1,6 @@
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GlobalLanguageCode } from '@/global.interface'
 import { WordDoc, WordProps, WordModel } from '@/schemas/deprecated-word.schema'
-import { Model } from 'mongoose'
 import { IWord } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { semesterLambda } from '@/lambdas/semester.lambda'
@@ -154,7 +153,7 @@ export class WordDomain {
   /** Deletes word from persistence, if access is given */
   async delete(
     atd: AccessTokenDomain,
-    wordModel: Model<WordDoc>,
+    wordModel: WordModel,
     supportModel: SupportModel,
   ): Promise<void> {
     if (atd.userId !== this.props.userId) {
