@@ -19,9 +19,9 @@ const privateRootPaths: PathAndMethod[] = [
 // API First version paths
 const privateV1Paths: PathAndMethod[] = [
   [AuthControllerPath.PostSignOut, RequestMethod.POST],
-  [AuthControllerPath.GetAuthPrep, RequestMethod.GET],
   [AuthControllerPath.PostGoogleAuth, RequestMethod.POST],
   [AuthControllerPath.PostDevTokenAuth, RequestMethod.POST],
+  [AuthControllerPath.GetAuthPrep, RequestMethod.GET],
 ]
 
 const getV1Path = ([path, method]: PathAndMethod): PathAndMethod => {
