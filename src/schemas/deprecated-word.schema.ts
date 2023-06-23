@@ -1,5 +1,5 @@
 import { DataBasicsDate } from '@/global.interface'
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument, Model } from 'mongoose'
 import {
   defaultSchemaTimestampsConfig,
@@ -62,3 +62,8 @@ export class WordProps {
 }
 
 export const WordsSchema = SchemaFactory.createForClass(WordProps)
+
+export const wordModelDefinition: ModelDefinition = {
+  name: WordProps.name,
+  schema: WordsSchema,
+}

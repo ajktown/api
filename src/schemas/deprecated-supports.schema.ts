@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument, Model } from 'mongoose'
 import { SchemaCollectionName } from './index.collections'
 
@@ -66,3 +66,8 @@ export class SupportProps {
 }
 
 export const SupportsSchema = SchemaFactory.createForClass(SupportProps)
+
+export const supportsModelDefinition: ModelDefinition = {
+  name: SupportProps.name,
+  schema: SupportsSchema,
+}
