@@ -1,5 +1,5 @@
 import { DataBasicsDate } from '@/global.interface'
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { ModelDefinition, Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { HydratedDocument, Model } from 'mongoose'
 import {
   defaultSchemaTimestampsConfig,
@@ -41,3 +41,8 @@ export class UserProps {
 }
 
 export const UsersSchema = SchemaFactory.createForClass(UserProps)
+
+export const userModelDefinition: ModelDefinition = {
+  name: UserProps.name,
+  schema: UsersSchema,
+}
