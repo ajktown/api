@@ -28,7 +28,7 @@ const getV1Path = ([path, method]: PathAndMethod): PathAndMethod => {
   return [AjkTownApiVersion.V1 + '/' + path, method]
 }
 
-export const excludedPaths: RouteInfo[] = [
+export const authMdlExcludedPaths: RouteInfo[] = [
   ...privateRootPaths,
   ...privateV1Paths.map(getV1Path),
 ].map(([path, method]) => ({ path, method }))

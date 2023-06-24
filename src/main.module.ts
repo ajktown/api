@@ -9,7 +9,7 @@ import { SemesterModule } from './modules/semester.module'
 import { AuthModule } from './modules/auth.module'
 import { JwtModule } from '@nestjs/jwt'
 import { getJwtOptionsLambda } from './lambdas/get-jwt-options.lambda'
-import { excludedPaths } from './constants/excluded-paths.const'
+import { authMdlExcludedPaths } from './constants/auth-mdl-excluded-paths.const'
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ export class MainModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .exclude(...excludedPaths)
+      .exclude(...authMdlExcludedPaths)
       .forRoutes('*')
   }
 }
