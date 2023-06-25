@@ -1,8 +1,6 @@
 import { Transform } from 'class-transformer'
 import { IsNumber, IsOptional, IsString } from 'class-validator'
-import { intoNumber } from './index.validator'
-
-// TODO: The limit has to be set by default if not given, for less traffics (i.e 1000).
+import { intoNumber, intoNumberWithLimit } from './index.validator'
 
 export class PaginationReqDTORoot {
   @Transform(intoNumber)
@@ -10,7 +8,9 @@ export class PaginationReqDTORoot {
   @IsOptional()
   pageIndex: number
 
-  @Transform(intoNumber)
+  @Transform((transformFnParams) =>
+    intoNumberWithLimit({ transformFnParams, max: 1000 }),
+  )
   @IsNumber()
   @IsOptional()
   itemsPerPage: number
