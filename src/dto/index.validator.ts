@@ -13,13 +13,13 @@ export const intoNumber = ({ value }: TransformFnParams): number => {
   throw new Error('Invalid number value')
 }
 
-export const intoNumberWithLimit = (params: {
+export const intoNumberWithMaxLimit = (params: {
   transformFnParams: TransformFnParams
-  max: number
+  maxLimit: number
 }): number => {
   const converted = intoNumber(params.transformFnParams)
-  if (params.max < converted)
-    throw new Error(`Invalid number value. Max: ${params.max}`)
+  if (params.maxLimit < converted)
+    throw new Error(`Invalid number value. Max: ${params.maxLimit}`)
   return converted
 }
 

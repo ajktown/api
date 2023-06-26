@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer'
 import { IsNumber, IsOptional, IsString } from 'class-validator'
-import { intoNumber, intoNumberWithLimit } from './index.validator'
+import { intoNumber, intoNumberWithMaxLimit } from './index.validator'
 
 export class PaginationReqDTORoot {
   @Transform(intoNumber)
@@ -9,7 +9,7 @@ export class PaginationReqDTORoot {
   pageIndex: number
 
   @Transform((transformFnParams) =>
-    intoNumberWithLimit({ transformFnParams, max: 1000 }),
+    intoNumberWithMaxLimit({ transformFnParams, maxLimit: 1000 }),
   )
   @IsNumber()
   @IsOptional()
