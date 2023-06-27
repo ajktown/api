@@ -19,7 +19,7 @@ export const intoNumberWithMaxLimit = (params: {
 }): number => {
   const converted = intoNumber(params.transformFnParams)
   if (params.maxLimit < converted)
-    throw new Error(`Invalid number value. Max: ${params.maxLimit}`)
+    throw new Error(`Exceeded max limit. Got: ${converted} Max Limit: ${params.maxLimit}`)
   return converted
 }
 
