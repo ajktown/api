@@ -16,7 +16,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
-import { PutWordByIdBodyDTO } from '@/dto/put-word-bofy.dto'
+import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 
 export enum WordControllerPath {
   PostWord = `words`,

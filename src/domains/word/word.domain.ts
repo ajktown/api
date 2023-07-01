@@ -6,7 +6,7 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import { semesterLambda } from '@/lambdas/semester.lambda'
 import { SupportModel } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '../support/support.domain'
-import { PutWordByIdBodyDTO } from '@/dto/put-word-bofy.dto'
+import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
