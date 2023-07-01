@@ -3,7 +3,7 @@ import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
-import { PutWordByIdBodyDTO } from '@/dto/put-word-bofy.dto'
+import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
