@@ -7,18 +7,22 @@ import { semesterLambda } from '@/lambdas/semester.lambda'
 import { SupportModel } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '../support/support.domain'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
+import { DomainRoot } from '../index.root'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
 // TODO: every static function and toDocument() or toDTO() could be moved to other files instead. But not decided yet.
 // ! Dependency-free domain
 
-export class WordDomain {
+export class WordDomain extends DomainRoot {
   private readonly props: Partial<IWord>
 
   private constructor(props: Partial<IWord>) {
+    super()
     if (!props.userId) throw new Error('No userId (OwnerID)!')
+
     this.props = props
+    props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
 
     // addedDate is used to sort data.
     const date = props.dateAdded ? new Date(props.dateAdded) : new Date()
