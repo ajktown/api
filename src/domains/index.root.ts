@@ -1,6 +1,6 @@
 export class DomainRoot {
   /** For now it is private */
-  private intoUniqueArray<T>(arr: T[]): T[] {
+  private intoUniqueArray(arr: string[]): string[] {
     return [...new Set(arr)]
   }
 
