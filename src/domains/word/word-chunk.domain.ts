@@ -82,14 +82,11 @@ export class WordChunkDomain {
   }
 
   /** Delete support from persistence if condition is met.
-   * This is an automatic update process and therefore is private
-   * Condition
-   *   1. No words in the semester
-   *   2. Query is semester only (params like pageIndex, itemsPerPage are not included)
-   * */
+   * This is an automatic update process and therefore is private. */
   private async deleteSemesterIfEmptyQuery(supportModel: SupportModel) {
-    if (this.words.length > 0) return
-    if (!this.isSemesterOnlyQuery()) return
+    // Conditions to delete support:
+    if (this.words.length > 0) return // if there is at least one word, semester is still valid
+    if (!this.isSemesterOnlyQuery()) return // if query is not semester only, semester is still valid
 
     const semesterRemovedSupportDomain = (
       await SupportDomain.fromMdb(this.atd, supportModel)
