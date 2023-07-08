@@ -17,6 +17,8 @@ import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
+import { SemesterService } from '@/services/semester.service'
+import { PostWordRes } from '@/responses/post-word.res'
 
 export enum WordControllerPath {
   PostWord = `words`,
@@ -31,13 +33,19 @@ export enum WordControllerPath {
 export class WordController {
   constructor(
     private readonly wordService: WordService,
+    private readonly semesterService: SemesterService,
     private readonly jwtService: JwtService,
   ) {}
 
   @Post(WordControllerPath.PostWord)
   async post(@Req() req: Request, @Body() reqDto: PostWordBodyDTO) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.wordService.post(atd, reqDto)).toResDTO(atd)
+    const response: PostWordRes = {
+      // The order matters postedWord -> semesters, as semesters may be updated after post word.
+      postedWord: (await this.wordService.post(atd, reqDto)).toResDTO(atd),
+      semesters: (await this.semesterService.getSemesters(atd)).toResDTO(),
+    }
+    return response
   }
 
   @Get(WordControllerPath.GetWords)

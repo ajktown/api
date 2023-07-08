@@ -7,6 +7,7 @@ import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { supportsModelDefinition } from '@/schemas/deprecated-supports.schema'
 import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
+import { SemesterService } from '@/services/semester.service'
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { GetSemesterQueryFactory } from '@/factories/get-semester-query.factory'
     TermToExamplePrompt,
     GetWordQueryFactory,
     GetSemesterQueryFactory,
+    SemesterService,
   ],
 })
 export class WordModule {}
