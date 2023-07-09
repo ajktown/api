@@ -2,7 +2,7 @@ import { UserDoc, UserModel } from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
-import { BadRequestError } from '@/errors/400/bad-request.error'
+import { BadRequestError, DataNotObjectError } from '@/errors/400/bad-request.error'
 import { ForbiddenError } from '@/errors/403/forbidden.error'
 
 export class UserDomain {
@@ -54,7 +54,7 @@ export class UserDomain {
   }
 
   static fromMdb(props: UserDoc): UserDomain {
-    if (typeof props !== 'object') throw new Error('Not Object!')
+    if (typeof props !== 'object') throw new DataNotObjectError()
 
     return new UserDomain({
       id: props.id,

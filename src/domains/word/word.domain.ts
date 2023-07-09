@@ -12,6 +12,7 @@ import {
   DeleteForbiddenError,
   UpdateForbiddenError,
 } from '@/errors/403/forbidden.error'
+import { DataNotObjectError } from '@/errors/400/bad-request.error'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -57,7 +58,7 @@ export class WordDomain extends DomainRoot {
   }
 
   static fromMdb(props: WordDoc): WordDomain {
-    if (typeof props !== 'object') throw new Error('Not Object!')
+    if (typeof props !== 'object') throw new DataNotObjectError()
 
     return new WordDomain({
       id: props.id,

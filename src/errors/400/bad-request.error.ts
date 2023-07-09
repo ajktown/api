@@ -18,6 +18,12 @@ export class DataNotPresentError extends BadRequestException {
   }
 }
 
+export class DataNotObjectError extends BadRequestException {
+  constructor() {
+    super(`Given data is not JavaScript object type`) // i.e) User email is not present
+  }
+}
+
 // TODO: Anything that is not standardized should be thrown with this exception.
 export class BadRequestError extends BadRequestException {
   constructor(message: string) {
