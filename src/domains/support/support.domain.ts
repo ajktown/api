@@ -6,13 +6,13 @@ import {
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
 import { UpdateForbiddenError } from '@/errors/403/forbidden.error'
-import { BadRequestError } from '@/errors/400/bad-request.error'
+import { BadRequestError, DataNotPresentError } from '@/errors/400/bad-request.error'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
 
   private constructor(props: Partial<ISupport>) {
-    if (!props) throw new Error('No userId (OwnerID)!')
+    if (!props.userId) throw new DataNotPresentError('User ID')
 
     this.props = props
   }

@@ -17,7 +17,7 @@ export class AccessTokenDomain {
 
   private constructor(props: IOauthPayload) {
     if (!props.userEmail) throw new DataNotPresentError(`User email`)
-    if (!props.userId) throw new DataNotPresentError(`User id`)
+    if (!props.userId) throw new DataNotPresentError(`User ID`)
     this.props = props
   }
 
