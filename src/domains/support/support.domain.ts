@@ -6,6 +6,7 @@ import {
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
 import { UpdateForbiddenError } from '@/errors/403/forbidden.error'
+import { BadRequestError } from '@/errors/400/bad-request.error'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
@@ -28,10 +29,12 @@ export class SupportDomain {
   ): Promise<SupportDomain> {
     const supportDocs = await model.find({ ownerID: atd.userId }).exec()
     if (avoidRecursiveCall && supportDocs.length !== 1) {
-      throw new Error('Something went really wrong while creating support')
+      throw new BadRequestError(
+        'Something went really wrong while creating support',
+      )
     }
 
-    if (supportDocs.length > 2) throw new Error('Too much data!')
+    if (supportDocs.length > 2) throw new BadRequestError('Too much data!')
 
     if (!avoidRecursiveCall && supportDocs.length === 0) {
       const temp = new SupportDomain({

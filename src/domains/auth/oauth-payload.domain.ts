@@ -1,4 +1,5 @@
 import { DataNotPresentError } from '@/errors/400/bad-request.error'
+import { ForbiddenError } from '@/errors/403/forbidden.error'
 import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
 import { FilterQuery } from 'mongoose'
@@ -30,7 +31,7 @@ export class OauthPayloadDomain {
   }
 
   static fromGooglePayload(payload: TokenPayload) {
-    if (!payload.email_verified) throw new Error('Email not verified!')
+    if (!payload.email_verified) throw new ForbiddenError('Email not verified!')
 
     return new OauthPayloadDomain({
       federalProvider: PrivateFederalProvider.Google,
