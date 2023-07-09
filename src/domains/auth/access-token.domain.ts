@@ -4,7 +4,7 @@ import { PostOauthRes } from '@/responses/post-auth-oauth.res'
 import { Request } from 'express'
 import { CookieConst } from '@/constants/cookie.const'
 import { envLambda } from '@/lambdas/get-env.lambda'
-import { DataNotPresentException } from '@/exceptions/400/bad-request.exception'
+import { DataNotPresentError } from '@/errors/400/bad-request.error'
 
 export interface IOauthPayload {
   userEmail: string
@@ -16,8 +16,8 @@ export class AccessTokenDomain {
   private readonly props: Partial<IOauthPayload>
 
   private constructor(props: IOauthPayload) {
-    if (!props.userEmail) throw new DataNotPresentException(`User email`)
-    if (!props.userId) throw new DataNotPresentException(`User id`)
+    if (!props.userEmail) throw new DataNotPresentError(`User email`)
+    if (!props.userId) throw new DataNotPresentError(`User id`)
     this.props = props
   }
 
@@ -51,11 +51,11 @@ export class AccessTokenDomain {
       return AccessTokenDomain.fromUser(UserDomain.underDevEnv())
 
     if (!req.cookies)
-      throw new DataNotPresentException(`Http-only cookies`, { isPlural: true })
+      throw new DataNotPresentError(`Http-only cookies`, { isPlural: true })
 
     const potentialToken = req.cookies[CookieConst.AjktownSecuredAccessToken]
     if (typeof potentialToken !== 'string')
-      throw new DataNotPresentException(`AJK Town Secured Access Token`)
+      throw new DataNotPresentError(`AJK Town Secured Access Token`)
     const attr = await jwtService.verify(potentialToken)
     return new AccessTokenDomain(attr)
   }

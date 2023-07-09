@@ -2,14 +2,14 @@ import { BadRequestException } from '@nestjs/common'
 
 /** Thrown when certain data is missing when it is supposed to be present.
  * @example
- * throw new DataNotPresentException(`User email`) // When singular
- * throw new DataNotPresentException(`Users`, true) // When plural
+ * throw new DataNotPresentError(`User email`) // When singular
+ * throw new DataNotPresentError(`Users`, true) // When plural
  */
 
 type PrivateOptional = {
   isPlural?: boolean
 }
-export class DataNotPresentException extends BadRequestException {
+export class DataNotPresentError extends BadRequestException {
   constructor(dataType: string, optional?: PrivateOptional) {
     const messageSuffix = optional.isPlural
       ? 'are not present'
@@ -19,7 +19,7 @@ export class DataNotPresentException extends BadRequestException {
 }
 
 // TODO: Anything that is not standardized should be thrown with this exception.
-export class NotStandardizedBadRequestException extends BadRequestException {
+export class BadRequestError extends BadRequestException {
   constructor(message: string) {
     super(message)
   }

@@ -4,7 +4,7 @@ import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
-import { NotStandardizedBadRequestException } from '@/exceptions/400/bad-request.exception'
+import { BadRequestError } from '@/errors/400/bad-request.error'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
@@ -68,9 +68,7 @@ export class WordService {
     dto: PutWordByIdBodyDTO,
   ): Promise<WordDomain> {
     if (Object.keys(dto).length === 0) {
-      throw new NotStandardizedBadRequestException(
-        'Require at least one or more field to update!',
-      )
+      throw new BadRequestError('Require at least one or more field to update!')
     }
     const wordDomain = await this.getById(id)
     return wordDomain.updateWithPutDto(atd, dto, this.wordModel)
