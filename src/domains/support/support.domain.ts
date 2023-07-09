@@ -5,8 +5,14 @@ import {
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
-import { UpdateForbiddenError } from '@/errors/403/forbidden.error'
-import { BadRequestError, DataNotPresentError } from '@/errors/400/bad-request.error'
+import {
+  ReadForbiddenError,
+  UpdateForbiddenError,
+} from '@/errors/403/forbidden.error'
+import {
+  BadRequestError,
+  DataNotPresentError,
+} from '@/errors/400/bad-request.error'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
@@ -102,9 +108,8 @@ export class SupportDomain {
   }
 
   toResDTO(atd: AccessTokenDomain): Partial<ISupport> {
-    if (atd.userId !== this.props.userId) {
-      throw new Error('No access')
-    }
+    if (atd.userId !== this.props.userId)
+      throw new ReadForbiddenError(atd, `Support`)
 
     return {
       id: this.props.id,

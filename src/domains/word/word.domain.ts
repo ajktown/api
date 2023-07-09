@@ -10,6 +10,8 @@ import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { DomainRoot } from '../index.root'
 import {
   DeleteForbiddenError,
+  ForbiddenError,
+  ReadForbiddenError,
   UpdateForbiddenError,
 } from '@/errors/403/forbidden.error'
 import { DataNotObjectError } from '@/errors/400/bad-request.error'
@@ -126,7 +128,7 @@ export class WordDomain extends DomainRoot {
    */
   toResDTO(atd: AccessTokenDomain): Partial<IWord> {
     if (atd.userId !== this.props.userId) {
-      throw new Error('No access')
+      throw new ReadForbiddenError(atd, `Word`)
     }
 
     return this.props
