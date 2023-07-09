@@ -18,7 +18,7 @@ export class AuthService {
     private userModel: UserModel,
   ) {}
 
-  /** Get words by given query */
+  /** Validate and generate AccessTokenDomain based on the temporary token Google has generated */
   async byGoogle(query: PostAuthGoogleBodyDTO): Promise<AccessTokenDomain> {
     try {
       const ticket = await new OAuth2Client(query.clientId).verifyIdToken({
