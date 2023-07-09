@@ -8,7 +8,10 @@ import { SupportModel } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '../support/support.domain'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { DomainRoot } from '../index.root'
-import { ForbiddenError } from '@/errors/403/forbidden.error'
+import {
+  DeleteForbiddenError,
+  UpdateForbiddenError,
+} from '@/errors/403/forbidden.error'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -134,7 +137,7 @@ export class WordDomain extends DomainRoot {
     wordModel: WordModel,
   ): Promise<WordDomain> {
     if (atd.userId !== this.props.userId) {
-      throw new ForbiddenError(atd, `Update Word`)
+      throw new UpdateForbiddenError(atd, `Word`)
     }
     return WordDomain.fromMdb(
       await wordModel
@@ -162,7 +165,7 @@ export class WordDomain extends DomainRoot {
     supportModel: SupportModel,
   ): Promise<void> {
     if (atd.userId !== this.props.userId) {
-      throw new Error('No access to delete')
+      throw new DeleteForbiddenError(atd, `Word`)
     }
 
     await wordModel.findByIdAndDelete(this.props.id).exec()

@@ -2,6 +2,8 @@ import { UserDoc, UserModel } from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
+import { BadRequestError } from '@/errors/400/bad-request.error'
+import { ForbiddenError } from '@/errors/403/forbidden.error'
 
 export class UserDomain {
   private readonly props: Partial<IUser>
@@ -13,7 +15,9 @@ export class UserDomain {
   /** This can be run only when it is non-production */
   static underDevEnv(): UserDomain {
     if (envLambda.mode.isProduct())
-      throw new Error('Cannot create dev user under production environment')
+      throw new ForbiddenError(
+        'Cannot create dev user under production environment',
+      )
 
     return new UserDomain({
       id: 'abc',
@@ -37,7 +41,9 @@ export class UserDomain {
   ): Promise<UserDomain> {
     const userDoc = await userModel.find(oauthPayload.toFind()).limit(1).exec()
     if (userDoc.length > 1)
-      throw new Error('[Fatal] Two or more users have the same email addresses')
+      throw new BadRequestError(
+        'Two or more users fatally have the same email addresses',
+      )
     if (userDoc.length === 0) {
       // no user found. create one
       return UserDomain.fromMdb(

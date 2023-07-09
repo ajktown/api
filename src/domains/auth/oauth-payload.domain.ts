@@ -1,3 +1,4 @@
+import { DataNotPresentError } from '@/errors/400/bad-request.error'
 import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
 import { FilterQuery } from 'mongoose'
@@ -19,7 +20,7 @@ export class OauthPayloadDomain {
   private readonly props: Partial<IOauthPayload>
 
   private constructor(props: Partial<IOauthPayload>) {
-    if (!props.userEmail) throw new Error('Failed to find email')
+    if (!props.userEmail) throw new DataNotPresentError(`User email`)
 
     this.props = props
   }
