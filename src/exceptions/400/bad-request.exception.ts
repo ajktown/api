@@ -17,3 +17,10 @@ export class DataNotPresentException extends BadRequestException {
     super(`${dataType} ${messageSuffix}`) // i.e) User email is not present
   }
 }
+
+// TODO: Anything that is not standardized should be thrown with this exception.
+export class NotStandardizedBadRequestException extends BadRequestException {
+  constructor(message: string) {
+    super(message)
+  }
+}
