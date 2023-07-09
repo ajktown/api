@@ -4,10 +4,7 @@ import { PostOauthRes } from '@/responses/post-auth-oauth.res'
 import { Request } from 'express'
 import { CookieConst } from '@/constants/cookie.const'
 import { envLambda } from '@/lambdas/get-env.lambda'
-import {
-  DataNotPresentException,
-  PluralDataNotPresentException,
-} from '@/exceptions/400/bad-request.exception'
+import { DataNotPresentException } from '@/exceptions/400/bad-request.exception'
 
 export interface IOauthPayload {
   userEmail: string
@@ -54,7 +51,7 @@ export class AccessTokenDomain {
       return AccessTokenDomain.fromUser(UserDomain.underDevEnv())
 
     if (!req.cookies)
-      throw new PluralDataNotPresentException(`Http-only cookies`)
+      throw new DataNotPresentException(`Http-only cookies`, { isPlural: true })
 
     const potentialToken = req.cookies[CookieConst.AjktownSecuredAccessToken]
     if (typeof potentialToken !== 'string')
