@@ -1,6 +1,6 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ForbiddenException } from '@nestjs/common'
-
+// TODO: We might separate each error into different files, gets index.enum.ts or something and share the same messages.
 const PRIVATE_NOT_AUTHORIZED_TO_PERFORM = `is not authorized to perform the following action`
 
 /** Thrown when certain data is missing when it is supposed to be present.\
