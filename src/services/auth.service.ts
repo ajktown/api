@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
 import { AuthPrepDomain } from '@/domains/auth/auth-prep.domain'
+import { UnauthorizedSignInError } from '@/errors/401/unauthorized.error'
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,7 @@ export class AuthService {
         await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
       )
     } catch (error) {
-      throw new Error('Invalid Credential')
+      throw new UnauthorizedSignInError(`Google`)
     }
   }
 
