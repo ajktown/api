@@ -4,7 +4,7 @@ import { envLambda } from '@/lambdas/get-env.lambda'
 import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
-import { ForbiddenError } from '@/errors/403/forbidden.error'
+import { ForbiddenError } from '@/errors/403/index.error'
 
 export class UserDomain {
   private readonly props: Partial<IUser>

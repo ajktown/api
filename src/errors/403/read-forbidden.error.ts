@@ -1,5 +1,5 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
-import { ActionForbiddenError } from './forbidden.error'
+import { ActionForbiddenError } from './index.error'
 
 /** Thrown when certain data is missing when it is supposed to be present.\
  * @param

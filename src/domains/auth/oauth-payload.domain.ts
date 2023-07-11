@@ -1,5 +1,5 @@
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
-import { ForbiddenError } from '@/errors/403/forbidden.error'
+import { ForbiddenError } from '@/errors/403/index.error'
 import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
 import { FilterQuery } from 'mongoose'
