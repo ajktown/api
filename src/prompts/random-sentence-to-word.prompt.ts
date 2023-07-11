@@ -2,7 +2,7 @@ import { IWord } from '@/domains/word/index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { Injectable } from '@nestjs/common'
 import { PromptRoot } from './index.root'
-import { BadRequestError } from '@/errors/400/bad-request.error'
+import { BadRequestError } from '@/errors/400/index.error'
 
 enum PrivateType {
   FullSentence = `full-sentence`,

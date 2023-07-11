@@ -4,7 +4,7 @@ import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
-import { BadRequestError } from '@/errors/400/bad-request.error'
+import { BadRequestError } from '@/errors/400/index.error'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {

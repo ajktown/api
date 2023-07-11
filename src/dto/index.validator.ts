@@ -1,4 +1,4 @@
-import { BadRequestError } from '@/errors/400/bad-request.error'
+import { BadRequestError } from '@/errors/400/index.error'
 import { TransformFnParams } from 'class-transformer'
 
 /** Convert into boolean. Use ONLY after @Transform(intoBoolean) */

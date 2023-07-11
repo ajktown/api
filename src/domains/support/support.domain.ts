@@ -9,10 +9,8 @@ import {
   ReadForbiddenError,
   UpdateForbiddenError,
 } from '@/errors/403/forbidden.error'
-import {
-  BadRequestError,
-  DataNotPresentError,
-} from '@/errors/400/bad-request.error'
+import { BadRequestError } from '@/errors/400/index.error'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>

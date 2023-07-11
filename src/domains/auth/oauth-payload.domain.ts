@@ -1,4 +1,4 @@
-import { DataNotPresentError } from '@/errors/400/bad-request.error'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 import { ForbiddenError } from '@/errors/403/forbidden.error'
 import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'

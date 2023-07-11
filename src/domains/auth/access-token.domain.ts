@@ -4,7 +4,7 @@ import { PostOauthRes } from '@/responses/post-auth-oauth.res'
 import { Request } from 'express'
 import { CookieConst } from '@/constants/cookie.const'
 import { envLambda } from '@/lambdas/get-env.lambda'
-import { DataNotPresentError } from '@/errors/400/bad-request.error'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
 export interface IOauthPayload {
   userEmail: string

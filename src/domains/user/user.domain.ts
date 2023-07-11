@@ -2,10 +2,8 @@ import { UserDoc, UserModel } from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
-import {
-  BadRequestError,
-  DataNotObjectError,
-} from '@/errors/400/bad-request.error'
+import { BadRequestError } from '@/errors/400/index.error'
+import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { ForbiddenError } from '@/errors/403/forbidden.error'
 
 export class UserDomain {

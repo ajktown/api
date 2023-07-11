@@ -13,11 +13,9 @@ import {
   ReadForbiddenError,
   UpdateForbiddenError,
 } from '@/errors/403/forbidden.error'
-import {
-  BadRequestError,
-  DataNotObjectError,
-  DataNotPresentError,
-} from '@/errors/400/bad-request.error'
+import { BadRequestError } from '@/errors/400/index.error'
+import { DataNotObjectError } from '@/errors/400/data-not-object.error'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
