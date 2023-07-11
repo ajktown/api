@@ -36,7 +36,10 @@ export class SupportDomain {
       )
     }
 
-    if (supportDocs.length > 2) throw new BadRequestError('Too much data!')
+    if (supportDocs.length > 2)
+      throw new BadRequestError(
+        `We got ${supportDocs.length} supportDocs, when we expect 1 or 0`,
+      )
 
     if (!avoidRecursiveCall && supportDocs.length === 0) {
       const temp = new SupportDomain({

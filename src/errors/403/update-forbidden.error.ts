@@ -12,7 +12,7 @@ import { ActionForbiddenError } from './index.error'
 
 export class UpdateForbiddenError extends ActionForbiddenError {
   constructor(atd: AccessTokenDomain, resourceName: string) {
-    // i.e) User "abc" is not authorized to perform the following action: "Read Word"
+    // i.e) User "abc" is not authorized to perform the following action: "Update Word"
     super(atd, resourceName, 'Update')
   }
 }
