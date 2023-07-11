@@ -19,7 +19,7 @@ export class UserDomain {
   static underDevEnv(): UserDomain {
     if (envLambda.mode.isProduct())
       throw new ForbiddenError(
-        'Cannot create dev user under production environment',
+        'You cannot create dev user under production environment',
       )
 
     return new UserDomain({
