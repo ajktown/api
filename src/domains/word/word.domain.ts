@@ -8,11 +8,9 @@ import { SupportModel } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '../support/support.domain'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { DomainRoot } from '../index.root'
-import {
-  DeleteForbiddenError,
-  ReadForbiddenError,
-  UpdateForbiddenError,
-} from '@/errors/403/forbidden.error'
+import { DeleteForbiddenError } from '@/errors/403/delete-forbidden.error'
+import { UpdateForbiddenError } from '@/errors/403/update-forbidden.error'
+import { ReadForbiddenError } from '@/errors/403/read-forbidden.error'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
