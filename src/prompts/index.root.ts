@@ -1,4 +1,4 @@
-import { InternalServerError } from '@/errors/500/internal-server-error.exception'
+import { InternalServerError } from '@/errors/500/index.error'
 import { envLambda, SupportedEnvAttr } from '@/lambdas/get-env.lambda'
 import { Configuration, OpenAIApi } from 'openai'
 
