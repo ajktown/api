@@ -5,8 +5,8 @@ import {
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
-import { UpdateForbiddenError } from '@/errors/403/update-forbidden.error'
-import { ReadForbiddenError } from '@/errors/403/read-forbidden.error'
+import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
+import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
