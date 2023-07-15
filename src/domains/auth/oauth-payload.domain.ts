@@ -1,3 +1,5 @@
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
+import { ForbiddenError } from '@/errors/403/index.error'
 import { UserDoc, UserProps, UserModel } from '@/schemas/deprecated-user.schema'
 import { TokenPayload } from 'google-auth-library'
 import { FilterQuery } from 'mongoose'
@@ -19,7 +21,7 @@ export class OauthPayloadDomain {
   private readonly props: Partial<IOauthPayload>
 
   private constructor(props: Partial<IOauthPayload>) {
-    if (!props.userEmail) throw new Error('Failed to find email')
+    if (!props.userEmail) throw new DataNotPresentError(`User email`)
 
     this.props = props
   }
@@ -29,7 +31,7 @@ export class OauthPayloadDomain {
   }
 
   static fromGooglePayload(payload: TokenPayload) {
-    if (!payload.email_verified) throw new Error('Email not verified!')
+    if (!payload.email_verified) throw new ForbiddenError('Email is not verified!')
 
     return new OauthPayloadDomain({
       federalProvider: PrivateFederalProvider.Google,

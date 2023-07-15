@@ -2,6 +2,7 @@ import { IWord } from '@/domains/word/index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { Injectable } from '@nestjs/common'
 import { PromptRoot } from './index.root'
+import { BadRequestError } from '@/errors/400/index.error'
 
 enum PrivateType {
   FullSentence = `full-sentence`,
@@ -54,7 +55,7 @@ export class RandomSampleToWordPrompt extends PromptRoot {
     const res = await this.get(randomSample)
     const splittedRes = res.split('$')
     if (splittedRes.length !== 4)
-      throw new Error('Chat GPT Generated data is wrongful.')
+      throw new BadRequestError('Chat GPT Generated data is wrongful.')
 
     const [type, term, definition, example] = splittedRes
 

@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { Request } from 'express'
 import { AuthPrepDomain } from '@/domains/auth/auth-prep.domain'
+import { UnauthorizedSignInError } from '@/errors/401/unauthorized-sign-in.error'
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,7 @@ export class AuthService {
     private userModel: UserModel,
   ) {}
 
-  /** Get words by given query */
+  /** Validate and generate AccessTokenDomain based on the temporary token Google has generated */
   async byGoogle(query: PostAuthGoogleBodyDTO): Promise<AccessTokenDomain> {
     try {
       const ticket = await new OAuth2Client(query.clientId).verifyIdToken({
@@ -34,7 +35,7 @@ export class AuthService {
         await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
       )
     } catch (error) {
-      throw new Error('Invalid Credential')
+      throw new UnauthorizedSignInError(`Google`)
     }
   }
 

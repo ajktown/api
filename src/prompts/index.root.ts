@@ -1,3 +1,4 @@
+import { InternalServerError } from '@/errors/500/index.error'
 import { envLambda, SupportedEnvAttr } from '@/lambdas/get-env.lambda'
 import { Configuration, OpenAIApi } from 'openai'
 
@@ -22,7 +23,8 @@ enum PrivateOpenaiModel {
 export class PromptRoot {
   private prepareOpenai() {
     const apiKey = envLambda.get(SupportedEnvAttr.OpenAiKey)
-    if (!apiKey) throw new Error('Open AI API Key not found on env file')
+    if (!apiKey)
+      throw new InternalServerError('Open AI API Key not found on env file')
 
     return new OpenAIApi(
       new Configuration({

@@ -5,12 +5,16 @@ import {
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
+import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
+import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
+import { BadRequestError } from '@/errors/400/index.error'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
 
   private constructor(props: Partial<ISupport>) {
-    if (!props) throw new Error('No userId (OwnerID)!')
+    if (!props.userId) throw new DataNotPresentError('User ID')
 
     this.props = props
   }
@@ -27,10 +31,15 @@ export class SupportDomain {
   ): Promise<SupportDomain> {
     const supportDocs = await model.find({ ownerID: atd.userId }).exec()
     if (avoidRecursiveCall && supportDocs.length !== 1) {
-      throw new Error('Something went really wrong while creating support')
+      throw new BadRequestError(
+        'Something went really wrong while creating support',
+      )
     }
 
-    if (supportDocs.length > 2) throw new Error('Too much data!')
+    if (supportDocs.length > 2)
+      throw new BadRequestError(
+        `We got ${supportDocs.length} supportDocs, when we expect 1 or 0`,
+      )
 
     if (!avoidRecursiveCall && supportDocs.length === 0) {
       const temp = new SupportDomain({
@@ -60,7 +69,7 @@ export class SupportDomain {
   ): this {
     const props = newlyPostedWordDomain.toResDTO(atd)
     if (props.userId !== this.props.userId) {
-      throw new Error('No access')
+      throw new UpdateForbiddenError(atd, `Word`)
     }
 
     const newSemesters = new Set(this.props.semesters)
@@ -98,9 +107,8 @@ export class SupportDomain {
   }
 
   toResDTO(atd: AccessTokenDomain): Partial<ISupport> {
-    if (atd.userId !== this.props.userId) {
-      throw new Error('No access')
-    }
+    if (atd.userId !== this.props.userId)
+      throw new ReadForbiddenError(atd, `Support`)
 
     return {
       id: this.props.id,

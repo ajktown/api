@@ -8,6 +8,12 @@ import { SupportModel } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '../support/support.domain'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { DomainRoot } from '../index.root'
+import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
+import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
+import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
+import { BadRequestError } from '@/errors/400/index.error'
+import { DataNotObjectError } from '@/errors/400/data-not-object.error'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -19,7 +25,7 @@ export class WordDomain extends DomainRoot {
 
   private constructor(props: Partial<IWord>) {
     super()
-    if (!props.userId) throw new Error('No userId (OwnerID)!')
+    if (!props.userId) throw new DataNotPresentError('User ID')
 
     this.props = props
     props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
@@ -53,7 +59,7 @@ export class WordDomain extends DomainRoot {
   }
 
   static fromMdb(props: WordDoc): WordDomain {
-    if (typeof props !== 'object') throw new Error('Not Object!')
+    if (typeof props !== 'object') throw new DataNotObjectError()
 
     return new WordDomain({
       id: props.id,
@@ -89,7 +95,7 @@ export class WordDomain extends DomainRoot {
     } catch {
       // Something went wrong, and therefore should delete the word from persistence
       await newlyPostedWordDomain.delete(atd, model, supportModel)
-      throw new Error('Failed to post word')
+      throw new BadRequestError('Something went wrong while posting word')
     }
 
     return newlyPostedWordDomain
@@ -121,7 +127,7 @@ export class WordDomain extends DomainRoot {
    */
   toResDTO(atd: AccessTokenDomain): Partial<IWord> {
     if (atd.userId !== this.props.userId) {
-      throw new Error('No access')
+      throw new ReadForbiddenError(atd, `Word`)
     }
 
     return this.props
@@ -133,7 +139,7 @@ export class WordDomain extends DomainRoot {
     wordModel: WordModel,
   ): Promise<WordDomain> {
     if (atd.userId !== this.props.userId) {
-      throw new Error('No access to update')
+      throw new UpdateForbiddenError(atd, `Word`)
     }
     return WordDomain.fromMdb(
       await wordModel
@@ -161,7 +167,7 @@ export class WordDomain extends DomainRoot {
     supportModel: SupportModel,
   ): Promise<void> {
     if (atd.userId !== this.props.userId) {
-      throw new Error('No access to delete')
+      throw new DeleteForbiddenError(atd, `Word`)
     }
 
     await wordModel.findByIdAndDelete(this.props.id).exec()

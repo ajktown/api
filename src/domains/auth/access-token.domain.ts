@@ -4,6 +4,7 @@ import { PostOauthRes } from '@/responses/post-auth-oauth.res'
 import { Request } from 'express'
 import { CookieConst } from '@/constants/cookie.const'
 import { envLambda } from '@/lambdas/get-env.lambda'
+import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 
 export interface IOauthPayload {
   userEmail: string
@@ -15,8 +16,8 @@ export class AccessTokenDomain {
   private readonly props: Partial<IOauthPayload>
 
   private constructor(props: IOauthPayload) {
-    if (!props.userEmail) throw new Error('user email not defined')
-    if (!props.userId) throw new Error('user id not defined')
+    if (!props.userEmail) throw new DataNotPresentError(`User email`)
+    if (!props.userId) throw new DataNotPresentError(`User ID`)
     this.props = props
   }
 
@@ -49,11 +50,12 @@ export class AccessTokenDomain {
     if (envLambda.mode.isLocal() && req.headers['postman-token'])
       return AccessTokenDomain.fromUser(UserDomain.underDevEnv())
 
-    if (!req.cookies) throw new Error("Http-only cookie doesn't exist")
+    if (!req.cookies)
+      throw new DataNotPresentError(`Http-only cookies`, { isPlural: true })
 
     const potentialToken = req.cookies[CookieConst.AjktownSecuredAccessToken]
     if (typeof potentialToken !== 'string')
-      throw new Error("SAT Token cookie doesn't exist")
+      throw new DataNotPresentError(`AJK Town Secured Access Token`)
     const attr = await jwtService.verify(potentialToken)
     return new AccessTokenDomain(attr)
   }
