@@ -31,7 +31,7 @@ export class OauthPayloadDomain {
   }
 
   static fromGooglePayload(payload: TokenPayload) {
-    if (!payload.email_verified) throw new ForbiddenError('Email not verified!')
+    if (!payload.email_verified) throw new ForbiddenError('Email is not verified!')
 
     return new OauthPayloadDomain({
       federalProvider: PrivateFederalProvider.Google,
