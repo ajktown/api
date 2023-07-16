@@ -7,6 +7,8 @@ export enum SupportedEnvAttr {
   StrictlyEnv = `ENV`,
   // ! JWT Token Secrets
   JwtTokenSecret = `JWT_TOKEN_SECRET`,
+  // !  Cross Origin Resource Sharing
+  Cors = `ALLOWED_CORS`,
   // ! Mongo DB
   MdbLocalUri = `MDB_LOCAL_URI`,
   MdbProdUri = `MDB_PROD_URI`,
@@ -24,6 +26,10 @@ export const envLambda = {
     if (envData) return envData
     if (!defaultValue) return undefined
     return defaultValue.toString()
+  },
+  getCorsOrigin: (): string => {
+    const defaultCorsOrigin = 'http://localhost:3000'
+    return envLambda.get(SupportedEnvAttr.Cors) ?? defaultCorsOrigin
   },
   getJwtTokenSecret: () => {
     return envLambda.get(SupportedEnvAttr.JwtTokenSecret)

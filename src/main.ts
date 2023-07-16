@@ -20,7 +20,7 @@ const bootstrap = async () => {
   })
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: envLambda.getCorsOrigin(),
     credentials: true,
   })
 
