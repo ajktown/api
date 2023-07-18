@@ -15,27 +15,42 @@ spec:
     spec:
       containers:
       - name: ajktown-api
-        image: docker.io/library/ajktown-api:latest
-        ports:
-        - containerPort: 3000
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ajktown-db
-  namespace: ajktown
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: ajktown-db
-  template:
-    metadata:
-      labels:
-        app: ajktown-db
-    spec:
-      containers:
-      - name: ajktown-db
-        image: mongo:latest
+        image: ajktown/api:latest
+        env:
+        # ! Sensitive data starting from here
+        - name: MDB_PROD_URI
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: mdb_prod_uri
+        - name: JWT_TOKEN_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: jwt_token_secret
+        - name: OPEN_AI_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: open_ai_key
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: google_client_id
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: google_client_secret
+        # ! Non sensitive data starting from here
+        - name: LISTENING_PORT
+          value: "3000"
+        - name: ALLOWED_CORS
+          value: "https://wordnote.ajktown.com"
+        - name: ENV
+          value: "prod"
+        - name: IS_CHAT_GPT_ENABLED
+          value: "false"
         ports:
         - containerPort: 3000
