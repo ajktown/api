@@ -43,6 +43,7 @@ export class LoggingInterceptor implements NestInterceptor {
       tap(() => {
         const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
         const message = `✓ [${rui}] [${method}] ${url} (${ms})`
+        // TODO: Should use nest js defined logger to log instead.
         console.log(message)
       }),
     )
