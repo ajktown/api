@@ -33,6 +33,9 @@ export class WordDomain extends DomainRoot {
     // addedDate is used to sort data.
     const date = props.dateAdded ? new Date(props.dateAdded) : new Date()
     this.props.dateAdded = date.valueOf()
+
+    // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
+    if (!props.createdAt) this.props.createdAt = date
   }
 
   get id() {
