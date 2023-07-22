@@ -10,6 +10,8 @@ import { AuthModule } from './modules/auth.module'
 import { JwtModule } from '@nestjs/jwt'
 import { getJwtOptionsLambda } from './lambdas/get-jwt-options.lambda'
 import { authMdlExcludedPaths } from './constants/auth-mdl-excluded-paths.const'
+import { APP_INTERCEPTOR } from '@nestjs/core'
+import { LoggingInterceptor } from './interceptors/logging.interceptor'
 
 @Module({
   imports: [
@@ -20,7 +22,14 @@ import { authMdlExcludedPaths } from './constants/auth-mdl-excluded-paths.const'
     JwtModule.register(getJwtOptionsLambda()),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      // Apply logger to every controller for every request
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class MainModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
