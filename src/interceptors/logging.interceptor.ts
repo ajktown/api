@@ -1,18 +1,17 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
-import { AuthService } from '@/services/auth.service'
 import {
   Injectable,
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-  Logger,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { Observable } from 'rxjs'
-import { tap } from 'rxjs/operators'
+import { Observable, throwError } from 'rxjs'
+import { catchError, tap } from 'rxjs/operators'
 
 // TODO: This only catches the successful error. We need to catch the error as well.
 // TODO: It would be also cool to have userId in the log.
+// TODO: Should use nest js defined logger to log instead for every console used here.
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly jwtService: JwtService) {}
@@ -42,9 +41,14 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(() => {
         const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
-        const message = `✓ [${rui}] [${method}] ${url} (${ms})`
-        // TODO: Should use nest js defined logger to log instead.
+        const message = `✅ [${rui}] [${method}] ${url} (${ms})`
         console.log(message)
+      }),
+      catchError((err) => {
+        const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
+        const message = `❌ [${rui}] [${err.name}] [${method}] ${url} (${ms})`
+        console.warn(message)
+        return throwError(() => err)
       }),
     )
   }
