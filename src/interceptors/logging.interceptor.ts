@@ -9,8 +9,6 @@ import { JwtService } from '@nestjs/jwt'
 import { Observable, throwError } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
 
-// TODO: This only catches the successful error. We need to catch the error as well.
-// TODO: It would be also cool to have userId in the log.
 // TODO: Should use nest js defined logger to log instead for every console used here.
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
