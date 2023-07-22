@@ -20,6 +20,8 @@
 
 `AJK Town API` is the second generation project produced by AJK Town, or AJ Kim. It was renamed after "Wordy", which once contained both API server and the Frontend source code packaged together. They are now separated into two repositories `AJK Town API` and `AJK Town Wordnote`.
 
+https://api.ajktown.com
+
 ## Public Image
 
 https://hub.docker.com/r/ajktown/wordnote/tags

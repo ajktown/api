@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ajktown-api-svc
+  namespace: ajktown
+  labels:
+    app: ajktown-api
+spec:
+  selector:
+    app: ajktown-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: NodePort
