@@ -38,11 +38,13 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
+        // Write a log message, only for any successful request.
         const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
         const message = `✅ [${rui}] [${method}] ${url} (${ms})`
         console.log(message)
       }),
       catchError((err) => {
+        // Write a log message, only for any UNSUCCESSFUL request.
         const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
         const message = `❌ [${rui}] [${err.name}] [${method}] ${url} (${ms})`
         console.warn(message)
