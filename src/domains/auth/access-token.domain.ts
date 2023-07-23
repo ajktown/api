@@ -42,6 +42,9 @@ export class AccessTokenDomain {
     })
   }
 
+  /** Returns Atd if header of request has valid atd attached.
+   * Throws error if not valid.
+   */
   static async fromReq(
     req: Request,
     jwtService: JwtService,
