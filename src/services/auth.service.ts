@@ -20,7 +20,10 @@ export class AuthService {
   ) {}
 
   /** Validate and generate AccessTokenDomain based on the temporary token Google has generated */
-  async byGoogle(query: PostAuthGoogleBodyDTO): Promise<AccessTokenDomain> {
+  async byGoogle(
+    query: PostAuthGoogleBodyDTO,
+    req: Request,
+  ): Promise<AccessTokenDomain> {
     try {
       const ticket = await new OAuth2Client(query.clientId).verifyIdToken({
         idToken: query.credential,
@@ -33,6 +36,7 @@ export class AuthService {
 
       return AccessTokenDomain.fromUser(
         await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
+        req,
       )
     } catch (error) {
       throw new UnauthorizedSignInError(`Google`)
@@ -40,8 +44,8 @@ export class AuthService {
   }
 
   /** Attaches HttpOnly Token for dev-user */
-  async byDevToken(): Promise<AccessTokenDomain> {
-    return AccessTokenDomain.fromUser(UserDomain.underDevEnv())
+  async byDevToken(req: Request): Promise<AccessTokenDomain> {
+    return AccessTokenDomain.fromUser(UserDomain.underDevEnv(), req)
   }
 
   /** Returns AuthPrepDomain that contains sign in information of any requester. */
