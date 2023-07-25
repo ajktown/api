@@ -72,11 +72,12 @@ export class WordChunkDomain {
    */
   private isSemesterOnlyQuery(): boolean {
     let exemptCount = 0
-    if (this.query.pageIndex) exemptCount++
-    if (this.query.itemsPerPage) exemptCount++
+    if (this.query.pageIndex !== undefined) exemptCount++
+    if (this.query.itemsPerPage !== undefined) exemptCount++
+    if (this.query.semester !== undefined) exemptCount++
 
     return (
-      Object.keys(this.query).length === 1 + exemptCount &&
+      Object.keys(this.query).length === exemptCount &&
       this.query.semester !== undefined
     )
   }

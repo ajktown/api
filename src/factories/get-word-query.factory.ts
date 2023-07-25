@@ -32,7 +32,8 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
       ...this.toObject('pronun', query.pronunciation),
       ...this.toObject('meaning', query.definition),
       ...this.toObject('example', query.example),
-      ...this.toRangeObjectByDaysAgo('createdAt', query.daysAgo),
+      ...this.toNumRangeObjectByDaysAgo('dateAdded', query.daysAgo, atd),
+      ...this.toRangeObjectByDaysAgo('createdAt', query.daysAgo, atd),
       ...this.toInObject('tag', query.tags),
     }
   }

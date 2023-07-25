@@ -15,7 +15,7 @@ export interface IOauthPayload {
 
 export class AccessTokenDomain {
   private readonly props: Partial<IOauthPayload>
-  private readonly timezone: string
+  readonly timezone: string
 
   private constructor(props: IOauthPayload, timezone: string) {
     if (!props.userEmail) throw new DataNotPresentError(`User email`)
