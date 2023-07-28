@@ -1,6 +1,6 @@
 import { UserDomain } from '@/domains/user/user.domain'
 import { PostAuthGoogleBodyDTO } from '@/dto/post-auth-google.dto'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { OAuth2Client } from 'google-auth-library'
 import { JwtService } from '@nestjs/jwt'
 import { OauthPayloadDomain } from '@/domains/auth/oauth-payload.domain'
@@ -14,6 +14,7 @@ import { UnauthorizedSignInError } from '@/errors/401/unauthorized-sign-in.error
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly logger: Logger,
     private readonly jwtService: JwtService,
     @InjectModel(UserProps.name)
     private userModel: UserModel,
@@ -35,6 +36,7 @@ export class AuthService {
         await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
       )
     } catch (error) {
+      this.logger.warn(error)
       throw new UnauthorizedSignInError(`Google`)
     }
   }
