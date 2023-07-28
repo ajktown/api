@@ -32,7 +32,7 @@ You musth have permission to push to the repository.
 ```sh
 
 docker build -t ajktown/api:latest .
-docker push ajktown/wordnote:latest
+docker push ajktown/api:latest
 
 ```
 
