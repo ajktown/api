@@ -36,7 +36,7 @@ export class AuthService {
         await UserDomain.fromOauthPayload(oauthPayload, this.userModel),
       )
     } catch (error) {
-      this.logger.warn(error)
+      this.logger.error(error)
       throw new UnauthorizedSignInError(`Google`)
     }
   }
