@@ -5,4 +5,10 @@ export class AppService {
   getHello(): string {
     return 'Hello World from AJK Town API Service!'
   }
+
+  getHealthz() {
+    return {
+      status: 'ok',
+    }
+  }
 }
