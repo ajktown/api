@@ -31,7 +31,7 @@ https://hub.docker.com/r/ajktown/wordnote/tags
 You musth have permission to push to the repository.
 ```sh
 
-docker build -t ajktown/wordnote:latest .
+docker build -t ajktown/api:latest .
 docker push ajktown/wordnote:latest
 
 ```
