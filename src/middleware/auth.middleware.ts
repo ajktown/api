@@ -1,6 +1,7 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import {
   Injectable,
+  Logger,
   NestMiddleware,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -11,13 +12,17 @@ import { NextFunction, Request, Response } from 'express'
 // We should refresh the access token
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly jwtService: JwtService,
+  ) {}
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       await AccessTokenDomain.fromReq(req, this.jwtService)
-    } catch {
-      const err = new UnauthorizedException()
-      return res.status(err.getStatus()).send(err)
+    } catch (err) {
+      this.logger.error(err)
+
+      return res.status(err.getStatus()).send(new UnauthorizedException())
     }
 
     next()
