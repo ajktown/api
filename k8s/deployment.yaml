@@ -54,3 +54,9 @@ spec:
           value: "false"
         ports:
         - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10 # Takes about 10~15 seconds to start api server
+          periodSeconds: 10
