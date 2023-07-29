@@ -39,7 +39,7 @@ export class FactoryRoot<DocumentProps> {
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: number; $lt: number } } {
     const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd)
-    return daysAgo
+    return daysAgo != undefined
       ? { [key]: { $gte: start.valueOf(), $lt: end.valueOf() } }
       : {}
   }
@@ -51,12 +51,12 @@ export class FactoryRoot<DocumentProps> {
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: Date; $lt: Date } } {
     const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd)
-    return daysAgo ? { [key]: { $gte: start, $lt: end } } : {}
+    return daysAgo != undefined ? { [key]: { $gte: start, $lt: end } } : {}
   }
 
   public toSort(): PrivateToSort {
     return {
-      createdAt: -1,
+      dateAdded: -1,
     }
   }
 }

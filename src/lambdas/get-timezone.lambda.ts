@@ -6,7 +6,8 @@ const PRIVATE_DEFAULT_TIMEZONE_IDENTIFIER = `Asia/Tokyo`
 
 const PRIVATE_DEFAULT_TIMEZONE = `timezone`
 
-export const getTimezone = (req: Request): string => {
+export const getTimezone = (req?: Request): string => {
+  if (!req) return PRIVATE_DEFAULT_TIMEZONE_IDENTIFIER
   const timezone = req.headers[PRIVATE_DEFAULT_TIMEZONE]
 
   if (Array.isArray(timezone)) return PRIVATE_DEFAULT_TIMEZONE_IDENTIFIER

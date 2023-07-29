@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { FactoryRoot } from './index.root'
 import { FilterQuery, ProjectionType, QueryOptions } from 'mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
+import { UnidentifiedUserError } from '@/errors/401/unidentified-user.error'
 
 @Injectable()
 export class GetWordQueryFactory extends FactoryRoot<WordProps> {
@@ -20,6 +21,8 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
   ): FilterQuery<WordProps> {
+    if (!atd.userId) throw new UnidentifiedUserError()
+
     return {
       ownerID: atd.userId,
       ...this.getFilterForSearchInput(query),
@@ -33,7 +36,6 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
       ...this.toObject('meaning', query.definition),
       ...this.toObject('example', query.example),
       ...this.toNumRangeObjectByDaysAgo('dateAdded', query.daysAgo, atd),
-      ...this.toRangeObjectByDaysAgo('createdAt', query.daysAgo, atd),
       ...this.toInObject('tag', query.tags),
     }
   }

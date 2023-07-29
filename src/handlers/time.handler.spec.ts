@@ -1,5 +1,7 @@
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { timeHandler } from './time.handler'
 import { DateTime } from 'luxon'
+import { UserDomain } from '@/domains/user/user.domain'
 
 describe(`timeHandler.getDaysAgo(date: Date)`, () => {
   it(`should be exposed as a function`, () => {
@@ -20,6 +22,10 @@ describe(`timeHandler.getDaysAgo(date: Date)`, () => {
     {
       sampleDate: DateTime.now().minus({ days: 1 }).toJSDate(),
       wantDaysAgo: 1,
+    },
+    {
+      sampleDate: 1687333207174,
+      wantDaysAgo: 0,
     },
   ]
 
@@ -57,9 +63,12 @@ describe(`timeHandler.getDateFromDaysAgo(daysAgo: number)`, () => {
     },
   ]
 
+  const atd = AccessTokenDomain.fromUser(UserDomain.underDevEnv())
+
   tests.forEach((test) => {
     const [gotStart, gotEnd] = timeHandler.getDateFromDaysAgo(
       test.sampleDaysAgo,
+      atd,
     )
     it(`should return "${test.wantStart}" and "${test.wantEnd}" with arg(s) "${test.sampleDaysAgo}"`, () => {
       expect(gotStart.valueOf()).toEqual(test.wantStart.valueOf())

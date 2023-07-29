@@ -36,7 +36,7 @@ export class AccessTokenDomain {
     return this.props.profileImageUrl
   }
 
-  static fromUser(user: UserDomain, req: Request) {
+  static fromUser(user: UserDomain, req?: Request) {
     const userRes = user.toResDTO()
     return new AccessTokenDomain(
       {

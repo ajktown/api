@@ -30,12 +30,8 @@ export class WordDomain extends DomainRoot {
     this.props = props
     props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
 
-    // addedDate is used to sort data.
-    const date = props.dateAdded ? new Date(props.dateAdded) : new Date()
-    this.props.dateAdded = date.valueOf()
-
     // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
-    if (!props.createdAt) this.props.createdAt = date
+    if (!this.props.createdAt) this.props.createdAt = new Date(props.dateAdded)
   }
 
   get id() {
@@ -57,7 +53,7 @@ export class WordDomain extends DomainRoot {
       definition: dto.definition,
       example: dto.example,
       tags: dto.tags,
-      dateAdded: dto.dateAdded,
+      dateAdded: new Date().valueOf() - 60 * 60 * 24 * 1000 * 2, // 1 day ago
     })
   }
 
@@ -76,8 +72,12 @@ export class WordDomain extends DomainRoot {
       example: props.example,
       tags: props.tag,
       dateAdded: props.dateAdded,
-      createdAt: new Date(props.createdAt),
-      updatedAt: new Date(props.createdAt),
+      createdAt: props.createdAt
+        ? new Date(props.createdAt)
+        : new Date(props.dateAdded),
+      updatedAt: props.updatedAt
+        ? new Date(props.updatedAt)
+        : new Date(props.dateAdded),
     })
   }
 
