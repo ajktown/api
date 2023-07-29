@@ -33,6 +33,7 @@ You musth have permission to push to the repository.
 
 docker build -t ajktown/api:latest .
 docker push ajktown/api:latest
+kubectl apply -f k8s
 
 ```
 
