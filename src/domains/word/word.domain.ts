@@ -53,7 +53,7 @@ export class WordDomain extends DomainRoot {
       definition: dto.definition,
       example: dto.example,
       tags: dto.tags,
-      dateAdded: new Date().valueOf() - 60 * 60 * 24 * 1000 * 2, // 1 day ago
+      dateAdded: new Date().valueOf()
     })
   }
 
