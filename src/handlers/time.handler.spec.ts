@@ -1,7 +1,7 @@
-import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { timeHandler } from './time.handler'
 import { DateTime } from 'luxon'
-import { UserDomain } from '@/domains/user/user.domain'
+
+const PRIVATE_DEFAULT_TIMEZONE = 'Asia/Seoul'
 
 describe(`timeHandler.getDaysAgo(date: Date)`, () => {
   it(`should be exposed as a function`, () => {
@@ -30,7 +30,10 @@ describe(`timeHandler.getDaysAgo(date: Date)`, () => {
   ]
 
   tests.forEach((test) => {
-    const gotDaysAgo = timeHandler.getDaysAgo(test.sampleDate)
+    const gotDaysAgo = timeHandler.getDaysAgo(
+      test.sampleDate,
+      PRIVATE_DEFAULT_TIMEZONE,
+    )
     it(`should return "${test.wantDaysAgo}" with arg(s) "${test.sampleDate}"`, () => {
       expect(gotDaysAgo).toBe(test.wantDaysAgo)
     })
@@ -63,12 +66,10 @@ describe(`timeHandler.getDateFromDaysAgo(daysAgo: number)`, () => {
     },
   ]
 
-  const atd = AccessTokenDomain.fromUser(UserDomain.underDevEnv())
-
   tests.forEach((test) => {
     const [gotStart, gotEnd] = timeHandler.getDateFromDaysAgo(
       test.sampleDaysAgo,
-      atd,
+      PRIVATE_DEFAULT_TIMEZONE,
     )
     it(`should return "${test.wantStart}" and "${test.wantEnd}" with arg(s) "${test.sampleDaysAgo}"`, () => {
       expect(gotStart.valueOf()).toEqual(test.wantStart.valueOf())
@@ -116,6 +117,7 @@ describe(`timeHandler.isWithinDaysAgo(daysAgo: number, date: Date)`, () => {
     const gotIsWithin = timeHandler.isWithinDaysAgo(
       test.sampleDaysAgo,
       test.sampleDate,
+      PRIVATE_DEFAULT_TIMEZONE,
     )
     it(`should return "${test.wantIsWithin}" with arg(s) "${test.sampleDaysAgo}" and "${test.sampleDate}"`, () => {
       expect(gotIsWithin).toBe(test.wantIsWithin)
