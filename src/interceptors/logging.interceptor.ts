@@ -4,15 +4,18 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  Logger,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Observable, throwError } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
 
-// TODO: Should use nest js defined logger to log instead for every console used here.
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly logger: Logger,
+  ) {}
 
   async intercept(
     context: ExecutionContext,
@@ -27,7 +30,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const { url, method } = req
 
     // Get who has requested
-    let rui: string = 'ajktown_defined_unidentified_user'
+    let rui: string = 'unidentified_ajktown_user'
     try {
       const requestedUser = await AccessTokenDomain.fromReq(
         req,
@@ -41,13 +44,13 @@ export class LoggingInterceptor implements NestInterceptor {
         // Write a log message, only for any successful request.
         const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
         const message = `✅ [${rui}] [${method}] ${url} (${ms})`
-        console.log(message)
+        this.logger.log(message)
       }),
       catchError((err) => {
         // Write a log message, only for any UNSUCCESSFUL request.
         const ms: string = Date.now() - now + 'ms' // 14 (or 14ms)
         const message = `❌ [${rui}] [${err.name}] [${method}] ${url} (${ms})`
-        console.warn(message)
+        this.logger.warn(message)
         return throwError(() => err)
       }),
     )

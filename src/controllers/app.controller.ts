@@ -5,6 +5,7 @@ export enum ApiHomePath {
   // Unlike other api paths with mandatory /api prefix, this is the only one that doesn't have it.
   // Checkout src/main.ts for more details.
   Home = ``,
+  Healthz = `healthz`,
   HomeHelloWorld = `hello-world`,
 }
 @Controller()
@@ -14,6 +15,11 @@ export class AppController {
   @Get(ApiHomePath.Home)
   home(): string {
     return this.appService.getHello()
+  }
+
+  @Get(ApiHomePath.Healthz)
+  healthz() {
+    return this.appService.getHealthz()
   }
 
   @Get(ApiHomePath.HomeHelloWorld)

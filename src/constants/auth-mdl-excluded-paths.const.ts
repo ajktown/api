@@ -13,6 +13,7 @@ type PathAndMethod = [string, RequestMethod]
 /** Root paths do not contain basic prefix like /api/v1 unlike other api paths. */
 const privateRootPaths: PathAndMethod[] = [
   [ApiHomePath.Home, RequestMethod.GET],
+  [ApiHomePath.Healthz, RequestMethod.GET],
   [ApiHomePath.HomeHelloWorld, RequestMethod.GET],
 ]
 

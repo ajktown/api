@@ -8,6 +8,7 @@ import { ValidationPipe } from '@nestjs/common'
 const PRIVATE_GLOBAL_PREFIX = '/api'
 const PRIVATE_GLOBAL_PREFIX_EXCLUDE = [
   ApiHomePath.Home,
+  ApiHomePath.Healthz,
   ApiHomePath.HomeHelloWorld,
 ]
 const PRIVATE_DEFAULT_LISTENING_PORT = 8000

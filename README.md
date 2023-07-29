@@ -5,6 +5,7 @@
 - [AJK Town API](#ajk-town-api)
   - [Overview](#overview)
   - [Public Image](#public-image)
+    - [Push image command](#push-image-command)
   - [For Envoy](#for-envoy)
   - [About the starter of this project](#about-the-starter-of-this-project)
     - [Description](#description)
@@ -25,6 +26,15 @@ https://api.ajktown.com
 ## Public Image
 
 https://hub.docker.com/r/ajktown/wordnote/tags
+
+### Push image command
+You musth have permission to push to the repository.
+```sh
+
+docker build -t ajktown/api:latest .
+docker push ajktown/api:latest
+
+```
 
 ## For Envoy
 

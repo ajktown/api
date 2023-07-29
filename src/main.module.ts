@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { AppController } from '@/controllers/app.controller'
 import { AppService } from '@/services/app.service'
 import { WordModule } from './modules/word.module'
@@ -23,6 +23,7 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor'
   ],
   controllers: [AppController],
   providers: [
+    Logger,
     AppService,
     {
       // Apply logger to every controller for every request
