@@ -1,13 +1,7 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { Transform } from 'class-transformer'
-import {
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator'
-import { intoArray, intoBoolean, intoNumber } from './index.validator'
+import { IsArray, IsBoolean, IsString } from 'class-validator'
+import { intoArray, intoBoolean } from './index.validator'
 
 // ! Security Warning:
 // UserId must not be here. End user cannot set userId with their own.
@@ -36,9 +30,4 @@ export class PostWordBodyDTO {
   @Transform(intoArray)
   @IsArray()
   tags: string[]
-
-  @Transform(intoNumber)
-  @IsNumber()
-  @IsOptional()
-  dateAdded: number
 }

@@ -31,9 +31,10 @@ export class AuthController {
   @Post(AuthControllerPath.PostGoogleAuth)
   async postGoogleAuth(
     @Body() reqDto: PostAuthGoogleBodyDTO,
+    @Req() req: Request,
     @Res() response: Response,
   ) {
-    const atd = await this.authService.byGoogle(reqDto)
+    const atd = await this.authService.byGoogle(reqDto, req)
     getResWithHttpCookieLambda(
       response,
       await atd.toAccessToken(this.jwtService),
@@ -41,8 +42,8 @@ export class AuthController {
   }
 
   @Post(AuthControllerPath.PostDevTokenAuth)
-  async postDevAuth(@Res() response: Response) {
-    const atd = await this.authService.byDevToken()
+  async postDevAuth(@Req() req: Request, @Res() response: Response) {
+    const atd = await this.authService.byDevToken(req)
     getResWithHttpCookieLambda(
       response,
       await atd.toAccessToken(this.jwtService),

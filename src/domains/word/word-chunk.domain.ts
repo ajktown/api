@@ -30,7 +30,7 @@ export class WordChunkDomain {
     return this.words
   }
 
-  get semesterDomain(): SemesterDomain | undefined {
+  get semesterWithDetails(): SemesterDomain | undefined {
     if (!this.isSemesterOnlyQuery()) return undefined
     return SemesterDomain.fromSemesterCode(
       this.query.semester,
@@ -72,11 +72,12 @@ export class WordChunkDomain {
    */
   private isSemesterOnlyQuery(): boolean {
     let exemptCount = 0
-    if (this.query.pageIndex) exemptCount++
-    if (this.query.itemsPerPage) exemptCount++
+    if (this.query.pageIndex !== undefined) exemptCount++
+    if (this.query.itemsPerPage !== undefined) exemptCount++
+    if (this.query.semester !== undefined) exemptCount++
 
     return (
-      Object.keys(this.query).length === 1 + exemptCount &&
+      Object.keys(this.query).length === exemptCount &&
       this.query.semester !== undefined
     )
   }
@@ -87,6 +88,9 @@ export class WordChunkDomain {
     // Conditions to delete support:
     if (this.words.length > 0) return // if there is at least one word, semester is still valid
     if (!this.isSemesterOnlyQuery()) return // if query is not semester only, semester is still valid
+
+    //  TODO: Write a logger
+    console.warn('Deleting semester automatically with query', this.query)
 
     const semesterRemovedSupportDomain = (
       await SupportDomain.fromMdb(this.atd, supportModel)
@@ -104,7 +108,7 @@ export class WordChunkDomain {
     const slicedWords = wordsRes.slice(sliceFrom, sliceUntil)
     return {
       pagination: pagination,
-      semester: this.semesterDomain?.toResDTO(),
+      semester: this.semesterWithDetails?.toResDTO(),
       wordIds: slicedWords.map((word) => word.id),
       words: slicedWords,
     }

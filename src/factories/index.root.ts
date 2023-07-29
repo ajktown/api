@@ -1,3 +1,4 @@
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { DataBasicsDate } from '@/global.interface'
 import { timeHandler } from '@/handlers/time.handler'
 import { SortOrder } from 'mongoose'
@@ -32,17 +33,30 @@ export class FactoryRoot<DocumentProps> {
   }
 
   /** method that takes daysAgo and return the range of object in MDB */
+  protected toNumRangeObjectByDaysAgo(
+    key: keyof DocumentProps | '_id' | keyof DataBasicsDate,
+    daysAgo: number,
+    atd: AccessTokenDomain,
+  ): { [key: string]: { $gte: number; $lt: number } } {
+    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd)
+    return daysAgo != undefined
+      ? { [key]: { $gte: start.valueOf(), $lt: end.valueOf() } }
+      : {}
+  }
+
+  /** method that takes daysAgo and return the range of object in MDB */
   protected toRangeObjectByDaysAgo(
     key: keyof DocumentProps | '_id' | keyof DataBasicsDate,
     daysAgo: number,
+    atd: AccessTokenDomain,
   ): { [key: string]: { $gte: Date; $lt: Date } } {
-    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo)
-    return daysAgo ? { [key]: { $gte: start, $lt: end } } : {}
+    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd)
+    return daysAgo != undefined ? { [key]: { $gte: start, $lt: end } } : {}
   }
 
   public toSort(): PrivateToSort {
     return {
-      createdAt: -1,
+      dateAdded: -1,
     }
   }
 }

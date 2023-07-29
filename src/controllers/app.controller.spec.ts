@@ -13,9 +13,11 @@ describe('AppController', () => {
   })
 
   describe('getHello', () => {
-    it('should return "Hello World!"', () => {
+    it('should return "Hello World from AJK Town API Service!"', () => {
       const appController = app.get(AppController)
-      expect(appController.getHello()).toBe('Hello World!')
+      expect(appController.getHello()).toBe(
+        'Hello World from AJK Town API Service!',
+      )
     })
   })
 })
