@@ -5,7 +5,10 @@ type JsDateAccepter = number | string | Date
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 
 export const timeHandler = {
-  /** return daysAgo for thTe given JS Date */
+  /** return daysAgo for thTe given JS Date
+   * This also make sure that it is in the same timezone as the given timezone
+   * This means if user's timezone changes, the daysAgo will change as well
+   */
   getDaysAgo: (givenDate: JsDateAccepter, timezone: string): number => {
     // TODO: Write test for this
     const now: Date = DateTime.now().setZone(timezone).startOf('day').toJSDate()
