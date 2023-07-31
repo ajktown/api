@@ -29,4 +29,14 @@ export const timeHandler = {
       nDaysAgoDate.endOf('day').toJSDate(),
     ]
   },
+
+  /** Return true or false if the givenDate is within the nDaysAgo */
+  // TODO: Delete me. not used
+  isWithinDaysAgo: (
+    nDaysAgo: number,
+    givenDate: JsDateAccepter,
+    timezone: string,
+  ) => {
+    return nDaysAgo === timeHandler.getDaysAgo(givenDate, timezone)
+  },
 }
