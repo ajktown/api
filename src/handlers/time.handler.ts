@@ -5,12 +5,15 @@ type JsDateAccepter = number | string | Date
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 
 export const timeHandler = {
-  /** return daysAgo for the given JS Date */
+  /** return daysAgo for thTe given JS Date */
   getDaysAgo: (givenDate: JsDateAccepter, timezone: string): number => {
-    const today: Date = DateTime.now().setZone(timezone).toJSDate()
-    const convertedDate = new Date(givenDate)
+    // TODO: Write test for this
+    const now: Date = DateTime.now().setZone(timezone).startOf('day').toJSDate()
+    const convertedDate = DateTime.fromJSDate(new Date(givenDate))
+      .startOf('day')
+      .toJSDate()
 
-    return ((today.valueOf() - convertedDate.valueOf()) / DAY_IN_MS) | 0
+    return (now.valueOf() - convertedDate.valueOf()) / DAY_IN_MS
   },
   /** Returns JS Start Date and End Date from given nDaysAgo */
   getDateFromDaysAgo: (nDaysAgo: number, timezone: string): [Date, Date] => {
