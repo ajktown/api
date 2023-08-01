@@ -13,10 +13,11 @@ export const timeHandler = {
     // TODO: Write test for this
     const now: Date = DateTime.now().setZone(timezone).startOf('day').toJSDate()
     const convertedDate = DateTime.fromJSDate(new Date(givenDate))
+      .setZone(timezone)
       .startOf('day')
       .toJSDate()
 
-    return (now.valueOf() - convertedDate.valueOf()) / DAY_IN_MS
+    return ((now.valueOf() - convertedDate.valueOf()) / DAY_IN_MS) | 0
   },
   /** Returns JS Start Date and End Date from given nDaysAgo */
   getDateFromDaysAgo: (nDaysAgo: number, timezone: string): [Date, Date] => {
