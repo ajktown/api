@@ -20,7 +20,8 @@ export class SemesterDetailsDomain {
     wordDomains.forEach((w) => {
       const word = w.toResDTO(atd)
       word.id && wordIdsSet.add(word.id)
-      word.dateAdded && daysAgoSet.add(timeHandler.getDaysAgo(word.dateAdded))
+      word.dateAdded &&
+        daysAgoSet.add(timeHandler.getDaysAgo(word.dateAdded, atd.timezone))
       word.languageCode && languagesSet.add(word.languageCode)
       word.tags.forEach((tag) => tagsSet.add(tag))
     })
