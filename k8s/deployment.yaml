@@ -43,6 +43,21 @@ spec:
             secretKeyRef:
               name: ajktown-api-secret
               key: google_client_secret
+        - name: ADMIN_ACCOUNT_IDS
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: admin_account_ids
+        - name: ADMIN_DETECT_LANGUAGE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: admin_detect_language_api_key
+        - name: NON_ADMIN_DETECT_LANGUAGE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: non_admin_detect_language_api_key
         # ! Non sensitive data starting from here
         - name: LISTENING_PORT
           value: "3000"
