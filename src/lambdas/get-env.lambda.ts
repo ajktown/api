@@ -15,6 +15,10 @@ export enum SupportedEnvAttr {
   // ! Open AI
   StrictlyAllowChatGtp = `IS_CHAT_GPT_ENABLED`,
   OpenAiKey = `OPEN_AI_KEY`,
+  // ! Detect Language API Access Keys
+  ADMIN_ACCOUNT_IDS = `ADMIN_ACCOUNT_IDS`, // comma separated list of account ids
+  AdminDetectLanguageApiKey = `ADMIN_DETECT_LANGUAGE_API_KEY`,
+  NonAdminDetectLanguageApiKey = `NON_ADMIN_DETECT_LANGUAGE_API_KEY`,
 }
 
 export const envLambda = {
@@ -30,6 +34,13 @@ export const envLambda = {
   getCorsOrigin: (): string => {
     const defaultCorsOrigin = 'http://localhost:3000'
     return envLambda.get(SupportedEnvAttr.Cors) ?? defaultCorsOrigin
+  },
+  getAdminIds: (): string[] => {
+    const commaSeparatedAdminIds = envLambda.get(
+      SupportedEnvAttr.ADMIN_ACCOUNT_IDS,
+    )
+    if (!commaSeparatedAdminIds) return []
+    return commaSeparatedAdminIds.split(',')
   },
   getJwtTokenSecret: () => {
     return envLambda.get(SupportedEnvAttr.JwtTokenSecret)
@@ -52,6 +63,7 @@ export const envLambda = {
           return StrictlyEnv.LocalMode
       }
     },
+
     isProduct: () => envLambda.mode.get() === StrictlyEnv.ProductMode,
     isLocal: () => envLambda.mode.get() === StrictlyEnv.LocalMode,
   },

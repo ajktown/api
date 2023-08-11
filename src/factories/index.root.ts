@@ -38,7 +38,7 @@ export class FactoryRoot<DocumentProps> {
     daysAgo: number,
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: number; $lt: number } } {
-    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd)
+    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd.timezone)
     return daysAgo != undefined
       ? { [key]: { $gte: start.valueOf(), $lt: end.valueOf() } }
       : {}
@@ -50,7 +50,7 @@ export class FactoryRoot<DocumentProps> {
     daysAgo: number,
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: Date; $lt: Date } } {
-    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd)
+    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd.timezone)
     return daysAgo != undefined ? { [key]: { $gte: start, $lt: end } } : {}
   }
 
