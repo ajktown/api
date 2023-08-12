@@ -39,7 +39,6 @@ export class WordService {
     }
 
     postReqDto.languageCode = await getDetectedLanguageLambda(
-      atd,
       postReqDto.term,
       this.logger,
     )

@@ -1,4 +1,3 @@
-import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { GlobalLanguageCode } from '@/global.interface'
 import axios from 'axios'
 import { SupportedEnvAttr, envLambda } from './get-env.lambda'
@@ -19,17 +18,11 @@ interface PrivateDetectLanguageRes {
 }
 
 export const getDetectedLanguageLambda = async (
-  atd: AccessTokenDomain,
   term: string,
   logger: Logger,
 ): Promise<GlobalLanguageCode> => {
-  let isAdminKeyUsed: boolean = false
   try {
-    isAdminKeyUsed = envLambda.getAdminIds().includes(atd.userId)
-
-    const key = isAdminKeyUsed
-      ? envLambda.get(SupportedEnvAttr.AdminDetectLanguageApiKey)
-      : envLambda.get(SupportedEnvAttr.NonAdminDetectLanguageApiKey)
+    const key = envLambda.get(SupportedEnvAttr.DetectLanguageApiKey)
 
     const res: PrivateDetectLanguageRes = await axios.post(
       `https://ws.detectlanguage.com/0.2/detect`,
@@ -45,7 +38,7 @@ export const getDetectedLanguageLambda = async (
 
     if (res.data.data.detections.length > 0) {
       logger.verbose(
-        `Detected language: ${res.data.data.detections[0].language} with isAdminKeyUsed: ${isAdminKeyUsed}}`,
+        `Detected language: ${res.data.data.detections[0].language}`,
       )
       return res.data.data.detections[0].language
     }
@@ -53,7 +46,7 @@ export const getDetectedLanguageLambda = async (
     return PRIVATE_DEFAULT_LANGUAGE
   } catch (err) {
     logger.warn(
-      `Failed to detect language with isAdminKeyUsed: ${isAdminKeyUsed} & with the following error: ${err}. Default language is returned: ${PRIVATE_DEFAULT_LANGUAGE}`,
+      `Failed to detect language with the following error: ${err}. Default language is returned: ${PRIVATE_DEFAULT_LANGUAGE}`,
     )
     return PRIVATE_DEFAULT_LANGUAGE
   }
