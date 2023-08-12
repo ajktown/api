@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Logger, Module } from '@nestjs/common'
 import { WordService } from '@/services/word.service'
 import { WordController } from '@/controllers/word.controller'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -15,6 +15,7 @@ import { SemesterService } from '@/services/semester.service'
   ],
   controllers: [WordController],
   providers: [
+    Logger,
     WordService,
     TermToExamplePrompt,
     GetWordQueryFactory,

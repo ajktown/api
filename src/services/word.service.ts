@@ -13,7 +13,7 @@ import {
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
 @Injectable()
@@ -25,6 +25,7 @@ export class WordService {
     private supportModel: SupportModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,
+    private readonly logger: Logger,
   ) {}
 
   /** Post a new word */
@@ -40,6 +41,7 @@ export class WordService {
     postReqDto.languageCode = await getDetectedLanguageLambda(
       atd,
       postReqDto.term,
+      this.logger,
     )
     return await WordDomain.fromPostDto(atd, postReqDto).post(
       atd,
