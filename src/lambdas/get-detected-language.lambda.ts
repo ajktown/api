@@ -40,7 +40,7 @@ export const getDetectedLanguageLambda = async (
     if (res.data.data.detections.length > 0)
       return res.data.data.detections[0].language
     return 'en'
-  } catch (err) {
+  } catch {
     return 'en'
   }
 }
