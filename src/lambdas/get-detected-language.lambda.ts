@@ -3,15 +3,16 @@ import { GlobalLanguageCode } from '@/global.interface'
 import axios from 'axios'
 import { SupportedEnvAttr, envLambda } from './get-env.lambda'
 
-interface Result {
-  language: GlobalLanguageCode // "en",
-  confidence: number // 83.896703655741,
-  isReliable: boolean // true
-}
-interface SuccessResponse {
+const PRIVATE_DEFAULT_LANGUAGE: GlobalLanguageCode = 'en'
+
+interface PrivateDetectLanguageRes {
   data: {
     data: {
-      detections: Result[]
+      detections: {
+        language: GlobalLanguageCode // "en",
+        confidence: number // 83.896703655741,
+        isReliable: boolean // true
+      }[]
     }
   }
 }
@@ -25,7 +26,7 @@ export const getDetectedLanguageLambda = async (
       ? envLambda.get(SupportedEnvAttr.AdminDetectLanguageApiKey)
       : envLambda.get(SupportedEnvAttr.NonAdminDetectLanguageApiKey)
 
-    const res: SuccessResponse = await axios.post(
+    const res: PrivateDetectLanguageRes = await axios.post(
       `https://ws.detectlanguage.com/0.2/detect`,
       {
         q: term,
@@ -39,8 +40,8 @@ export const getDetectedLanguageLambda = async (
 
     if (res.data.data.detections.length > 0)
       return res.data.data.detections[0].language
-    return 'en'
+    return PRIVATE_DEFAULT_LANGUAGE
   } catch {
-    return 'en'
+    return PRIVATE_DEFAULT_LANGUAGE
   }
 }
