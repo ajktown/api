@@ -4,6 +4,15 @@ import { SupportedEnvAttr, envLambda } from './get-env.lambda'
 import { Logger } from '@nestjs/common'
 
 const PRIVATE_DEFAULT_LANGUAGE: GlobalLanguageCode = 'en'
+// Only languages below are allowed to be used on AJK Town at this point
+const PRIVATE_ALLOWED_LANGUAGE_SET = new Set<GlobalLanguageCode>([
+  'ko',
+  'en',
+  'ja',
+  'zh',
+  'fa',
+  PRIVATE_DEFAULT_LANGUAGE,
+])
 
 interface PrivateDetectLanguageRes {
   data: {
@@ -37,9 +46,15 @@ export const getDetectedLanguageLambda = async (
     )
 
     if (res.data.data.detections.length > 0) {
-      logger.verbose(
-        `Detected language: ${res.data.data.detections[0].language}`,
-      )
+      const detectedLanguage = res.data.data.detections[0].language
+      logger.verbose(`Detected language: ${detectedLanguage}`)
+
+      if (!PRIVATE_ALLOWED_LANGUAGE_SET.has(detectedLanguage)) {
+        logger.warn(
+          `Detected language "${detectedLanguage}" is not supported on AJK Town. Default language is returned: ${PRIVATE_DEFAULT_LANGUAGE}`,
+        )
+        return PRIVATE_DEFAULT_LANGUAGE
+      }
       return res.data.data.detections[0].language
     }
 
