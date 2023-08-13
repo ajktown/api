@@ -45,20 +45,19 @@ export const getDetectedLanguageLambda = async (
       },
     )
 
-    if (res.data.data.detections.length > 0) {
-      const detectedLanguage = res.data.data.detections[0].language
-      logger.verbose(`Detected language: ${detectedLanguage}`)
+    if (res.data.data.detections.length === 0) return PRIVATE_DEFAULT_LANGUAGE
 
-      if (!PRIVATE_ALLOWED_LANGUAGE_SET.has(detectedLanguage)) {
-        logger.warn(
-          `Detected language "${detectedLanguage}" is not supported on AJK Town. Default language is returned: ${PRIVATE_DEFAULT_LANGUAGE}`,
-        )
-        return PRIVATE_DEFAULT_LANGUAGE
-      }
-      return res.data.data.detections[0].language
+    const detectedLanguage = res.data.data.detections[0].language
+    logger.verbose(`Detected language: ${detectedLanguage}`)
+
+    if (!PRIVATE_ALLOWED_LANGUAGE_SET.has(detectedLanguage)) {
+      logger.warn(
+        `Detected language "${detectedLanguage}" is not supported on AJK Town. Default language is returned: ${PRIVATE_DEFAULT_LANGUAGE}`,
+      )
+      return PRIVATE_DEFAULT_LANGUAGE
     }
 
-    return PRIVATE_DEFAULT_LANGUAGE
+    return detectedLanguage
   } catch (err) {
     logger.warn(
       `Failed to detect language with the following error: ${err}. Default language is returned: ${PRIVATE_DEFAULT_LANGUAGE}`,
