@@ -31,7 +31,10 @@ export const getDetectedLanguageLambda = async (
   logger: Logger,
 ): Promise<GlobalLanguageCode> => {
   try {
-    const key = envLambda.get(SupportedEnvAttr.DetectLanguageApiKey)
+    // The key may contain new line characters. Remove them.
+    const key = envLambda
+      .get(SupportedEnvAttr.DetectLanguageApiKey)
+      .replace(/\r?\n|\r/g, '')
 
     const res: PrivateDetectLanguageRes = await axios.post(
       `https://ws.detectlanguage.com/0.2/detect`,
@@ -40,6 +43,7 @@ export const getDetectedLanguageLambda = async (
       },
       {
         headers: {
+          'content-type': 'application/json',
           Authorization: `Bearer ${key}`,
         },
       },
