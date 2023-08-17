@@ -15,6 +15,8 @@ export enum SupportedEnvAttr {
   // ! Open AI
   StrictlyAllowChatGtp = `IS_CHAT_GPT_ENABLED`,
   OpenAiKey = `OPEN_AI_KEY`,
+  // ! Detect Language API Access Keys
+  DetectLanguageApiKey = `DETECT_LANGUAGE_API_KEY`,
 }
 
 export const envLambda = {
@@ -52,6 +54,7 @@ export const envLambda = {
           return StrictlyEnv.LocalMode
       }
     },
+
     isProduct: () => envLambda.mode.get() === StrictlyEnv.ProductMode,
     isLocal: () => envLambda.mode.get() === StrictlyEnv.LocalMode,
   },

@@ -1,4 +1,5 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
+import { envLambda } from '@/lambdas/get-env.lambda'
 import {
   Injectable,
   Logger,
@@ -17,6 +18,10 @@ export class AuthMiddleware implements NestMiddleware {
     private readonly jwtService: JwtService,
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
+    // mimic latency in real api
+    if (envLambda.mode.isLocal())
+      await new Promise((resolve) => setTimeout(resolve, 200))
+
     try {
       await AccessTokenDomain.fromReq(req, this.jwtService)
     } catch (err) {

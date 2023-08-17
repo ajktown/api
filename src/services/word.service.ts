@@ -6,13 +6,14 @@ import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { BadRequestError } from '@/errors/400/index.error'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
+import { getDetectedLanguageLambda } from '@/lambdas/get-detected-language.lambda'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import {
   SupportProps,
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
 @Injectable()
@@ -24,6 +25,7 @@ export class WordService {
     private supportModel: SupportModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,
+    private readonly logger: Logger,
   ) {}
 
   /** Post a new word */
@@ -36,6 +38,10 @@ export class WordService {
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
+    postReqDto.languageCode = await getDetectedLanguageLambda(
+      postReqDto.term,
+      this.logger,
+    )
     return await WordDomain.fromPostDto(atd, postReqDto).post(
       atd,
       this.wordModel,

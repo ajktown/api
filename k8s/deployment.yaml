@@ -43,6 +43,11 @@ spec:
             secretKeyRef:
               name: ajktown-api-secret
               key: google_client_secret
+        - name: DETECT_LANGUAGE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ajktown-api-secret
+              key: detect_language_api_key
         # ! Non sensitive data starting from here
         - name: LISTENING_PORT
           value: "3000"
