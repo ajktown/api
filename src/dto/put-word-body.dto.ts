@@ -32,6 +32,10 @@ export class PutWordByIdBodyDTO {
   @IsOptional()
   example: string
 
+  @IsString()
+  @IsOptional()
+  exampleLink: string
+
   @Transform(intoArray)
   @IsArray()
   @IsOptional()

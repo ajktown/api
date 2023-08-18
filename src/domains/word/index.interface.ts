@@ -10,6 +10,7 @@ export interface IWord extends DataBasicsDate {
   pronunciation: string
   definition: string
   example: string
+  exampleLink: string
   tags: string[]
   dateAdded: number
 }

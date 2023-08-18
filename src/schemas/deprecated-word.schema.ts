@@ -28,6 +28,9 @@ export class WordProps {
   example: string // example sentence
 
   @Prop()
+  exampleLink: string // example sentence link
+
+  @Prop()
   sem: number //231
 
   @Prop()
