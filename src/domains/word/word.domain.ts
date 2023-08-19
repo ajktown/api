@@ -29,6 +29,7 @@ export class WordDomain extends DomainRoot {
     this.props = props
 
     this.props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
+    this.props.example = props.example || ''
     this.props.exampleLink = props.exampleLink || ''
     // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
     if (!this.props.createdAt) this.props.createdAt = new Date(props.dateAdded)
