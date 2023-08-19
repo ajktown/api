@@ -26,10 +26,10 @@ export class WordDomain extends DomainRoot {
   private constructor(props: Partial<IWord>) {
     super()
     if (!props.userId) throw new DataNotPresentError('User ID')
-
     this.props = props
-    props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
 
+    this.props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
+    this.props.exampleLink = props.exampleLink || ''
     // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
     if (!this.props.createdAt) this.props.createdAt = new Date(props.dateAdded)
   }
@@ -52,6 +52,7 @@ export class WordDomain extends DomainRoot {
       pronunciation: dto.pronunciation,
       definition: dto.definition,
       example: dto.example,
+      exampleLink: dto.exampleLink,
       tags: dto.tags,
       dateAdded: new Date().valueOf(),
     })
@@ -70,6 +71,7 @@ export class WordDomain extends DomainRoot {
       pronunciation: props.pronun,
       definition: props.meaning,
       example: props.example,
+      exampleLink: props.exampleLink,
       tags: props.tag,
       dateAdded: props.dateAdded,
       createdAt: props.createdAt
@@ -113,6 +115,7 @@ export class WordDomain extends DomainRoot {
       pronun: this.props.pronunciation,
       meaning: this.props.definition,
       example: this.props.example,
+      exampleLink: this.props.exampleLink,
       tag: this.props.tags,
       ownerID: this.props.userId,
       dateAdded: this.props.dateAdded,
@@ -155,6 +158,7 @@ export class WordDomain extends DomainRoot {
             pronun: dto.pronunciation,
             meaning: dto.definition,
             example: dto.example,
+            exampleLink: dto.exampleLink,
             tag: dto.tags,
           },
           { new: true },

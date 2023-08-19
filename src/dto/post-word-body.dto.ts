@@ -27,6 +27,9 @@ export class PostWordBodyDTO {
   @IsString()
   example: string
 
+  @IsString()
+  exampleLink: string
+
   @Transform(intoArray)
   @IsArray()
   tags: string[]

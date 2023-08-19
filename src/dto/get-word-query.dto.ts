@@ -59,6 +59,10 @@ export class GetWordQueryDTO
   @IsString()
   example: string
 
+  @IsOptional()
+  @IsString()
+  exampleLink: string
+
   @Transform(intoNumber)
   @IsOptional()
   @IsNumber()
