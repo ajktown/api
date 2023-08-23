@@ -30,7 +30,7 @@ export class PromptRoot {
     return new OpenAI({ apiKey })
   }
 
-  private buildPrompt(args: PrivateArgs) {
+  private buildContent(args: PrivateArgs): string {
     return `${args.command}
     ${args.extraRequests.map((request) => request).join('\n')}
     ${args.samples
@@ -48,7 +48,7 @@ export class PromptRoot {
 
     const openai = this.prepareOpenai()
     const completion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: this.buildPrompt(args) }],
+      messages: [{ role: 'user', content: this.buildContent(args) }],
       model: PrivateOpenaiModel.Gpt3_5Turbo,
       temperature: 0.6, // 0 ~ 1
     })
