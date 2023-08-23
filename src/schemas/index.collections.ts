@@ -4,6 +4,7 @@ export enum SchemaCollectionName {
   Words = `words`,
   Users = `users`,
   Supports = `supports`,
+  Preferences = `preferences`,
 }
 
 export enum DiscriminatorKey {
