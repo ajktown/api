@@ -1,6 +1,6 @@
 import { InternalServerError } from '@/errors/500/index.error'
 import { envLambda, SupportedEnvAttr } from '@/lambdas/get-env.lambda'
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 
 const PRIVATE_RES_HEADER = `Answer`
 
@@ -17,7 +17,8 @@ interface PrivateArgs {
 }
 
 enum PrivateOpenaiModel {
-  TextDavinci003 = 'text-davinci-003',
+  TextDavinci003 = 'text-davinci-003', // Used since the beginning
+  Gpt3_5Turbo = `gpt-3.5-turbo`, // Used since Aug 2023
 }
 
 export class PromptRoot {
@@ -26,11 +27,7 @@ export class PromptRoot {
     if (!apiKey)
       throw new InternalServerError('Open AI API Key not found on env file')
 
-    return new OpenAIApi(
-      new Configuration({
-        apiKey,
-      }),
-    )
+    return new OpenAI({ apiKey })
   }
 
   private buildPrompt(args: PrivateArgs) {
@@ -50,13 +47,12 @@ export class PromptRoot {
     if (!envLambda.isChatGptAllowed()) return ''
 
     const openai = this.prepareOpenai()
-    const completion = await openai.createCompletion({
-      model: PrivateOpenaiModel.TextDavinci003,
-      prompt: this.buildPrompt(args),
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: 'user', content: this.buildPrompt(args) }],
+      model: PrivateOpenaiModel.Gpt3_5Turbo,
       temperature: 0.6, // 0 ~ 1
-      // user, TODO: ChatGPT offers abuse model. Apply with user id of the mongo db
     })
 
-    return completion.data.choices[0].text.trim()
+    return completion.choices[0].message.content
   }
 }
