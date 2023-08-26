@@ -22,6 +22,7 @@ enum PrivateOpenaiModel {
 }
 
 export class PromptRoot {
+  /** Prepares connection with OpenAI */
   private prepareOpenai() {
     const apiKey = envLambda.get(SupportedEnvAttr.OpenAiKey)
     if (!apiKey)
@@ -30,6 +31,7 @@ export class PromptRoot {
     return new OpenAI({ apiKey })
   }
 
+  /** Builds a request with given arguments */
   private buildContent(args: PrivateArgs): string {
     return `${args.command}
     ${args.extraRequests.map((request) => request).join('\n')}
@@ -43,6 +45,7 @@ export class PromptRoot {
     ${PRIVATE_RES_HEADER}:`
   }
 
+  /** Returns OpenAI generated response */
   protected async execute(args: PrivateArgs): Promise<string> {
     if (!envLambda.isChatGptAllowed()) return ''
 
