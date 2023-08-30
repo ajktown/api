@@ -15,6 +15,9 @@ export type PreferenceModel = Model<PreferenceDoc>
   timestamps: defaultSchemaTimestampsConfig,
 })
 export class PreferenceProps {
+  @Prop({ required: true })
+  ownerID: string // the owner id 5f85729......
+
   @Prop()
   nativeLanguages: string[] // ['en', 'ko', 'ja']
 }
