@@ -6,7 +6,7 @@ import { PreferenceService } from '@/services/preference.service'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 
 export enum PreferenceControllerPath {
-  GetPreference = `preferences`,
+  GetPreference = `preference`,
 }
 
 @Controller(AjkTownApiVersion.V1)
