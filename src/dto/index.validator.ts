@@ -31,3 +31,7 @@ export const intoArray = ({ value }: TransformFnParams): string[] => {
   if (Array.isArray(value)) return value
   throw new BadRequestError('Invalid tags value')
 }
+
+export const intoUniqueArray = (params: TransformFnParams): string[] => {
+  return Array.from(new Set(intoArray(params)))
+}
