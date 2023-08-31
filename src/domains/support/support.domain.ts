@@ -24,7 +24,7 @@ export class SupportDomain {
   }
 
   /** Returns SupportDomain from MongoDB. It also creates SupportDomain if it doesn't exist. */
-  static async fromMdb(
+  static async fromMdbByAtd(
     atd: AccessTokenDomain,
     model: SupportModel,
     avoidRecursiveCall = false,
@@ -51,7 +51,7 @@ export class SupportDomain {
       })
 
       await temp.toDocument(model).save()
-      return this.fromMdb(atd, model, true)
+      return this.fromMdbByAtd(atd, model, true)
     }
 
     return new SupportDomain({

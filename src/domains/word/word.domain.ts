@@ -94,7 +94,7 @@ export class WordDomain extends DomainRoot {
     )
 
     try {
-      const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
+      const supportDomain = await SupportDomain.fromMdbByAtd(atd, supportModel)
       await supportDomain
         .updateWithPostedWord(atd, newlyPostedWordDomain)
         .update(supportModel)
@@ -179,7 +179,7 @@ export class WordDomain extends DomainRoot {
     }
 
     await wordModel.findByIdAndDelete(this.props.id).exec()
-    const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
+    const supportDomain = await SupportDomain.fromMdbByAtd(atd, supportModel)
     await supportDomain.updateWithWordDeleted(supportModel)
   }
 }
