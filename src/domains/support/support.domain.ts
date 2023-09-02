@@ -3,12 +3,14 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import {
   SupportProps,
   SupportModel,
+  SupportDoc,
 } from '@/schemas/deprecated-supports.schema'
 import { WordDomain } from '../word/word.domain'
 import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
+import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
 
 export class SupportDomain {
   private readonly props: Partial<ISupport>
@@ -21,6 +23,16 @@ export class SupportDomain {
 
   get id() {
     return this.props.id
+  }
+
+  static fromMdb(doc: SupportDoc): SupportDomain {
+    return new SupportDomain({
+      id: doc.id,
+      userId: doc.ownerID,
+      semesters: doc.sems,
+      newWordCount: doc.newWordCnt,
+      deletedWordCount: doc.deletedWordCnt,
+    })
   }
 
   /** Returns SupportDomain from MongoDB. It also creates SupportDomain if it doesn't exist. */
@@ -36,10 +48,12 @@ export class SupportDomain {
       )
     }
 
-    if (supportDocs.length > 2)
-      throw new BadRequestError(
-        `We got ${supportDocs.length} supportDocs, when we expect 1 or 0`,
-      )
+    if (supportDocs.length > 1) {
+      // TODO: Write a logger
+      for await (const doc of supportDocs.slice(1)) {
+        await SupportDomain.fromMdb(doc).delete(atd, model)
+      }
+    }
 
     if (!avoidRecursiveCall && supportDocs.length === 0) {
       const temp = new SupportDomain({
@@ -54,13 +68,7 @@ export class SupportDomain {
       return this.fromMdbByAtd(atd, model, true)
     }
 
-    return new SupportDomain({
-      id: supportDocs[0].id,
-      userId: supportDocs[0].ownerID,
-      semesters: supportDocs[0].sems,
-      newWordCount: supportDocs[0].newWordCnt,
-      deletedWordCount: supportDocs[0].deletedWordCnt,
-    })
+    return SupportDomain.fromMdb(supportDocs[0])
   }
 
   updateWithPostedWord(
@@ -138,5 +146,13 @@ export class SupportDomain {
       },
       { upsert: true },
     )
+  }
+
+  async delete(atd: AccessTokenDomain, model: SupportModel): Promise<void> {
+    if (atd.userId !== this.props.userId) {
+      throw new DeleteForbiddenError(atd, `Support`)
+    }
+
+    await model.findByIdAndDelete(this.props.id).exec()
   }
 }

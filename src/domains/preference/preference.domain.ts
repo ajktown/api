@@ -8,6 +8,7 @@ import {
 import { BadRequestError } from '@/errors/400/index.error'
 import { GlobalLanguageCode } from '@/global.interface'
 import { PutPreferenceDto } from '@/dto/put-preference.dto'
+import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
 
 export class PreferenceDomain {
   private readonly props: Partial<IPreference>
@@ -44,10 +45,12 @@ export class PreferenceDomain {
       )
     }
 
-    if (preferenceDocs.length > 2)
-      throw new BadRequestError(
-        `We got ${preferenceDocs.length} preferenceDocs, when we expect 1 or 0`,
-      )
+    if (preferenceDocs.length > 1) {
+      // TODO: Write a logger
+      for await (const doc of preferenceDocs.slice(1)) {
+        await PreferenceDomain.fromMdb(doc).delete(atd, model)
+      }
+    }
 
     if (!avoidRecursiveCall && preferenceDocs.length === 0) {
       const temp = new PreferenceDomain({
@@ -89,5 +92,13 @@ export class PreferenceDomain {
       nativeLanguages: this.props.nativeLanguages,
     }
     return new preferenceModel(preferenceProps)
+  }
+
+  async delete(atd: AccessTokenDomain, model: PreferenceModel): Promise<void> {
+    if (atd.userId !== this.props.ownerId) {
+      throw new DeleteForbiddenError(atd, `Preference`)
+    }
+
+    await model.findByIdAndDelete(this.props.id).exec()
   }
 }
