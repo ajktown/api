@@ -64,11 +64,56 @@ export class SupportDomain {
         deletedWordCount: 0,
       })
 
-      await temp.toDocument(model).save()
+      await temp.toDoc(model).save()
       return this.fromMdbByAtd(atd, model, true)
     }
 
     return SupportDomain.fromMdb(supportDocs[0])
+  }
+
+  /** Removes given semester within the support */
+  removeSemester(semester: number): this {
+    const newSemesters = new Set(this.props.semesters)
+    newSemesters.delete(semester)
+    this.props.semesters = Array.from(newSemesters)
+
+    return this
+  }
+
+  toDoc(supportModel: SupportModel): SupportDoc {
+    const docProps: SupportProps = {
+      ownerID: this.props.userId,
+      sems: this.props.semesters,
+      newWordCnt: this.props.newWordCount,
+      deletedWordCnt: this.props.deletedWordCount,
+    }
+    return new supportModel(docProps)
+  }
+
+  toResDTO(atd: AccessTokenDomain): Partial<ISupport> {
+    if (atd.userId !== this.props.userId)
+      throw new ReadForbiddenError(atd, `Support`)
+
+    return {
+      id: this.props.id,
+      userId: this.props.userId,
+      semesters: this.props.semesters,
+      newWordCount: this.props.newWordCount,
+      deletedWordCount: this.props.deletedWordCount,
+    }
+  }
+
+  async update(model: SupportModel) {
+    return model.findByIdAndUpdate(
+      this.props.id,
+      {
+        // ownerID: this.props.userId,
+        sems: this.props.semesters,
+        newWordCnt: this.props.newWordCount,
+        deletedWordCnt: this.props.deletedWordCount,
+      },
+      { upsert: true },
+    )
   }
 
   updateWithPostedWord(
@@ -93,59 +138,6 @@ export class SupportDomain {
     this.props.deletedWordCount += 1
     await this.update(model)
     return this
-  }
-
-  /** Removes given semester within the support */
-  removeSemester(semester: number): this {
-    const newSemesters = new Set(this.props.semesters)
-    newSemesters.delete(semester)
-    this.props.semesters = Array.from(newSemesters)
-
-    return this
-  }
-
-  toDocument(supportModel: SupportModel) {
-    const docProps: SupportProps = {
-      ownerID: this.props.userId,
-      sems: this.props.semesters,
-      newWordCnt: this.props.newWordCount,
-      deletedWordCnt: this.props.deletedWordCount,
-    }
-    return new supportModel(docProps)
-  }
-
-  toResDTO(atd: AccessTokenDomain): Partial<ISupport> {
-    if (atd.userId !== this.props.userId)
-      throw new ReadForbiddenError(atd, `Support`)
-
-    return {
-      id: this.props.id,
-      userId: this.props.userId,
-      semesters: this.props.semesters,
-      newWordCount: this.props.newWordCount,
-      deletedWordCount: this.props.deletedWordCount,
-    }
-  }
-
-  toMdbUpdate() {
-    return {
-      // ownerID: this.props.userId,
-      sems: this.props.semesters,
-      newWordCnt: this.props.newWordCount,
-      deletedWordCnt: this.props.deletedWordCount,
-    }
-  }
-  async update(model: SupportModel) {
-    return model.findByIdAndUpdate(
-      this.props.id,
-      {
-        // ownerID: this.props.userId,
-        sems: this.props.semesters,
-        newWordCnt: this.props.newWordCount,
-        deletedWordCnt: this.props.deletedWordCount,
-      },
-      { upsert: true },
-    )
   }
 
   async delete(atd: AccessTokenDomain, model: SupportModel): Promise<void> {

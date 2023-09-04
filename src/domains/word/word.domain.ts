@@ -90,7 +90,7 @@ export class WordDomain extends DomainRoot {
     supportModel: SupportModel,
   ): Promise<WordDomain> {
     const newlyPostedWordDomain = WordDomain.fromMdb(
-      await this.toModel(model).save(),
+      await this.toDoc(model).save(),
     )
 
     try {
@@ -107,7 +107,7 @@ export class WordDomain extends DomainRoot {
     return newlyPostedWordDomain
   }
 
-  private toModel(wordModel: WordModel): WordDoc {
+  private toDoc(wordModel: WordModel): WordDoc {
     const docProps: WordProps = {
       language: this.props.languageCode,
       sem: this.props.semester,

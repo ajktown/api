@@ -21,10 +21,6 @@ export class PreferenceDomain {
     return this.props.id
   }
 
-  toResDTO(): Partial<IPreference> {
-    return this.props
-  }
-
   static fromMdb(doc: PreferenceDoc): PreferenceDomain {
     return new PreferenceDomain({
       id: doc.id,
@@ -59,11 +55,23 @@ export class PreferenceDomain {
         nativeLanguages: [],
       })
 
-      await temp.toDocument(model).save()
+      await temp.toDoc(model).save()
       return this.fromMdbByAtd(atd, model, true)
     }
 
     return PreferenceDomain.fromMdb(preferenceDocs[0])
+  }
+
+  toDoc(preferenceModel: PreferenceModel): PreferenceDoc {
+    const preferenceProps: PreferenceProps = {
+      ownerID: this.props.ownerId,
+      nativeLanguages: this.props.nativeLanguages,
+    }
+    return new preferenceModel(preferenceProps)
+  }
+
+  toResDTO(): Partial<IPreference> {
+    return this.props
   }
 
   async updateWithPutDto(
@@ -84,14 +92,6 @@ export class PreferenceDomain {
       )
       .exec()
     return PreferenceDomain.fromMdbByAtd(atd, model)
-  }
-
-  toDocument(preferenceModel: PreferenceModel) {
-    const preferenceProps: PreferenceProps = {
-      ownerID: this.props.ownerId,
-      nativeLanguages: this.props.nativeLanguages,
-    }
-    return new preferenceModel(preferenceProps)
   }
 
   async delete(atd: AccessTokenDomain, model: PreferenceModel): Promise<void> {
