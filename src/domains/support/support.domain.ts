@@ -107,7 +107,7 @@ export class SupportDomain {
     return model.findByIdAndUpdate(
       this.props.id,
       {
-        // ownerID: this.props.userId,
+        // ownerID: this.props.userId, // ownerId should not be modified
         sems: this.props.semesters,
         newWordCnt: this.props.newWordCount,
         deletedWordCnt: this.props.deletedWordCount,
