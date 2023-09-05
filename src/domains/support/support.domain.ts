@@ -25,16 +25,6 @@ export class SupportDomain {
     return this.props.id
   }
 
-  static fromMdb(doc: SupportDoc): SupportDomain {
-    return new SupportDomain({
-      id: doc.id,
-      userId: doc.ownerID,
-      semesters: doc.sems,
-      newWordCount: doc.newWordCnt,
-      deletedWordCount: doc.deletedWordCnt,
-    })
-  }
-
   /** Returns SupportDomain from MongoDB. It also creates SupportDomain if it doesn't exist. */
   static async fromMdbByAtd(
     atd: AccessTokenDomain,
@@ -69,6 +59,16 @@ export class SupportDomain {
     }
 
     return SupportDomain.fromMdb(supportDocs[0])
+  }
+
+  static fromMdb(doc: SupportDoc): SupportDomain {
+    return new SupportDomain({
+      id: doc.id,
+      userId: doc.ownerID,
+      semesters: doc.sems,
+      newWordCount: doc.newWordCnt,
+      deletedWordCount: doc.deletedWordCnt,
+    })
   }
 
   /** Removes given semester within the support */
