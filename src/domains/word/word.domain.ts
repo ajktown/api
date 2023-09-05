@@ -180,6 +180,6 @@ export class WordDomain extends DomainRoot {
 
     await wordModel.findByIdAndDelete(this.props.id).exec()
     const supportDomain = await SupportDomain.fromMdbByAtd(atd, supportModel)
-    await supportDomain.updateWithWordDeleted(supportModel)
+    await supportDomain.updateWithDeletedWord(supportModel)
   }
 }

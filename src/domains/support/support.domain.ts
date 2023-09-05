@@ -134,7 +134,7 @@ export class SupportDomain {
     return this
   }
 
-  async updateWithWordDeleted(model: SupportModel): Promise<this> {
+  async updateWithDeletedWord(model: SupportModel): Promise<this> {
     this.props.deletedWordCount += 1
     await this.update(model)
     return this
