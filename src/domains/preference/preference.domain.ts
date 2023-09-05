@@ -21,14 +21,6 @@ export class PreferenceDomain {
     return this.props.id
   }
 
-  static fromMdb(doc: PreferenceDoc): PreferenceDomain {
-    return new PreferenceDomain({
-      id: doc.id,
-      ownerId: doc.ownerID,
-      nativeLanguages: doc.nativeLanguages as GlobalLanguageCode[],
-    })
-  }
-
   static async fromMdbByAtd(
     atd: AccessTokenDomain,
     model: PreferenceModel,
@@ -60,6 +52,14 @@ export class PreferenceDomain {
     }
 
     return PreferenceDomain.fromMdb(preferenceDocs[0])
+  }
+
+  static fromMdb(doc: PreferenceDoc): PreferenceDomain {
+    return new PreferenceDomain({
+      id: doc.id,
+      ownerId: doc.ownerID,
+      nativeLanguages: doc.nativeLanguages as GlobalLanguageCode[],
+    })
   }
 
   toDoc(preferenceModel: PreferenceModel): PreferenceDoc {
