@@ -33,6 +33,7 @@ export class AuthPrepDomain {
     this.props = props
   }
 
+  // TODO: Write this in buildEnv() instead, and used by constructor
   private static prepareEnv(): GetAuthPrepEnvInfo {
     return {
       currentEnv: envLambda.mode.get(),
