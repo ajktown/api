@@ -9,11 +9,15 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { GlobalLanguageCode } from '@/global.interface'
 import { PutPreferenceDto } from '@/dto/put-preference.dto'
 import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
+import { GetPreferenceRes } from '@/responses/get-preference.res'
+import { DictPreferenceDomain } from './index.dict.domain'
 
 export class PreferenceDomain {
   private readonly props: Partial<IPreference>
 
   private constructor(props: Partial<IPreference>) {
+    if (!props.dictPreference)
+      props.dictPreference = DictPreferenceDomain.getDefault()
     this.props = props
   }
 
@@ -70,8 +74,11 @@ export class PreferenceDomain {
     return new preferenceModel(preferenceProps)
   }
 
-  toResDTO(): Partial<IPreference> {
-    return this.props
+  toResDTO(): Partial<GetPreferenceRes> {
+    return {
+      ...this.props,
+      dictPreference: this.props.dictPreference.toResDTO(),
+    }
   }
 
   async updateWithPutDto(
