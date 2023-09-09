@@ -63,6 +63,7 @@ export class PreferenceDomain {
       id: doc.id,
       ownerId: doc.ownerID,
       nativeLanguages: doc.nativeLanguages as GlobalLanguageCode[],
+      dictPreference: DictPreferenceDomain.fromDoc(doc),
     })
   }
 
@@ -70,6 +71,7 @@ export class PreferenceDomain {
     const preferenceProps: PreferenceProps = {
       ownerID: this.props.ownerId,
       nativeLanguages: this.props.nativeLanguages,
+      selectedDictIds: this.props.dictPreference.selectedDictIds,
     }
     return new preferenceModel(preferenceProps)
   }
@@ -87,6 +89,7 @@ export class PreferenceDomain {
     model: PreferenceModel,
   ): Promise<PreferenceDomain> {
     const nativeLanguages = dto.nativeLanguages ?? []
+    const selectedDictIds = dto.selectedDictIds ?? []
 
     await model
       .findByIdAndUpdate(
@@ -94,6 +97,7 @@ export class PreferenceDomain {
         {
           // ownerId never changes
           nativeLanguages,
+          selectedDictIds,
         },
         { new: true },
       )

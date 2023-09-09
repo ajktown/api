@@ -19,7 +19,10 @@ export class PreferenceProps {
   ownerID: string // the owner id 5f85729......
 
   @Prop()
-  nativeLanguages: string[] // ['en', 'ko', 'ja']
+  nativeLanguages: string[] // i.e) ['en', 'ko', 'ja']
+
+  @Prop()
+  selectedDictIds: string[] // i.e) ['google_en_en', 'naver_dictionary_ko_ko']
 }
 
 export const PreferenceSchema = SchemaFactory.createForClass(PreferenceProps)

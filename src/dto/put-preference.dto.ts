@@ -9,4 +9,9 @@ export class PutPreferenceDto {
   @IsArray()
   @IsOptional()
   nativeLanguages: GlobalLanguageCode[]
+
+  @Transform(intoUniqueArray)
+  @IsArray()
+  @IsOptional()
+  selectedDictIds: string[]
 }

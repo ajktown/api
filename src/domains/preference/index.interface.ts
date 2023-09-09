@@ -10,5 +10,6 @@ export interface IPreference extends DataBasicsDate {
 }
 
 export interface IDictPreference {
+  selectedDictIds: string[]
   availableDictCodes: AvailableDictCode[]
 }
