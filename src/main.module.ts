@@ -12,12 +12,14 @@ import { getJwtOptionsLambda } from './lambdas/get-jwt-options.lambda'
 import { authMdlExcludedPaths } from './constants/auth-mdl-excluded-paths.const'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor } from './interceptors/logging.interceptor'
+import { PreferenceModule } from './modules/preference.module'
 
 @Module({
   imports: [
     AuthModule,
     WordModule,
     SemesterModule,
+    PreferenceModule,
     MongooseModule.forRoot(getMdbUriLambda()),
     JwtModule.register(getJwtOptionsLambda()),
   ],

@@ -10,7 +10,7 @@ const PRIVATE_ALLOWED_LANGUAGE_SET = new Set<GlobalLanguageCode>([
   'en',
   'ja',
   'zh',
-  'fa',
+  'fr',
   PRIVATE_DEFAULT_LANGUAGE,
 ])
 

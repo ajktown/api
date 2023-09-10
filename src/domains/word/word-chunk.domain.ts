@@ -93,7 +93,7 @@ export class WordChunkDomain {
     console.warn('Deleting semester automatically with query', this.query)
 
     const semesterRemovedSupportDomain = (
-      await SupportDomain.fromMdb(this.atd, supportModel)
+      await SupportDomain.fromMdbByAtd(this.atd, supportModel)
     ).removeSemester(this.query.semester)
     await semesterRemovedSupportDomain.update(supportModel)
   }

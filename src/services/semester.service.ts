@@ -25,7 +25,10 @@ export class SemesterService {
   ) {}
 
   async getSemesters(atd: AccessTokenDomain): Promise<SemesterChunkDomain> {
-    const supportDomain = await SupportDomain.fromMdb(atd, this.supportModel)
+    const supportDomain = await SupportDomain.fromMdbByAtd(
+      atd,
+      this.supportModel,
+    )
     return SemesterChunkDomain.fromSupportDomain(supportDomain, atd)
   }
 

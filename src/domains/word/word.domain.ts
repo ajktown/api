@@ -90,11 +90,11 @@ export class WordDomain extends DomainRoot {
     supportModel: SupportModel,
   ): Promise<WordDomain> {
     const newlyPostedWordDomain = WordDomain.fromMdb(
-      await this.toModel(model).save(),
+      await this.toDoc(model).save(),
     )
 
     try {
-      const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
+      const supportDomain = await SupportDomain.fromMdbByAtd(atd, supportModel)
       await supportDomain
         .updateWithPostedWord(atd, newlyPostedWordDomain)
         .update(supportModel)
@@ -107,7 +107,7 @@ export class WordDomain extends DomainRoot {
     return newlyPostedWordDomain
   }
 
-  private toModel(wordModel: WordModel): WordDoc {
+  private toDoc(wordModel: WordModel): WordDoc {
     const docProps: WordProps = {
       language: this.props.languageCode,
       sem: this.props.semester,
@@ -179,7 +179,7 @@ export class WordDomain extends DomainRoot {
     }
 
     await wordModel.findByIdAndDelete(this.props.id).exec()
-    const supportDomain = await SupportDomain.fromMdb(atd, supportModel)
-    await supportDomain.updateWithWordDeleted(supportModel)
+    const supportDomain = await SupportDomain.fromMdbByAtd(atd, supportModel)
+    await supportDomain.updateWithDeletedWord(supportModel)
   }
 }
