@@ -24,12 +24,15 @@ export class WordDomain extends DomainRoot {
   private readonly props: Partial<IWord>
 
   private withDefault(props: Partial<IWord>): Partial<IWord> {
+    props.term = props.term?.trim() || ''
+    props.pronunciation = props.pronunciation?.trim() || ''
+    props.definition = props.definition?.trim() || ''
+    props.example = props.example?.trim() || ''
+    props.exampleLink = props.exampleLink?.trim() || ''
     props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
-    props.example = props.example || ''
-    props.exampleLink = props.exampleLink || ''
-    props.isArchived = props.isArchived || false
     // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
     if (!props.createdAt) props.createdAt = new Date(props.dateAdded)
+    props.isArchived = props.isArchived || false
 
     return props
   }
