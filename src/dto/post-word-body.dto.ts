@@ -1,6 +1,6 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { Transform } from 'class-transformer'
-import { IsArray, IsBoolean, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator'
 import { intoArray, intoBoolean } from './index.validator'
 
 // ! Security Warning:
@@ -8,6 +8,7 @@ import { intoArray, intoBoolean } from './index.validator'
 
 // Semester cannot be set by end user
 export class PostWordBodyDTO {
+  @IsOptional()
   @IsString()
   languageCode: GlobalLanguageCode
 
