@@ -40,4 +40,9 @@ export class PutWordByIdBodyDTO {
   @IsArray()
   @IsOptional()
   tags: string[]
+
+  @Transform(intoBoolean)
+  @IsBoolean()
+  @IsOptional()
+  isArchived: boolean
 }

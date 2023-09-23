@@ -23,16 +23,21 @@ import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 export class WordDomain extends DomainRoot {
   private readonly props: Partial<IWord>
 
+  private withDefault(props: Partial<IWord>): Partial<IWord> {
+    props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
+    props.example = props.example || ''
+    props.exampleLink = props.exampleLink || ''
+    props.isArchived = props.isArchived || false
+    // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
+    if (!props.createdAt) props.createdAt = new Date(props.dateAdded)
+
+    return props
+  }
+
   private constructor(props: Partial<IWord>) {
     super()
     if (!props.userId) throw new DataNotPresentError('User ID')
-    this.props = props
-
-    this.props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
-    this.props.example = props.example || ''
-    this.props.exampleLink = props.exampleLink || ''
-    // old wordy used to not have createdAt. So, if createdAt not present, it will set it based on dateAdded.
-    if (!this.props.createdAt) this.props.createdAt = new Date(props.dateAdded)
+    this.props = this.withDefault(props)
   }
 
   get id() {
@@ -75,6 +80,7 @@ export class WordDomain extends DomainRoot {
       exampleLink: props.exampleLink,
       tags: props.tag,
       dateAdded: props.dateAdded,
+      isArchived: props.isArchived,
       createdAt: props.createdAt
         ? new Date(props.createdAt)
         : new Date(props.dateAdded),
@@ -120,6 +126,7 @@ export class WordDomain extends DomainRoot {
       tag: this.props.tags,
       ownerID: this.props.userId,
       dateAdded: this.props.dateAdded,
+      isArchived: this.props.isArchived,
       // Deprecated Props Below (Not used below from Wordnote, or Wordy v2):
       // reviewdOn: [],
       // order: 1,
@@ -161,6 +168,7 @@ export class WordDomain extends DomainRoot {
             example: dto.example,
             exampleLink: dto.exampleLink,
             tag: dto.tags,
+            isArchived: dto.isArchived,
           },
           { new: true },
         )
