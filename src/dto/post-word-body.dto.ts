@@ -34,4 +34,12 @@ export class PostWordBodyDTO {
   @Transform(intoArray)
   @IsArray()
   tags: string[]
+
+  /** It is doubtful why isArchived exists when a new word is posted.
+   * But you can actually undo deleting word and if the word is archived,
+   * it will be unarchived when undoing.
+   */
+  @Transform(intoBoolean)
+  @IsBoolean()
+  isArchived: boolean
 }

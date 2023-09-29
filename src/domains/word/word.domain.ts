@@ -64,6 +64,7 @@ export class WordDomain extends DomainRoot {
       exampleLink: dto.exampleLink,
       tags: dto.tags,
       dateAdded: new Date().valueOf(),
+      isArchived: dto.isArchived,
     })
   }
 
