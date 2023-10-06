@@ -1,6 +1,6 @@
 import { GlobalLanguageCode } from '@/global.interface'
 import { Transform } from 'class-transformer'
-import { IsArray, IsBoolean, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator'
 import { intoArray, intoBoolean } from './index.validator'
 
 // ! Security Warning:
@@ -8,6 +8,7 @@ import { intoArray, intoBoolean } from './index.validator'
 
 // Semester cannot be set by end user
 export class PostWordBodyDTO {
+  @IsOptional()
   @IsString()
   languageCode: GlobalLanguageCode
 
@@ -33,4 +34,12 @@ export class PostWordBodyDTO {
   @Transform(intoArray)
   @IsArray()
   tags: string[]
+
+  /** It is doubtful why isArchived exists when a new word is posted.
+   * But you can actually undo deleting word and if the word is archived,
+   * it will be unarchived when undoing.
+   */
+  @Transform(intoBoolean)
+  @IsBoolean()
+  isArchived: boolean
 }

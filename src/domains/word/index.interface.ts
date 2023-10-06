@@ -13,4 +13,5 @@ export interface IWord extends DataBasicsDate {
   exampleLink: string
   tags: string[]
   dateAdded: number
+  isArchived: boolean
 }

@@ -48,6 +48,9 @@ export class WordProps {
   @Prop()
   pronun: string // pronunciation
 
+  @Prop()
+  isArchived: boolean
+
   // ! Not used by Wordnote v2.0.0 or later below:
   // ! They are just recorded here for reference sake
 

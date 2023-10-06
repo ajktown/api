@@ -7,15 +7,14 @@ export class SemesterDomain {
   private readonly props: Partial<ISemester>
   private details: undefined | ISemesterDetailedInfo
 
-  /** Build and return unique id of semester */
-  // As semester is not individually stored in DB, the id is backend generated.
-  private buildIdConstructor(atd: AccessTokenDomain, semesterCode: number) {
-    return `${atd.userId}-${semesterCode}`
+  private withDefault(atd: AccessTokenDomain, props: Partial<ISemester>): Partial<ISemester> {
+    // As semester is not individually stored in DB, the id is backend generated.
+    props.id = `${atd.userId}-${props.code}`
+    return props
   }
 
   private constructor(atd: AccessTokenDomain, props: Partial<ISemester>) {
-    this.props = props
-    this.props.id = this.buildIdConstructor(atd, props.code)
+    this.props = this.withDefault(atd, props)
   }
 
   get semester() {

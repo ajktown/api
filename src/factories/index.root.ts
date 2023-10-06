@@ -24,12 +24,12 @@ export class FactoryRoot<DocumentProps> {
 
   /** method that takes key and value and return the object in MDB */
   protected toObject(key: keyof DocumentProps | '_id', value: any) {
-    return value ? { [key]: [value] } : {}
+    return value == undefined ? {} : { [key]: [value] }
   }
 
   /** method that takes key and value and return the object in MDB */
   protected toInObject(key: keyof DocumentProps | '_id', value: any[]) {
-    return value ? { [key]: { $in: value } } : {}
+    return value == undefined ? {} : { [key]: { $in: value } }
   }
 
   /** method that takes daysAgo and return the range of object in MDB */
@@ -39,9 +39,9 @@ export class FactoryRoot<DocumentProps> {
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: number; $lt: number } } {
     const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd.timezone)
-    return daysAgo != undefined
-      ? { [key]: { $gte: start.valueOf(), $lt: end.valueOf() } }
-      : {}
+    return daysAgo == undefined
+      ? {}
+      : { [key]: { $gte: start.valueOf(), $lt: end.valueOf() } }
   }
 
   /** method that takes daysAgo and return the range of object in MDB */
@@ -51,7 +51,7 @@ export class FactoryRoot<DocumentProps> {
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: Date; $lt: Date } } {
     const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd.timezone)
-    return daysAgo != undefined ? { [key]: { $gte: start, $lt: end } } : {}
+    return daysAgo == undefined ? {} : { [key]: { $gte: start, $lt: end } }
   }
 
   public toSort(): PrivateToSort {

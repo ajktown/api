@@ -37,6 +37,7 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
       ...this.toObject('example', query.example),
       ...this.toNumRangeObjectByDaysAgo('dateAdded', query.daysAgo, atd),
       ...this.toInObject('tag', query.tags),
+      ...this.toObject('isArchived', query.isArchived),
     }
   }
 

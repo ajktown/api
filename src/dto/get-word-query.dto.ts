@@ -77,4 +77,9 @@ export class GetWordQueryDTO
   @IsOptional()
   @IsNumber()
   dateAdded: number
+
+  @Transform(intoBoolean)
+  @IsOptional()
+  @IsBoolean()
+  isArchived: boolean
 }

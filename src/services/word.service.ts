@@ -38,10 +38,13 @@ export class WordService {
       postReqDto.example = await this.termToExamplePrompt.get(postReqDto.term)
     }
 
-    postReqDto.languageCode = await getDetectedLanguageLambda(
-      postReqDto.term,
-      this.logger,
-    )
+    if (!postReqDto.languageCode) {
+      postReqDto.languageCode = await getDetectedLanguageLambda(
+        postReqDto.term,
+        this.logger,
+      )
+    }
+
     return await WordDomain.fromPostDto(atd, postReqDto).post(
       atd,
       this.wordModel,
