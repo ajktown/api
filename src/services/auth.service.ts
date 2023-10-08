@@ -45,6 +45,10 @@ export class AuthService {
     }
   }
 
+  async byRequest(req: Request): Promise<AccessTokenDomain> {
+    return AccessTokenDomain.fromReq(req, this.jwtService)
+  }
+
   /** Attaches HttpOnly Token for dev-user */
   async byDevToken(req: Request): Promise<AccessTokenDomain> {
     return AccessTokenDomain.fromUser(UserDomain.underDevEnv(), req)

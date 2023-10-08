@@ -7,7 +7,10 @@ export class SemesterDomain {
   private readonly props: Partial<ISemester>
   private details: undefined | ISemesterDetailedInfo
 
-  private withDefault(atd: AccessTokenDomain, props: Partial<ISemester>): Partial<ISemester> {
+  private withDefault(
+    atd: AccessTokenDomain,
+    props: Partial<ISemester>,
+  ): Partial<ISemester> {
     // As semester is not individually stored in DB, the id is backend generated.
     props.id = `${atd.userId}-${props.code}`
     return props

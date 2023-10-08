@@ -50,8 +50,22 @@ export class AuthController {
     ).send({ message: 'OK' })
   }
 
+  /** Returns the basic signed in information for front-end user. Also attaches the refreshed access token
+   * if User has a valid access token attached.`
+   */
   @Get(AuthControllerPath.GetAuthPrep)
-  async getAuthPrep(@Req() req: Request) {
-    return (await this.authService.getAuthPrep(req)).toResDTO()
+  async getAuthPrep(@Req() req: Request, @Res() response: Response) {
+    const authPrepRes = (await this.authService.getAuthPrep(req)).toResDTO()
+
+    try {
+      getResWithHttpCookieLambda(
+        response,
+        await (
+          await this.authService.byRequest(req)
+        ).toAccessToken(this.jwtService),
+      ).send(authPrepRes)
+    } catch {
+      return authPrepRes
+    }
   }
 }
