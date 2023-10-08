@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post(AuthControllerPath.PostSignOut)
   async postSignOut(@Res() response: Response) {
-    getResWithRemovedHttpCookieLambda(response).send({
+    return getResWithRemovedHttpCookieLambda(response).send({
       message: 'Successfully Signed Out',
     })
   }
@@ -35,7 +35,7 @@ export class AuthController {
     @Res() response: Response,
   ) {
     const atd = await this.authService.byGoogle(reqDto, req)
-    getResWithHttpCookieLambda(
+    return getResWithHttpCookieLambda(
       response,
       await atd.toAccessToken(this.jwtService),
     ).send({ message: 'OK' })
@@ -44,7 +44,7 @@ export class AuthController {
   @Post(AuthControllerPath.PostDevTokenAuth)
   async postDevAuth(@Req() req: Request, @Res() response: Response) {
     const atd = await this.authService.byDevToken(req)
-    getResWithHttpCookieLambda(
+    return getResWithHttpCookieLambda(
       response,
       await atd.toAccessToken(this.jwtService),
     ).send({ message: 'OK' })
@@ -56,9 +56,8 @@ export class AuthController {
   @Get(AuthControllerPath.GetAuthPrep)
   async getAuthPrep(@Req() req: Request, @Res() response: Response) {
     const authPrepRes = (await this.authService.getAuthPrep(req)).toResDTO()
-
     try {
-      getResWithHttpCookieLambda(
+      return getResWithHttpCookieLambda(
         response,
         await (
           await this.authService.byRequest(req)
