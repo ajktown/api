@@ -45,6 +45,7 @@ export class AuthService {
     }
   }
 
+  /** Only usable when user is already signed in */
   async byRequest(req: Request): Promise<AccessTokenDomain> {
     return AccessTokenDomain.fromReq(req, this.jwtService)
   }
