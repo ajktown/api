@@ -17,7 +17,7 @@ export class SharedResourceDomain {
       throw new BadRequestError('Requires at least one data for wordId')
     // The checker below will be used, and is left for reference for future coding.
     // if (!props.wordId || !props.supportId)
-      // throw new BadRequestError('Requires at least one data either for wordId or supportId')
+    // throw new BadRequestError('Requires at least one data either for wordId or supportId')
 
     // defaults:
     // N/A
