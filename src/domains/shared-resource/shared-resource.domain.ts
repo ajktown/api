@@ -9,7 +9,7 @@ import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 
 export class SharedResourceDomain {
-  private readonly props: ISharedResource
+  readonly props: ISharedResource
 
   private constructor(props: ISharedResource) {
     // checkers:
@@ -52,17 +52,6 @@ export class SharedResourceDomain {
       }).save(),
     )
   }
-
-  // /** Returns props of the WordDomain, and userId (ownerId) must match
-  //  * to the accessTokenDomain claiming userId
-  //  */
-  // toResDTO(atd: AccessTokenDomain): Partial<IWord> {
-  //   if (atd.userId !== this.props.userId) {
-  //     throw new ReadForbiddenError(atd, `Word`)
-  //   }
-
-  //   return this.props
-  // }
 
   // async updateWithPutDto(
   //   atd: AccessTokenDomain,
