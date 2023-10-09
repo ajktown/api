@@ -6,7 +6,10 @@ import {
   SchemaCollectionName,
 } from './index.collections'
 
-export type SharedResourceDoc = HydratedDocument<SharedResourceProps, DataBasicsDate>
+export type SharedResourceDoc = HydratedDocument<
+  SharedResourceProps,
+  DataBasicsDate
+>
 
 export type SharedResourceModel = Model<SharedResourceDoc>
 
@@ -18,14 +21,19 @@ export class SharedResourceProps {
   @Prop({ required: true })
   ownerID: string // the owner id 5f85729......
 
+  /** If undefined, it is considered never expiring shared resource */
   @Prop()
-  resourceType: string // word
+  expiresInSecs: number
 
+  // RESOURCES
+  // The current plan is, if new resource is added, one of the data will be added.
+  //
   @Prop()
   wordId: string
 }
 
-export const SharedResourceSchema = SchemaFactory.createForClass(SharedResourceProps)
+export const SharedResourceSchema =
+  SchemaFactory.createForClass(SharedResourceProps)
 
 export const sharedResourceModelDefinition: ModelDefinition = {
   name: SharedResourceProps.name,
