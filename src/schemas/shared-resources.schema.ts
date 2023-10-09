@@ -21,9 +21,9 @@ export class SharedResourceProps {
   @Prop({ required: true })
   ownerID: string // the owner id 5f85729......
 
-  /** If undefined, it is considered never expiring shared resource */
-  @Prop()
-  expiresInSecs: number
+  /** If null, it is considered never expiring shared resource */
+  @Prop({ required: true })
+  expireInSecs: number | null
 
   // RESOURCES
   // The current plan is, if new resource is added, one of the data will be added.
