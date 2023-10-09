@@ -52,6 +52,7 @@ export class AuthController {
 
   /** Returns the basic signed in information for front-end user. Also attaches the refreshed access token
    * if User has a valid access token attached.`
+   * FYI: Once you call @Res(), you need to manually call response.send() to send the response.
    */
   @Get(AuthControllerPath.GetAuthPrep)
   async getAuthPrep(@Req() req: Request, @Res() response: Response) {
@@ -64,7 +65,7 @@ export class AuthController {
         ).toAccessToken(this.jwtService),
       ).send(authPrepRes)
     } catch {
-      return authPrepRes
+      response.send(authPrepRes)
     }
   }
 }
