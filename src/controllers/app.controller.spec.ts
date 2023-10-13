@@ -13,10 +13,10 @@ describe('AppController', () => {
   })
 
   describe('getHello', () => {
-    it('should return "Hello World from AJK Town API Service!"', () => {
+    it('should return "Hello World from AJK Town API Service! Check out https://wordnote.ajktown.com"', () => {
       const appController = app.get(AppController)
       expect(appController.getHello()).toBe(
-        'Hello World from AJK Town API Service!',
+        'Hello World from AJK Town API Service! Check out https://wordnote.ajktown.com',
       )
     })
   })
