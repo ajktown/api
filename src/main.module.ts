@@ -13,6 +13,7 @@ import { authMdlExcludedPaths } from './constants/auth-mdl-excluded-paths.const'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor } from './interceptors/logging.interceptor'
 import { PreferenceModule } from './modules/preference.module'
+import { SharedResourceModule } from './modules/shared-resource.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PreferenceModule } from './modules/preference.module'
     WordModule,
     SemesterModule,
     PreferenceModule,
+    SharedResourceModule,
     MongooseModule.forRoot(getMdbUriLambda()),
     JwtModule.register(getJwtOptionsLambda()),
   ],
