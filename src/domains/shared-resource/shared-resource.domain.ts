@@ -12,13 +12,6 @@ export class SharedResourceDomain {
   readonly props: ISharedResource
 
   private constructor(props: ISharedResource) {
-    // checkers:
-    if (!props.wordId)
-      throw new BadRequestError('Requires at least one data for wordId')
-    // The checker below will be used, and is left for reference for future coding.
-    // if (!props.wordId || !props.supportId)
-    // throw new BadRequestError('Requires at least one data either for wordId or supportId')
-
     // defaults:
     // N/A
 
@@ -39,11 +32,19 @@ export class SharedResourceDomain {
     })
   }
 
-  async post(
+  static async post(
     atd: AccessTokenDomain,
     dto: PostSharedResourceDTO,
     model: SharedResourceModel,
   ): Promise<SharedResourceDomain> {
+    // checkers:
+    if (!dto.wordId)
+      throw new BadRequestError('Requires at least one data for wordId')
+
+    // The checker below will be used, and is left for reference for future coding.
+    // if (!props.wordId || !props.supportId)
+    // throw new BadRequestError('Requires at least one data either for wordId or supportId')
+
     return SharedResourceDomain.fromMdb(
       await new model({
         ownerId: atd.userId,
