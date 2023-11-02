@@ -7,18 +7,25 @@ import {
 } from '@/schemas/shared-resources.schema'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { SharedResourceDomain } from '@/domains/shared-resource/shared-resource.domain'
+import { WordService } from './word.service'
 
 @Injectable()
 export class SharedResourceService {
   constructor(
     @InjectModel(SharedResourceProps.name)
     private sharedResourceModel: SharedResourceModel,
+    private wordService: WordService,
   ) {}
 
   async postSharedResource(
     atd: AccessTokenDomain,
     dto: PostSharedResourceDTO,
   ): Promise<SharedResourceDomain> {
-    return SharedResourceDomain.post(atd, dto, this.sharedResourceModel)
+    return SharedResourceDomain.post(
+      atd,
+      dto,
+      this.sharedResourceModel,
+      this.wordService,
+    )
   }
 }

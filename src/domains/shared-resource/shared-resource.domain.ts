@@ -7,6 +7,8 @@ import {
 } from '@/schemas/shared-resources.schema'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
+import { WordService } from '@/services/word.service'
+import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
 
 export class SharedResourceDomain {
   readonly props: ISharedResource
@@ -36,6 +38,7 @@ export class SharedResourceDomain {
     atd: AccessTokenDomain,
     dto: PostSharedResourceDTO,
     model: SharedResourceModel,
+    wordService: WordService,
   ): Promise<SharedResourceDomain> {
     // checkers:
     if (!dto.wordId)
@@ -44,6 +47,16 @@ export class SharedResourceDomain {
     // The checker below will be used, and is left for reference for future coding.
     // if (!props.wordId || !props.supportId)
     // throw new BadRequestError('Requires at least one data either for wordId or supportId')
+
+    if (dto.wordId) {
+      try {
+        // If the word itself is not found or the user does not have permission to access it, throw the same error.
+        const wordDomain = await wordService.getById(dto.wordId)
+        wordDomain.toResDTO(atd)
+      } catch {
+        throw new NotExistOrNoPermissionError()
+      }
+    }
 
     return SharedResourceDomain.fromMdb(
       await new model({
