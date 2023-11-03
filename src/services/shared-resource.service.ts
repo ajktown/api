@@ -8,6 +8,7 @@ import {
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { SharedResourceDomain } from '@/domains/shared-resource/shared-resource.domain'
 import { WordService } from './word.service'
+import { BadRequestError } from '@/errors/400/index.error'
 
 @Injectable()
 export class SharedResourceService {
@@ -21,11 +22,15 @@ export class SharedResourceService {
     atd: AccessTokenDomain,
     dto: PostSharedResourceDTO,
   ): Promise<SharedResourceDomain> {
-    return SharedResourceDomain.post(
-      atd,
-      dto,
-      this.sharedResourceModel,
-      this.wordService,
-    )
+    if (dto.wordId) {
+      return SharedResourceDomain.postSharedWord(
+        atd,
+        dto,
+        this.sharedResourceModel,
+        this.wordService,
+      )
+    }
+
+    throw new BadRequestError('Requires wordId')
   }
 }

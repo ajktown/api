@@ -34,7 +34,8 @@ export class SharedResourceDomain {
     })
   }
 
-  static async post(
+  /** Create sharedResource just for the word */
+  static async postSharedWord(
     atd: AccessTokenDomain,
     dto: PostSharedResourceDTO,
     model: SharedResourceModel,
@@ -44,27 +45,21 @@ export class SharedResourceDomain {
     if (!dto.wordId)
       throw new BadRequestError('Requires at least one data for wordId')
 
-    // The checker below will be used, and is left for reference for future coding.
-    // if (!props.wordId || !props.supportId)
-    // throw new BadRequestError('Requires at least one data either for wordId or supportId')
+    try {
+      // If the word itself is not found or the user does not have permission to access it, throw the same error.
+      const wordDomain = await wordService.getById(dto.wordId)
+      wordDomain.toResDTO(atd) // expect resDTO always checks for permission
 
-    if (dto.wordId) {
-      try {
-        // If the word itself is not found or the user does not have permission to access it, throw the same error.
-        const wordDomain = await wordService.getById(dto.wordId)
-        wordDomain.toResDTO(atd)
-      } catch {
-        throw new NotExistOrNoPermissionError()
-      }
+      return SharedResourceDomain.fromMdb(
+        await new model({
+          ownerId: atd.userId,
+          expireInSecs: dto.expireInSecs,
+          wordId: dto.wordId,
+        }).save(),
+      )
+    } catch {
+      throw new NotExistOrNoPermissionError()
     }
-
-    return SharedResourceDomain.fromMdb(
-      await new model({
-        ownerId: atd.userId,
-        expireInSecs: dto.expireInSecs,
-        wordId: dto.wordId,
-      }).save(),
-    )
   }
 
   // async updateWithPutDto(
