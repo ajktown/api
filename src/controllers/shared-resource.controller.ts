@@ -21,9 +21,11 @@ export class SharedResourceController {
     @Req() req: Request,
     @Body() dto: PostSharedResourceDTO,
   ) {
-    return this.sharedResourceService.postSharedResource(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-      dto,
-    )
+    return (
+      await this.sharedResourceService.postSharedResource(
+        await AccessTokenDomain.fromReq(req, this.jwtService),
+        dto,
+      )
+    ).toResDTO()
   }
 }

@@ -50,6 +50,19 @@ export class SharedResourceDomain {
       const wordDomain = await wordService.getById(dto.wordId)
       wordDomain.toResDTO(atd) // expect resDTO always checks for permission
 
+      // Check if the same shared resource exists:
+      // If somehow more than one document is created, the latest one is returned.
+      const alreadyExistLatestDoc = await model
+        .findOne({
+          ownerId: atd.userId,
+          wordId: dto.wordId,
+        })
+        .sort({ createdAt: -1 })
+
+      if (alreadyExistLatestDoc) {
+        return SharedResourceDomain.fromMdb(alreadyExistLatestDoc)
+      }
+
       return SharedResourceDomain.fromMdb(
         await new model({
           ownerId: atd.userId,
@@ -62,47 +75,8 @@ export class SharedResourceDomain {
     }
   }
 
-  // async updateWithPutDto(
-  //   atd: AccessTokenDomain,
-  //   dto: PutWordByIdBodyDTO,
-  //   wordModel: WordModel,
-  // ): Promise<WordDomain> {
-  //   if (atd.userId !== this.props.userId) {
-  //     throw new UpdateForbiddenError(atd, `Word`)
-  //   }
-  //   return WordDomain.fromMdb(
-  //     await wordModel
-  //       .findByIdAndUpdate(
-  //         this.id,
-  //         {
-  //           language: dto.languageCode,
-  //           isFavorite: dto.isFavorite,
-  //           word: dto.term,
-  //           pronun: dto.pronunciation,
-  //           meaning: dto.definition,
-  //           example: dto.example,
-  //           exampleLink: dto.exampleLink,
-  //           tag: dto.tags,
-  //           isArchived: dto.isArchived,
-  //         },
-  //         { new: true },
-  //       )
-  //       .exec(),
-  //   )
-  // }
-
-  // /** Deletes word from persistence, if access is given */
-  // async delete(
-  //   atd: AccessTokenDomain,
-  //   wordModel: WordModel,
-  //   supportModel: SupportModel,
-  // ): Promise<void> {
-  //   if (atd.userId !== this.props.userId) {
-  //     throw new DeleteForbiddenError(atd, `Word`)
-  //   }
-
-  //   await wordModel.findByIdAndDelete(this.props.id).exec()
-  //   const supportDomain = await SupportDomain.fromMdbByAtd(atd, supportModel)
-  //   await supportDomain.updateWithDeletedWord(supportModel)
-  // }
+  /** Returns props of the SharedResourceDomain */
+  toResDTO(): Partial<ISharedResource> {
+    return this.props
+  }
 }
