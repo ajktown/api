@@ -9,6 +9,7 @@ import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { WordService } from '@/services/word.service'
 import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
+import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 
 export class SharedResourceDomain {
   readonly props: ISharedResource
@@ -19,6 +20,10 @@ export class SharedResourceDomain {
 
     // finally:
     this.props = props
+  }
+
+  get isExpired() {
+    return Date.now() < this.props.expireInSecs
   }
 
   static fromMdb(props: SharedResourceDoc): SharedResourceDomain {
@@ -73,6 +78,23 @@ export class SharedResourceDomain {
     } catch {
       throw new NotExistOrNoPermissionError()
     }
+  }
+
+  /** Get the shared resource with given id */
+
+  static async fromGetSharedResource(
+    id: string,
+    dto: GetSharedResourcesQueryDTO,
+    model: SharedResourceModel,
+  ): Promise<SharedResourceDomain> {
+    const doc = await model.findById(id)
+    if (!doc) throw new NotExistOrNoPermissionError()
+
+    const domain = SharedResourceDomain.fromMdb(doc)
+    if (dto.isExpired && domain.isExpired)
+      throw new NotExistOrNoPermissionError()
+
+    return domain
   }
 
   /** Returns props of the SharedResourceDomain */
