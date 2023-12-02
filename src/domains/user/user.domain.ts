@@ -30,8 +30,8 @@ export class UserDomain {
         'https://www.shutterstock.com/image-vector/web-developer-design-vector-illustration-600w-314602454.jpg',
       languagePreference: 'en',
       dateAdded: new Date().valueOf(),
-      createdAt: new Date('1994-06-07'), // Confetti won't be visible with this option.
-      // createdAt: new Date(), // Confetti will be visible with this option.
+      // createdAt: new Date('1994-06-07'), // Confetti won't be visible with this option.
+      createdAt: new Date(), // Confetti will be visible with this option.
     })
   }
 
