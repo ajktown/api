@@ -84,7 +84,7 @@ export class AccessTokenDomain {
       timezone: this.timezone,
       // The user is considered the first time user, if the user has signed up within 10 seconds.
       isFirstTimeUser:
-        new Date().valueOf() < new Date(this.props.createdAt).valueOf() + 10,
+        new Date().valueOf() < new Date(this.props.createdAt).valueOf() + 20,
     }
   }
 
