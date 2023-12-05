@@ -7,10 +7,15 @@ import { envLambda } from '@/lambdas/get-env.lambda'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 import { getTimezone } from '@/lambdas/get-timezone.lambda'
 
+export interface IOauthPayloadNonDb {
+  timezone: string
+  isFirstTimeUser: boolean
+}
 export interface IOauthPayload {
   userEmail: string
   userId: string
   profileImageUrl: string
+  createdAt: string
 }
 
 export class AccessTokenDomain {
@@ -43,6 +48,7 @@ export class AccessTokenDomain {
         userEmail: userRes.email,
         userId: userRes.id,
         profileImageUrl: userRes.imageUrl,
+        createdAt: userRes.createdAt.toISOString(),
       },
       getTimezone(req),
     )
@@ -69,12 +75,16 @@ export class AccessTokenDomain {
     return new AccessTokenDomain(attr, getTimezone(req))
   }
 
-  toDetailedInfo(): IOauthPayload & { timezone: string } {
+  toDetailedInfo(): IOauthPayload & IOauthPayloadNonDb {
     return {
       userEmail: this.props.userEmail,
+      createdAt: this.props.createdAt,
       userId: this.props.userId,
       profileImageUrl: this.props.profileImageUrl,
       timezone: this.timezone,
+      // The user is considered the first time user, if the user has signed up within 10 seconds.
+      isFirstTimeUser:
+        new Date().valueOf() < new Date(this.props.createdAt).valueOf() + 20,
     }
   }
 
