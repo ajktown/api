@@ -3,7 +3,6 @@ import { SharedResourceDomain } from './shared-resource.domain'
 import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 import { SharedResourceModel } from '@/schemas/shared-resources.schema'
 import { GetSharedResourcesQueryFactory } from '@/factories/get-shared-resources-query.factory'
-import { GetSharedResourcesRes } from '@/responses/get-shared-resources.res'
 
 // TODO: Not complete yet.
 export class SharedResourceChunkDomain {
@@ -40,11 +39,5 @@ export class SharedResourceChunkDomain {
       ).map((raw) => SharedResourceDomain.fromMdb(raw)),
       query,
     )
-  }
-
-  toRes(): GetSharedResourcesRes {
-    return {
-      sharedResources: this.sharedResources.map((res) => res.props),
-    }
   }
 }

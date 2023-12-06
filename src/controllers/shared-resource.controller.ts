@@ -6,6 +6,12 @@ import { JwtService } from '@nestjs/jwt'
 import { SharedResourceService } from '@/services/shared-resource.service'
 import { Request } from 'express'
 import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
+import { WordModel, WordProps } from '@/schemas/deprecated-word.schema'
+import { InjectModel } from '@nestjs/mongoose'
+import {
+  SharedResourceModel,
+  SharedResourceProps,
+} from '@/schemas/shared-resources.schema'
 
 export enum SharedResourceControllerPath {
   PostSharedResource = `shared-resource`,
@@ -16,6 +22,10 @@ export class SharedResourceController {
   constructor(
     private readonly jwtService: JwtService,
     private readonly sharedResourceService: SharedResourceService,
+    @InjectModel(SharedResourceProps.name)
+    private sharedResourceModel: SharedResourceModel,
+    @InjectModel(WordProps.name)
+    private wordModel: WordModel,
   ) {}
 
   @Post(SharedResourceControllerPath.PostSharedResource)
@@ -28,7 +38,7 @@ export class SharedResourceController {
         await AccessTokenDomain.fromReq(req, this.jwtService),
         dto,
       )
-    ).toResDTO()
+    ).toResDTO(this.wordModel, this.sharedResourceModel)
   }
 
   @Get(SharedResourceControllerPath.GetSharedResource)
@@ -45,6 +55,6 @@ export class SharedResourceController {
 
     return (
       await this.sharedResourceService.get(id, nullableAtd, dto)
-    ).toResDTO()
+    ).toResDTO(this.wordModel, this.sharedResourceModel)
   }
 }
