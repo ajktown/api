@@ -32,5 +32,7 @@ export class SharedResourceService {
     }
 
     throw new BadRequestError('Requires wordId')
+    // Once there are more resources available other than wordId:
+    // throw new BadRequestError('Requires at least one data: wordId, w/e or w/e')
   }
 }
