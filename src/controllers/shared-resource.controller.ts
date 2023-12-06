@@ -5,7 +5,6 @@ import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { SharedResourceService } from '@/services/shared-resource.service'
 import { Request } from 'express'
-import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 import { WordModel, WordProps } from '@/schemas/deprecated-word.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import {
@@ -42,19 +41,16 @@ export class SharedResourceController {
   }
 
   @Get(SharedResourceControllerPath.GetSharedResource)
-  async getSharedResource(
-    @Param('id') id: string,
-    @Req() req: Request,
-    @Body() dto: GetSharedResourcesQueryDTO,
-  ) {
+  async getSharedResource(@Param('id') id: string, @Req() req: Request) {
     let nullableAtd: null | AccessTokenDomain = null
 
     try {
       nullableAtd = await AccessTokenDomain.fromReq(req, this.jwtService)
     } catch {}
 
-    return (
-      await this.sharedResourceService.get(id, nullableAtd, dto)
-    ).toResDTO(this.wordModel, this.sharedResourceModel)
+    return (await this.sharedResourceService.get(id, nullableAtd)).toResDTO(
+      this.wordModel,
+      this.sharedResourceModel,
+    )
   }
 }

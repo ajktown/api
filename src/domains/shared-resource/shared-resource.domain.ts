@@ -9,7 +9,6 @@ import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { WordService } from '@/services/word.service'
 import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
-import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 import { GetSharedResourceRes } from '@/responses/get-shared-resource.res'
 import { WordModel } from '@/schemas/deprecated-word.schema'
 import { WordDomain } from '../word/word.domain'
@@ -88,7 +87,6 @@ export class SharedResourceDomain {
   static async fromGetSharedResource(
     id: string,
     nullableAtd: null | AccessTokenDomain,
-    dto: GetSharedResourcesQueryDTO,
     model: SharedResourceModel,
   ): Promise<SharedResourceDomain> {
     const doc = await model.findById(id)
