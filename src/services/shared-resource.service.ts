@@ -9,6 +9,7 @@ import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { SharedResourceDomain } from '@/domains/shared-resource/shared-resource.domain'
 import { WordService } from './word.service'
 import { BadRequestError } from '@/errors/400/index.error'
+import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 
 @Injectable()
 export class SharedResourceService {
@@ -18,7 +19,7 @@ export class SharedResourceService {
     private wordService: WordService,
   ) {}
 
-  async postSharedResource(
+  async post(
     atd: AccessTokenDomain,
     dto: PostSharedResourceDTO,
   ): Promise<SharedResourceDomain> {
@@ -34,5 +35,18 @@ export class SharedResourceService {
     throw new BadRequestError('Requires wordId')
     // Once there are more resources available other than wordId:
     // throw new BadRequestError('Requires at least one data: wordId, w/e or w/e')
+  }
+
+  async get(
+    id: string,
+    nullableAtd: null | AccessTokenDomain,
+    dto: GetSharedResourcesQueryDTO,
+  ): Promise<SharedResourceDomain> {
+    return SharedResourceDomain.fromGetSharedResource(
+      id,
+      nullableAtd,
+      dto,
+      this.sharedResourceModel,
+    )
   }
 }

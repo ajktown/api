@@ -1,6 +1,7 @@
 import { ApiHomePath } from '@/controllers/app.controller'
 import { AuthControllerPath } from '@/controllers/auth.controller'
 import { AjkTownApiVersion } from '@/controllers/index.interface'
+import { SharedResourceControllerPath } from '@/controllers/shared-resource.controller'
 import { RequestMethod } from '@nestjs/common'
 import { RouteInfo } from '@nestjs/common/interfaces'
 
@@ -23,6 +24,7 @@ const privateV1Paths: PathAndMethod[] = [
   [AuthControllerPath.PostGoogleAuth, RequestMethod.POST],
   [AuthControllerPath.PostDevTokenAuth, RequestMethod.POST],
   [AuthControllerPath.GetAuthPrep, RequestMethod.GET],
+  [SharedResourceControllerPath.GetSharedResource, RequestMethod.GET],
 ]
 
 const getV1Path = ([path, method]: PathAndMethod): PathAndMethod => {

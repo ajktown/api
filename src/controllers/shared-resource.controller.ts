@@ -1,13 +1,15 @@
-import { Body, Controller, Post, Req } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { SharedResourceService } from '@/services/shared-resource.service'
 import { Request } from 'express'
+import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 
-enum SemesterControllerPath {
+export enum SharedResourceControllerPath {
   PostSharedResource = `shared-resource`,
+  GetSharedResource = `shared-resource`,
 }
 @Controller(AjkTownApiVersion.V1)
 export class SharedResourceController {
@@ -16,16 +18,33 @@ export class SharedResourceController {
     private readonly sharedResourceService: SharedResourceService,
   ) {}
 
-  @Post(SemesterControllerPath.PostSharedResource)
+  @Post(SharedResourceControllerPath.PostSharedResource)
   async postSharedResource(
     @Req() req: Request,
     @Body() dto: PostSharedResourceDTO,
   ) {
     return (
-      await this.sharedResourceService.postSharedResource(
+      await this.sharedResourceService.post(
         await AccessTokenDomain.fromReq(req, this.jwtService),
         dto,
       )
+    ).toResDTO()
+  }
+
+  @Get(SharedResourceControllerPath.GetSharedResource)
+  async getSharedResource(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Body() dto: GetSharedResourcesQueryDTO,
+  ) {
+    let nullableAtd: null | AccessTokenDomain = null
+
+    try {
+      nullableAtd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    } catch {}
+
+    return (
+      await this.sharedResourceService.get(id, nullableAtd, dto)
     ).toResDTO()
   }
 }

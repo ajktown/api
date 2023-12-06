@@ -71,7 +71,7 @@ export class SharedResourceDomain {
       return SharedResourceDomain.fromMdb(
         await new model({
           ownerId: atd.userId,
-          expireInSecs: new Date().valueOf()+ dto.expireAfterSecs,
+          expireInSecs: new Date().valueOf() + dto.expireAfterSecs,
           wordId: dto.wordId,
         }).save(),
       )
@@ -84,6 +84,7 @@ export class SharedResourceDomain {
 
   static async fromGetSharedResource(
     id: string,
+    nullableAtd: null | AccessTokenDomain,
     dto: GetSharedResourcesQueryDTO,
     model: SharedResourceModel,
   ): Promise<SharedResourceDomain> {
@@ -91,8 +92,14 @@ export class SharedResourceDomain {
     if (!doc) throw new NotExistOrNoPermissionError()
 
     const domain = SharedResourceDomain.fromMdb(doc)
-    if (dto.isExpired && domain.isExpired)
-      throw new NotExistOrNoPermissionError()
+
+    // if the shared resource is owned by the requester
+    if (nullableAtd && doc.ownerID === nullableAtd.userId) {
+      return domain // Even if it is expired, the owner can still see it
+    }
+
+    // non-owners from now on:
+    if (domain.isExpired) throw new NotExistOrNoPermissionError()
 
     return domain
   }
