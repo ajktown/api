@@ -71,7 +71,7 @@ export class SharedResourceDomain {
       return SharedResourceDomain.fromMdb(
         await new model({
           ownerId: atd.userId,
-          expireInSecs: dto.expireInSecs,
+          expireInSecs: new Date().valueOf()+ dto.expireAfterSecs,
           wordId: dto.wordId,
         }).save(),
       )

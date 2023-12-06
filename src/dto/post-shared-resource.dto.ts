@@ -3,7 +3,7 @@ import { IsNumber, IsOptional, IsString } from 'class-validator'
 export class PostSharedResourceDTO {
   @IsOptional()
   @IsNumber()
-  expireInSecs: number
+  expireAfterSecs: number
 
   @IsOptional()
   @IsString()
