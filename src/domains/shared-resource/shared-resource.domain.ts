@@ -5,7 +5,6 @@ import {
   SharedResourceDoc,
   SharedResourceModel,
 } from '@/schemas/shared-resources.schema'
-import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { WordService } from '@/services/word.service'
 import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
@@ -16,29 +15,41 @@ import { WordDomain } from '../word/word.domain'
 export class SharedResourceDomain {
   readonly props: ISharedResource
 
-  private constructor(props: ISharedResource) {
-    // defaults:
-    // N/A
-
-    // finally:
+  private constructor(
+    props: ISharedResource,
+    nullableAtd: null | AccessTokenDomain,
+  ) {
     this.props = props
+
+    // if the shared resource is owned by the requester
+    // Even if it is expired, the owner can still see it
+    if (nullableAtd && props.ownerId === nullableAtd.userId) return
+
+    // non-owners from now on:
+    if (this.isExpired) throw new NotExistOrNoPermissionError()
   }
 
   get isExpired() {
     return Date.now() < this.props.expireInSecs
   }
 
-  static fromMdb(props: SharedResourceDoc): SharedResourceDomain {
-    if (typeof props !== 'object') throw new DataNotObjectError()
+  static fromMdb(
+    props: SharedResourceDoc,
+    nullableAtd: null | AccessTokenDomain,
+  ): SharedResourceDomain {
+    if (typeof props !== 'object') throw new NotExistOrNoPermissionError()
 
-    return new SharedResourceDomain({
-      id: props.id,
-      ownerId: props.ownerID,
-      expireInSecs: props.expireInSecs,
-      wordId: props.wordId,
-      updatedAt: props.updatedAt,
-      createdAt: props.createdAt,
-    })
+    return new SharedResourceDomain(
+      {
+        id: props.id,
+        ownerId: props.ownerID,
+        expireInSecs: props.expireInSecs,
+        wordId: props.wordId,
+        updatedAt: props.updatedAt,
+        createdAt: props.createdAt,
+      },
+      nullableAtd,
+    )
   }
 
   /** Create sharedResource just for the word */
@@ -67,7 +78,7 @@ export class SharedResourceDomain {
         .sort({ createdAt: -1 })
 
       if (alreadyExistLatestDoc) {
-        return SharedResourceDomain.fromMdb(alreadyExistLatestDoc)
+        return SharedResourceDomain.fromMdb(alreadyExistLatestDoc, atd)
       }
 
       return SharedResourceDomain.fromMdb(
@@ -76,6 +87,7 @@ export class SharedResourceDomain {
           expireInSecs: new Date().valueOf() + dto.expireAfterSecs,
           wordId: dto.wordId,
         }).save(),
+        atd,
       )
     } catch {
       throw new NotExistOrNoPermissionError()
@@ -83,26 +95,27 @@ export class SharedResourceDomain {
   }
 
   /** Get the shared resource with given id */
-
-  static async fromGetSharedResource(
+  static async fromId(
     id: string,
     nullableAtd: null | AccessTokenDomain,
     model: SharedResourceModel,
   ): Promise<SharedResourceDomain> {
     const doc = await model.findById(id)
-    if (!doc) throw new NotExistOrNoPermissionError()
+    return SharedResourceDomain.fromMdb(doc, nullableAtd)
+  }
 
-    const domain = SharedResourceDomain.fromMdb(doc)
+  static async fromWordId(
+    wordId: string,
+    nullableAtd: null | AccessTokenDomain,
+    model: SharedResourceModel,
+  ): Promise<SharedResourceDomain> {
+    const doc = await model
+      .findOne({
+        wordId: wordId,
+      })
+      .sort({ createdAt: -1 })
 
-    // if the shared resource is owned by the requester
-    if (nullableAtd && doc.ownerID === nullableAtd.userId) {
-      return domain // Even if it is expired, the owner can still see it
-    }
-
-    // non-owners from now on:
-    if (domain.isExpired) throw new NotExistOrNoPermissionError()
-
-    return domain
+    return this.fromMdb(doc.id, nullableAtd)
   }
 
   /** Returns props of the SharedResourceDomain */

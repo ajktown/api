@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
@@ -11,6 +11,7 @@ import {
   SharedResourceModel,
   SharedResourceProps,
 } from '@/schemas/shared-resources.schema'
+import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
 
 export enum SharedResourceControllerPath {
   PostSharedResource = `shared-resource`,
@@ -41,14 +42,17 @@ export class SharedResourceController {
   }
 
   @Get(SharedResourceControllerPath.GetSharedResource)
-  async getSharedResource(@Param('id') id: string, @Req() req: Request) {
+  async getSharedResource(
+    @Req() req: Request,
+    @Body() dto: GetSharedResourcesQueryDTO,
+  ) {
     let nullableAtd: null | AccessTokenDomain = null
 
     try {
       nullableAtd = await AccessTokenDomain.fromReq(req, this.jwtService)
     } catch {}
 
-    return (await this.sharedResourceService.get(id, nullableAtd)).toResDTO(
+    return (await this.sharedResourceService.get(nullableAtd, dto)).toResDTO(
       this.wordModel,
       this.sharedResourceModel,
     )

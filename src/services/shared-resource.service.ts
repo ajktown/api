@@ -9,6 +9,8 @@ import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { SharedResourceDomain } from '@/domains/shared-resource/shared-resource.domain'
 import { WordService } from './word.service'
 import { BadRequestError } from '@/errors/400/index.error'
+import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
+import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
 
 @Injectable()
 export class SharedResourceService {
@@ -37,13 +39,25 @@ export class SharedResourceService {
   }
 
   async get(
-    id: string,
     nullableAtd: null | AccessTokenDomain,
+    dto: GetSharedResourcesQueryDTO,
   ): Promise<SharedResourceDomain> {
-    return SharedResourceDomain.fromGetSharedResource(
-      id,
-      nullableAtd,
-      this.sharedResourceModel,
-    )
+    if (dto.id) {
+      return SharedResourceDomain.fromId(
+        dto.id,
+        nullableAtd,
+        this.sharedResourceModel,
+      )
+    }
+
+    if (dto.wordId) {
+      return SharedResourceDomain.fromWordId(
+        dto.wordId,
+        nullableAtd,
+        this.sharedResourceModel,
+      )
+    }
+
+    throw new NotExistOrNoPermissionError()
   }
 }
