@@ -4,6 +4,7 @@ import { BadRequestError } from '@/errors/400/index.error'
 import {
   SharedResourceDoc,
   SharedResourceModel,
+  SharedResourceProps,
 } from '@/schemas/shared-resources.schema'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { WordService } from '@/services/word.service'
@@ -68,6 +69,8 @@ export class SharedResourceDomain {
       const wordDomain = await wordService.getById(dto.wordId)
       wordDomain.toResDTO(atd) // expect resDTO always checks for permission
 
+      console.log(wordDomain)
+
       // Check if the same shared resource exists:
       // If somehow more than one document is created, the latest one is returned.
       const alreadyExistLatestDoc = await model
@@ -80,15 +83,12 @@ export class SharedResourceDomain {
       if (alreadyExistLatestDoc) {
         return SharedResourceDomain.fromMdb(alreadyExistLatestDoc, atd)
       }
-
-      return SharedResourceDomain.fromMdb(
-        await new model({
-          ownerId: atd.userId,
-          expireInSecs: new Date().valueOf() + dto.expireAfterSecs,
-          wordId: dto.wordId,
-        }).save(),
-        atd,
-      )
+      const props: SharedResourceProps = {
+        ownerID: atd.userId,
+        expireInSecs: new Date().valueOf() + dto.expireAfterSecs,
+        wordId: dto.wordId,
+      }
+      return SharedResourceDomain.fromMdb(await new model(props).save(), atd)
     } catch {
       throw new NotExistOrNoPermissionError()
     }
@@ -115,7 +115,7 @@ export class SharedResourceDomain {
       })
       .sort({ createdAt: -1 })
 
-    return this.fromMdb(doc.id, nullableAtd)
+    return SharedResourceDomain.fromMdb(doc.id, nullableAtd)
   }
 
   /** Returns props of the SharedResourceDomain */
