@@ -69,8 +69,6 @@ export class SharedResourceDomain {
       const wordDomain = await wordService.getById(dto.wordId)
       wordDomain.toResDTO(atd) // expect resDTO always checks for permission
 
-      console.log(wordDomain)
-
       // Check if the same shared resource exists:
       // If somehow more than one document is created, the latest one is returned.
       const alreadyExistLatestDoc = await model
@@ -100,8 +98,7 @@ export class SharedResourceDomain {
     nullableAtd: null | AccessTokenDomain,
     model: SharedResourceModel,
   ): Promise<SharedResourceDomain> {
-    const doc = await model.findById(id)
-    return SharedResourceDomain.fromMdb(doc, nullableAtd)
+    return SharedResourceDomain.fromMdb(await model.findById(id), nullableAtd)
   }
 
   static async fromWordId(
@@ -109,13 +106,14 @@ export class SharedResourceDomain {
     nullableAtd: null | AccessTokenDomain,
     model: SharedResourceModel,
   ): Promise<SharedResourceDomain> {
-    const doc = await model
-      .findOne({
-        wordId: wordId,
-      })
-      .sort({ createdAt: -1 })
-
-    return SharedResourceDomain.fromMdb(doc.id, nullableAtd)
+    return SharedResourceDomain.fromMdb(
+      await model
+        .findOne({
+          wordId: wordId,
+        })
+        .sort({ createdAt: -1 }),
+      nullableAtd,
+    )
   }
 
   /** Returns props of the SharedResourceDomain */
