@@ -30,6 +30,7 @@ export class SharedResourceDomain {
     if (this.isExpired) throw new NotExistOrNoPermissionError()
   }
 
+  // TODO: You sure expireInSecs works properly? I think there is a bug!
   get isExpired() {
     return Date.now() < this.props.expireInSecs
   }
