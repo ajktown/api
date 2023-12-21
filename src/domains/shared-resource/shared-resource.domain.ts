@@ -30,9 +30,8 @@ export class SharedResourceDomain {
     if (this.isExpired) throw new NotExistOrNoPermissionError()
   }
 
-  // TODO: You sure expireInSecs works properly? I think there is a bug!
   get isExpired() {
-    return Date.now() < this.props.expireInSecs
+    return Date.now().valueOf() < this.props.expireInSecs
   }
 
   static fromMdb(
@@ -84,7 +83,7 @@ export class SharedResourceDomain {
       }
       const props: SharedResourceProps = {
         ownerID: atd.userId,
-        expireInSecs: new Date().valueOf() + dto.expireAfterSecs,
+        expireInSecs: new Date().valueOf() + dto.expireAfterSecs * 1000,
         wordId: dto.wordId,
       }
       return SharedResourceDomain.fromMdb(await new model(props).save(), atd)
