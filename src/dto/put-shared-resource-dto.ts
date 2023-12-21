@@ -4,5 +4,5 @@ import { IsNumber, IsOptional } from 'class-validator'
 export class PutSharedResourceDTO {
   @IsOptional()
   @IsNumber()
-  expireInSecs: number
+  extendSecs: number
 }

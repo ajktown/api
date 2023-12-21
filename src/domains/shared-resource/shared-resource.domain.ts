@@ -12,6 +12,7 @@ import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permis
 import { GetSharedResourceRes } from '@/responses/get-shared-resource.res'
 import { WordModel } from '@/schemas/deprecated-word.schema'
 import { WordDomain } from '../word/word.domain'
+import { PutSharedResourceDTO } from '@/dto/put-shared-resource-dto'
 
 export class SharedResourceDomain {
   readonly props: ISharedResource
@@ -137,5 +138,21 @@ export class SharedResourceDomain {
       sharedResource: this.props,
       word: word?.toSharedResDTO() || null,
     }
+  }
+
+  async extend(
+    dto: PutSharedResourceDTO,
+    model: SharedResourceModel,
+  ): Promise<SharedResourceDomain> {
+    this.props.expireInSecs += dto.extendSecs * 1000
+
+    return SharedResourceDomain.fromMdb(
+      await model.findByIdAndUpdate(
+        this.props.id,
+        { expireInSecs: this.props.expireInSecs },
+        { new: true },
+      ),
+      null,
+    )
   }
 }

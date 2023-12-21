@@ -60,4 +60,11 @@ export class SharedResourceService {
 
     throw new NotExistOrNoPermissionError()
   }
+
+  async getById(
+    id: string,
+    atd: AccessTokenDomain,
+  ): Promise<SharedResourceDomain> {
+    return SharedResourceDomain.fromId(id, atd, this.sharedResourceModel)
+  }
 }
