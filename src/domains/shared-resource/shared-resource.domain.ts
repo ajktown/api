@@ -32,7 +32,7 @@ export class SharedResourceDomain {
   }
 
   get isExpired() {
-    return Date.now().valueOf() < this.props.expireInSecs
+    return this.props.expireInSecs < Date.now().valueOf()
   }
 
   static fromMdb(
