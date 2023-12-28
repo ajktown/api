@@ -25,7 +25,7 @@ https://api.ajktown.com
 
 ## Public Image
 
-https://hub.docker.com/r/ajktown/wordnote/tags
+https://hub.docker.com/r/ajktown/api/tags
 
 ### Push image command
 You musth have permission to push to the repository.
