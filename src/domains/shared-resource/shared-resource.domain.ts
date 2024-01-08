@@ -117,6 +117,19 @@ export class SharedResourceDomain {
     )
   }
 
+  static async fromSignedInUser(
+    atd: AccessTokenDomain,
+    model: SharedResourceModel,
+  ): Promise<SharedResourceDomain[]> {
+    const docs = await model
+      .find({
+        ownerId: atd.userId,
+      })
+      .sort({ createdAt: -1 })
+
+    return docs.map((doc) => SharedResourceDomain.fromMdb(doc, atd))
+  }
+
   /** Returns props of the SharedResourceDomain */
   async toResDTO(
     wordModel: WordModel,

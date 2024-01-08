@@ -38,7 +38,7 @@ export class SharedResourceService {
     // throw new BadRequestError('Requires at least one data: wordId, w/e or w/e')
   }
 
-  async get(
+  async deprecatedGet(
     nullableAtd: null | AccessTokenDomain,
     dto: GetSharedResourcesQueryDTO,
   ): Promise<SharedResourceDomain> {
@@ -53,6 +53,41 @@ export class SharedResourceService {
     if (dto.wordId) {
       return SharedResourceDomain.fromWordId(
         dto.wordId,
+        nullableAtd,
+        this.sharedResourceModel,
+      )
+    }
+
+    throw new NotExistOrNoPermissionError()
+  }
+
+  async get(
+    nullableAtd: null | AccessTokenDomain,
+    dto: GetSharedResourcesQueryDTO,
+  ): Promise<SharedResourceDomain[]> {
+    if (dto.id) {
+      return [
+        await SharedResourceDomain.fromId(
+          dto.id,
+          nullableAtd,
+          this.sharedResourceModel,
+        ),
+      ]
+    }
+
+    if (dto.wordId) {
+      return [
+        await SharedResourceDomain.fromWordId(
+          dto.wordId,
+          nullableAtd,
+          this.sharedResourceModel,
+        ),
+      ]
+    }
+
+    // if user is signed in, get all of them
+    if (nullableAtd) {
+      return SharedResourceDomain.fromSignedInUser(
         nullableAtd,
         this.sharedResourceModel,
       )

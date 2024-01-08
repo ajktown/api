@@ -25,7 +25,8 @@ import { PutSharedResourceDTO } from '@/dto/put-shared-resource-dto'
 
 export enum SharedResourceControllerPath {
   PostSharedResource = `shared-resource`,
-  GetSharedResource = `shared-resource`,
+  DeprecatedGetSharedResource = `shared-resource`,
+  GetSharedResources = `shared-resources`,
   PutSharedResourceExtend = `shared-resource/:id/extend`,
 }
 @Controller(AjkTownApiVersion.V1)
@@ -52,7 +53,8 @@ export class SharedResourceController {
     ).toResDTO(this.wordModel, this.sharedResourceModel)
   }
 
-  @Get(SharedResourceControllerPath.GetSharedResource)
+  // TODO: Deprecated. delete me.
+  @Get(SharedResourceControllerPath.DeprecatedGetSharedResource)
   async getSharedResource(
     @Req() req: Request,
     @Query() dto: GetSharedResourcesQueryDTO,
@@ -62,10 +64,26 @@ export class SharedResourceController {
       nullableAtd = await AccessTokenDomain.fromReq(req, this.jwtService)
     } catch {}
 
-    return (await this.sharedResourceService.get(nullableAtd, dto)).toResDTO(
-      this.wordModel,
-      this.sharedResourceModel,
-    )
+    return (
+      await this.sharedResourceService.deprecatedGet(nullableAtd, dto)
+    ).toResDTO(this.wordModel, this.sharedResourceModel)
+  }
+
+  @Get(SharedResourceControllerPath.GetSharedResources)
+  async getSharedResources(
+    @Req() req: Request,
+    @Query() dto: GetSharedResourcesQueryDTO,
+  ) {
+    let nullableAtd: null | AccessTokenDomain = null
+    try {
+      nullableAtd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    } catch {}
+
+    return {
+      sharedResources: (
+        await this.sharedResourceService.get(nullableAtd, dto)
+      ).map((e) => e.toResDTO(this.wordModel, this.sharedResourceModel)),
+    }
   }
 
   @Put(SharedResourceControllerPath.PutSharedResourceExtend)

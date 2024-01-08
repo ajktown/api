@@ -24,7 +24,8 @@ const privateV1Paths: PathAndMethod[] = [
   [AuthControllerPath.PostGoogleAuth, RequestMethod.POST],
   [AuthControllerPath.PostDevTokenAuth, RequestMethod.POST],
   [AuthControllerPath.GetAuthPrep, RequestMethod.GET],
-  [SharedResourceControllerPath.GetSharedResource, RequestMethod.GET],
+  [SharedResourceControllerPath.DeprecatedGetSharedResource, RequestMethod.GET],
+  [SharedResourceControllerPath.GetSharedResources, RequestMethod.GET],
 ]
 
 // API Second version paths
