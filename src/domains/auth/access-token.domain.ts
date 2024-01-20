@@ -41,6 +41,11 @@ export class AccessTokenDomain {
     return this.props.profileImageUrl
   }
 
+  get isFirstTimeUser(): boolean {
+    if (!this.props.createdAt) return false // it is considered not a first time user, if createdAt is not present
+    return new Date().valueOf() < new Date(this.props.createdAt).valueOf() + 20
+  }
+
   static fromUser(user: UserDomain, req?: Request) {
     const userRes = user.toResDTO()
     return new AccessTokenDomain(
@@ -48,7 +53,7 @@ export class AccessTokenDomain {
         userEmail: userRes.email,
         userId: userRes.id,
         profileImageUrl: userRes.imageUrl,
-        createdAt: userRes.createdAt.toISOString(),
+        createdAt: userRes.createdAt?.toISOString(),
       },
       getTimezone(req),
     )
@@ -83,8 +88,7 @@ export class AccessTokenDomain {
       profileImageUrl: this.props.profileImageUrl,
       timezone: this.timezone,
       // The user is considered the first time user, if the user has signed up within 10 seconds.
-      isFirstTimeUser:
-        new Date().valueOf() < new Date(this.props.createdAt).valueOf() + 20,
+      isFirstTimeUser: this.isFirstTimeUser,
     }
   }
 

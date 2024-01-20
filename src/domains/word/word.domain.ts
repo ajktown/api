@@ -1,7 +1,7 @@
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { GlobalLanguageCode } from '@/global.interface'
 import { WordDoc, WordProps, WordModel } from '@/schemas/deprecated-word.schema'
-import { IWord } from './index.interface'
+import { ISharedWord, IWord } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { semesterLambda } from '@/lambdas/semester.lambda'
 import { SupportModel } from '@/schemas/deprecated-supports.schema'
@@ -149,6 +149,22 @@ export class WordDomain extends DomainRoot {
     }
 
     return this.props
+  }
+
+  /**
+   * Only used when the word is shared
+   * I may change this to accept the nullableAtd and
+   * return toResDTO() if it is owned by the user.
+   */
+  toSharedResDTO(): ISharedWord {
+    return {
+      languageCode: this.props.languageCode,
+      term: this.props.term,
+      pronunciation: this.props.pronunciation,
+      definition: this.props.definition,
+      example: this.props.example,
+      exampleLink: this.props.exampleLink,
+    }
   }
 
   async updateWithPutDto(
