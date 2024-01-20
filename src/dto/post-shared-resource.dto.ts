@@ -15,7 +15,9 @@ export class PostSharedResourceDTO {
    * At this point it must expire
    */
   @IsNumber()
-  @Max(MAXIMUM_EXPIRE_AFTER_SECS, { message: `Maximum ${MAXIMUM_EXPIRE_AFTER_SECS} seconds` })
+  @Max(MAXIMUM_EXPIRE_AFTER_SECS, {
+    message: `Maximum ${MAXIMUM_EXPIRE_AFTER_SECS} seconds`,
+  })
   expireAfterSecs: number
 
   @IsOptional()
