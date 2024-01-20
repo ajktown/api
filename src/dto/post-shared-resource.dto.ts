@@ -1,4 +1,11 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString, Max } from 'class-validator'
+
+/**
+ * MAXIMUM_EXPIRE_AFTER_SECS defines the maximum number of seconds.
+ * AJK Town API does not allow infinite expiration time.
+ */
+// const MAXIMUM_EXPIRE_AFTER_SECS = 60 * 60 * 24 * 7 // 7 days
+const MAXIMUM_EXPIRE_AFTER_SECS = 60 // 60 seconds
 
 export class PostSharedResourceDTO {
   /**
@@ -8,8 +15,8 @@ export class PostSharedResourceDTO {
    *
    * At this point it must expire
    */
-  @IsOptional()
   @IsNumber()
+  @Max(MAXIMUM_EXPIRE_AFTER_SECS)
   expireAfterSecs: number
 
   @IsOptional()
