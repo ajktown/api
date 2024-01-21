@@ -6,6 +6,7 @@ export enum SchemaCollectionName {
   Supports = `supports`,
   Preferences = `preferences`,
   SharedResources = `shared-resources`,
+  Actions = 'actions',
 }
 
 export enum DiscriminatorKey {
