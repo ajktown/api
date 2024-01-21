@@ -14,17 +14,12 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get(ApiHomePath.Home)
-  home(@Req() req: Request) {
+  getHome(@Req() req: Request) {
     return this.appService.getHome(req)
   }
 
   @Get(ApiHomePath.Healthz)
-  healthz() {
+  getHealthz() {
     return this.appService.getHealthz()
-  }
-
-  @Get(ApiHomePath.HomeHelloWorld)
-  getHello(): string {
-    return this.appService.getHello()
   }
 }

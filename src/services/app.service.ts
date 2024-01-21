@@ -33,9 +33,6 @@ export class AppService {
         .filter((item) => item),
     }
   }
-  getHello(): string {
-    return 'Hello World from AJK Town API Service! Check out https://wordnote.ajktown.com'
-  }
 
   getHealthz() {
     return {
