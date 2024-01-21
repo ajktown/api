@@ -8,6 +8,7 @@ export class AppService {
 
     return {
       message: 'Welcome to AJK Town API Service!',
+      api: 'https://api.ajktown.com',
       websites: [
         'https://wordnote.ajktown.com',
         'https://consistency.ajktown.com',
