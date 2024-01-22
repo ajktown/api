@@ -23,6 +23,9 @@ export class ActionProps {
 
   @Prop()
   level: number // 1 ~ 4 only. it is considered 0 if ActionDocs does not exist in the first place.
+
+  @Prop()
+  message: string // any unmodifiable message the end user wants to store with
 }
 
 export const ActionSchema = SchemaFactory.createForClass(ActionProps)

@@ -5,4 +5,5 @@ export interface IAction extends DataBasicsDate {
   ownerID: string
   groupId: string
   level: number // 1 ~ 4 only
+  message: string
 }

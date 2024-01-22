@@ -23,6 +23,7 @@ export class ActionDomain extends DomainRoot {
       ownerID: props.ownerID,
       groupId: props.groupId,
       level: props.level,
+      message: props.message,
       createdAt: props.createdAt,
       updatedAt: props.updatedAt,
     })
@@ -48,6 +49,7 @@ export class ActionDomain extends DomainRoot {
       ownerID: atd.userId,
       groupId: dto.groupId,
       level: fixedLevelForTestNow,
+      message: dto.message || '',
     }
     return ActionDomain.fromMdb(await new model(docProps).save())
   }
