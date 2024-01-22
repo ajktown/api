@@ -29,9 +29,11 @@ export const envLambda = {
     if (!defaultValue) return undefined
     return defaultValue.toString()
   },
-  getCorsOrigin: (): string => {
-    const defaultCorsOrigin = 'http://localhost:3000'
-    return envLambda.get(SupportedEnvAttr.Cors) ?? defaultCorsOrigin
+  getCorsOrigin: (): string[] => {
+    const got = envLambda.get(SupportedEnvAttr.Cors)
+    if (!got) return ['http://localhost:3000,http://localhost:3100'] // default value
+
+    return got.split(',')
   },
   getJwtTokenSecret: () => {
     return envLambda.get(SupportedEnvAttr.JwtTokenSecret)
