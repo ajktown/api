@@ -164,6 +164,7 @@ export class WordDomain extends DomainRoot {
       definition: this.props.definition,
       example: this.props.example,
       exampleLink: this.props.exampleLink,
+      tags: this.props.tags,
     }
   }
 
