@@ -40,4 +40,11 @@ export const timeHandler = {
   ) => {
     return nDaysAgo === timeHandler.getDaysAgo(givenDate, timezone)
   },
+
+  /** Returns the date in the format of YYYY-MM-DD */
+  getYYYYMMDD: (date: JsDateAccepter, timezone: string): string => {
+    return DateTime.fromJSDate(new Date(date))
+      .setZone(timezone)
+      .toFormat('yyyy-MM-dd')
+  },
 }
