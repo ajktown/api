@@ -47,10 +47,7 @@ export const timeHandler = {
     const endOfToday = DateTime.now().setZone(timezone).endOf('day')
     const nDaysAgoDate = endOfToday.minus({ days: nDaysAgo })
 
-    return [
-      nDaysAgoDate.toJSDate(),
-      endOfToday.toJSDate(),
-    ]
+    return [nDaysAgoDate.toJSDate(), endOfToday.toJSDate()]
   },
 
   getDateFromYear: (year: number, timezone: string): [Date, Date] => {

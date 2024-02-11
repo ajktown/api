@@ -18,7 +18,7 @@ export class ActionGroupDomain extends DomainRoot {
     this.isTodayHandled = domains.some(
       (d) =>
         timeHandler.getYYYYMMDD(d.toResDTO().createdAt, atd.timezone) ===
-        timeHandler.getYYYYMMDD(new Date(), atd.timezone),
+        timeHandler.getYYYYMMDD(new Date(), atd.timezone) && 0 < d.toResDTO().level,
     )
     // total counts is number of actions committed that is at least level 1 or higher
     this.totalCount = domains.filter((d) => d.toResDTO().level).length
@@ -30,7 +30,6 @@ export class ActionGroupDomain extends DomainRoot {
   ): ActionGroupDomain {
     const groupId = atd.userId + ActionGroupFixedIdSuffix.PostWordConsistency
 
-    // 2024 only, create an empty action domains
     const dateWordDomainMap = new Map<string, WordDomain>() // i.e) 2024-01-01 => WordDomain
     for (const wordDomain of wordChunk.wordDomains) {
       const date = timeHandler.getYYYYMMDD(
@@ -40,19 +39,26 @@ export class ActionGroupDomain extends DomainRoot {
       dateWordDomainMap.set(date, wordDomain)
     }
 
-    const startDate = new Date(`2024-01-01`)
-    const endDate = new Date(`2024-12-31`)
+    const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
+      365 - 1, // today is inclusive, so 365 - 1
+      atd.timezone,
+    )
 
     const actionDomains: ActionDomain[] = []
-
-    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-      const date = timeHandler.getYYYYMMDD(d, atd.timezone)
-      if (dateWordDomainMap.has(date)) {
+    for (
+      let date = start;
+      date <= end;
+      date = timeHandler.getNextDate(date, atd.timezone)
+    ) {
+      const wordDomain = dateWordDomainMap.get(
+        timeHandler.getYYYYMMDD(date, atd.timezone),
+      )
+      if (wordDomain) {
         actionDomains.push(
-          dateWordDomainMap.get(date).toActionDomain(atd, groupId),
+          ActionDomain.fromWordDomain(atd, groupId, wordDomain),
         )
       } else {
-        actionDomains.push(ActionDomain.fromEmpty(atd, groupId, d))
+        actionDomains.push(ActionDomain.fromEmpty(atd, groupId, date))
       }
     }
 
