@@ -11,9 +11,12 @@ export class ActionGroupService {
   async getPostWordsActionGroup(
     atd: AccessTokenDomain,
   ): Promise<ActionGroupDomain> {
-    const emptyQuery = new GetWordQueryDTO()
-    const wordChunk = await this.wordService.get(atd, emptyQuery)
+    const query = new GetWordQueryDTO()
+    query.daysAgoUntilToday = 365 // shows only 365 days until today
 
-    return ActionGroupDomain.fromWordChunk(atd, wordChunk)
+    return ActionGroupDomain.fromWordChunk(
+      atd,
+      await this.wordService.get(atd, query),
+    )
   }
 }
