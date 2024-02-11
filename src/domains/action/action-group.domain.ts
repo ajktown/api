@@ -18,7 +18,8 @@ export class ActionGroupDomain extends DomainRoot {
     this.isTodayHandled = domains.some(
       (d) =>
         timeHandler.getYYYYMMDD(d.toResDTO().createdAt, atd.timezone) ===
-        timeHandler.getYYYYMMDD(new Date(), atd.timezone) && 0 < d.toResDTO().level,
+          timeHandler.getYYYYMMDD(new Date(), atd.timezone) &&
+        0 < d.toResDTO().level,
     )
     // total counts is number of actions committed that is at least level 1 or higher
     this.totalCount = domains.filter((d) => d.toResDTO().level).length
