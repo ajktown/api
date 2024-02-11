@@ -31,7 +31,10 @@ export const timeHandler = {
     ]
   },
 
-  getDateFromDaysAgoUntilToday:  (nDaysAgo: number, timezone: string): [Date, Date] => {
+  getDateFromDaysAgoUntilToday: (
+    nDaysAgo: number,
+    timezone: string,
+  ): [Date, Date] => {
     const nDaysAgoDate = DateTime.now()
       .setZone(timezone)
       .minus({ days: nDaysAgo })
