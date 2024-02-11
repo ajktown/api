@@ -31,17 +31,25 @@ export const timeHandler = {
     ]
   },
 
+  getNextDate: (givenDate: JsDateAccepter, timezone: string): Date => {
+    return DateTime.fromJSDate(new Date(givenDate))
+      .setZone(timezone)
+      .plus({ days: 1 })
+      .toJSDate()
+  },
+
   getDateFromDaysAgoUntilToday: (
+    // if you want to have whole 365 days, set it as 364, as today will be included
+    // i.e) nDaysAgo = 1 (yesterday & today) has 2 days
     nDaysAgo: number,
     timezone: string,
   ): [Date, Date] => {
-    const nDaysAgoDate = DateTime.now()
-      .setZone(timezone)
-      .minus({ days: nDaysAgo })
+    const endOfToday = DateTime.now().setZone(timezone).endOf('day')
+    const nDaysAgoDate = endOfToday.minus({ days: nDaysAgo })
 
     return [
-      nDaysAgoDate.startOf('day').toJSDate(),
-      DateTime.now().setZone(timezone).endOf('day').toJSDate(),
+      nDaysAgoDate.toJSDate(),
+      endOfToday.toJSDate(),
     ]
   },
 
