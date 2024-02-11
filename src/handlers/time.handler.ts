@@ -31,6 +31,15 @@ export const timeHandler = {
     ]
   },
 
+  getDateFromYear: (year: number, timezone: string): [Date, Date] => {
+    const startDate = new Date(`01-01-${year}`)
+    const endDate = new Date(`01-01-${year + 1}`)
+    return [
+      DateTime.fromJSDate(startDate).setZone(timezone).toJSDate(),
+      DateTime.fromJSDate(endDate).setZone(timezone).toJSDate(),
+    ]
+  },
+
   /** Return true or false if the givenDate is within the nDaysAgo */
   // TODO: Delete me. not used
   isWithinDaysAgo: (
