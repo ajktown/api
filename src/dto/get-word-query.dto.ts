@@ -82,4 +82,14 @@ export class GetWordQueryDTO
   @IsOptional()
   @IsBoolean()
   isArchived: boolean
+
+  @Transform(intoNumber)
+  @IsOptional()
+  @IsNumber()
+  year: number // returns the words in the given year
+
+  @Transform(intoNumber)
+  @IsOptional()
+  @IsNumber()
+  daysAgoUntilToday: number // returns the words from days ago until today
 }
