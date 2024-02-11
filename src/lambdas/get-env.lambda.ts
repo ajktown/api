@@ -19,6 +19,18 @@ export enum SupportedEnvAttr {
   DetectLanguageApiKey = `DETECT_LANGUAGE_API_KEY`,
 }
 
+// ! Do not export Strictly imports below. They are only for this file.
+enum StrictlyEnv {
+  ProductMode = 'prod',
+  LocalMode = 'local',
+}
+const PRIVATE_DEFAULT_ENV_MODE: StrictlyEnv = StrictlyEnv.LocalMode
+
+enum StrictlyAllowChatGtp {
+  AllowChatGpt = 'true',
+}
+// ! Do not export Strictly imports above. They are only for this file.
+
 export const envLambda = {
   get: (
     attr: SupportedEnvAttr,
@@ -68,15 +80,3 @@ export const envLambda = {
     )
   },
 }
-
-// ! Do not export Strictly imports below. They are only for this file.
-enum StrictlyEnv {
-  ProductMode = 'prod',
-  LocalMode = 'local',
-}
-const PRIVATE_DEFAULT_ENV_MODE: StrictlyEnv = StrictlyEnv.LocalMode
-
-enum StrictlyAllowChatGtp {
-  AllowChatGpt = 'true',
-}
-// ! Do not export Strictly imports above. They are only for this file.
