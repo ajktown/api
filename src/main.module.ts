@@ -14,6 +14,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core'
 import { LoggingInterceptor } from './interceptors/logging.interceptor'
 import { PreferenceModule } from './modules/preference.module'
 import { SharedResourceModule } from './modules/shared-resource.module'
+import { ActionGroupModule } from './modules/action-group.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SharedResourceModule } from './modules/shared-resource.module'
     SemesterModule,
     PreferenceModule,
     SharedResourceModule,
+    ActionGroupModule,
     MongooseModule.forRoot(getMdbUriLambda()),
     JwtModule.register(getJwtOptionsLambda()),
   ],

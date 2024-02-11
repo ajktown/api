@@ -5,6 +5,7 @@ import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 import { PostActionDTO } from '@/dto/post-action.dto'
+import { WordDomain } from '../word/word.domain'
 
 export class ActionDomain extends DomainRoot {
   private readonly props: Partial<IAction>
@@ -13,6 +14,25 @@ export class ActionDomain extends DomainRoot {
     super()
     if (!props.ownerID) throw new DataNotPresentError('ownerID')
     this.props = props
+  }
+
+  static fromWordDomain(
+    atd: AccessTokenDomain,
+    groupId: string,
+    wordDomain: WordDomain,
+  ): ActionDomain {
+    const props = wordDomain.toResDTO(atd)
+    // if no post word level is 0
+    return new ActionDomain({
+      ownerID: atd.userId,
+      groupId: groupId,
+      level: 1,
+      message: '',
+      createdAt: new Date(props.dateAdded),
+      // the action cannot be updated, but since it is from word domain,
+      // we can simply set the dateAdded as updatedAt.
+      updatedAt: new Date(props.dateAdded),
+    })
   }
 
   static fromMdb(props: ActionDoc): ActionDomain {
