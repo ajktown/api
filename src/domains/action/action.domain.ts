@@ -1,4 +1,4 @@
-import { IAction } from './index.interface'
+import { IAction, IActionLevel } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { DomainRoot } from '../index.root'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
@@ -16,17 +16,40 @@ export class ActionDomain extends DomainRoot {
     this.props = props
   }
 
+  // the action level only exists as defined in IActionLevel
+  static getActionLevel(level: number): IActionLevel {
+    return Math.max(0, Math.min(3, level)) as IActionLevel
+  }
+
+  /**
+   * Returns empty action domain for the given date
+   */
+  static fromEmpty(
+    atd: AccessTokenDomain,
+    groupId: string,
+    date: Date,
+  ): ActionDomain {
+    return new ActionDomain({
+      ownerID: atd.userId,
+      groupId: groupId,
+      level: 0,
+      message: '',
+      createdAt: date,
+      updatedAt: date,
+    })
+  }
+
   static fromWordDomain(
     atd: AccessTokenDomain,
     groupId: string,
     wordDomain: WordDomain,
   ): ActionDomain {
     const props = wordDomain.toResDTO(atd)
-    // if no post word level is 0
+
     return new ActionDomain({
       ownerID: atd.userId,
       groupId: groupId,
-      level: 1,
+      level: 4,
       message: '',
       createdAt: new Date(props.dateAdded),
       // the action cannot be updated, but since it is from word domain,
@@ -42,7 +65,7 @@ export class ActionDomain extends DomainRoot {
       id: props.id,
       ownerID: props.ownerID,
       groupId: props.groupId,
-      level: props.level,
+      level: this.getActionLevel(props.level),
       message: props.message,
       createdAt: props.createdAt,
       updatedAt: props.updatedAt,
