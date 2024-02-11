@@ -31,6 +31,17 @@ export const timeHandler = {
     ]
   },
 
+  getDateFromDaysAgoUntilToday:  (nDaysAgo: number, timezone: string): [Date, Date] => {
+    const nDaysAgoDate = DateTime.now()
+      .setZone(timezone)
+      .minus({ days: nDaysAgo })
+
+    return [
+      nDaysAgoDate.startOf('day').toJSDate(),
+      DateTime.now().setZone(timezone).endOf('day').toJSDate(),
+    ]
+  },
+
   getDateFromYear: (year: number, timezone: string): [Date, Date] => {
     const startDate = new Date(`01-01-${year}`)
     const endDate = new Date(`01-01-${year + 1}`)
