@@ -44,14 +44,37 @@ export class FactoryRoot<DocumentProps> {
       : { [key]: { $gte: start.valueOf(), $lt: end.valueOf() } }
   }
 
-  /** method that takes daysAgo and return the range of object in MDB */
-  protected toRangeObjectByDaysAgo(
+  /**
+   * method that takes year and return the range of object in MDB
+   * If year 2024 is given, query for only data with dateAdded between 2024-01-01 and 2024-12-31 will be returned.
+   */
+  protected toNumRangeObjectByYear(
     key: keyof DocumentProps | '_id' | keyof DataBasicsDate,
-    daysAgo: number,
+    year: number,
     atd: AccessTokenDomain,
   ): { [key: string]: { $gte: Date; $lt: Date } } {
-    const [start, end] = timeHandler.getDateFromDaysAgo(daysAgo, atd.timezone)
-    return daysAgo == undefined ? {} : { [key]: { $gte: start, $lt: end } }
+    const [start, end] = timeHandler.getDateFromYear(year, atd.timezone)
+
+    return year == undefined ? {} : { [key]: { $gte: start, $lt: end } }
+  }
+
+  /**
+   * method that takes daysAgoUntilToday and return the range of object in MDB
+   * If daysAgoUntilToday 365 is given, data range between 365 days ago until today will be returned.
+   */
+  protected toNumRangeObjectByDaysAgoUntilToday(
+    key: keyof DocumentProps | '_id' | keyof DataBasicsDate,
+    daysAgoUntilToday: number,
+    atd: AccessTokenDomain,
+  ): { [key: string]: { $gte: Date; $lt: Date } } {
+    const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
+      daysAgoUntilToday,
+      atd.timezone,
+    )
+
+    return daysAgoUntilToday == undefined
+      ? {}
+      : { [key]: { $gte: start, $lt: end } }
   }
 
   public toSort(): PrivateToSort {
