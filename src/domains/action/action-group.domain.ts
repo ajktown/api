@@ -13,24 +13,17 @@ import {
 } from '@/schemas/action-group.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
+import { IActionGroup } from './index.interface'
+import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 
 export class ActionGroupDomain extends DomainRoot {
-  private readonly isTodayHandled: boolean
-  private readonly totalCount: number
+  private readonly props: IActionGroup
   private readonly domains: ActionDomain[]
 
-  private constructor(atd: AccessTokenDomain, domains: ActionDomain[]) {
+  private constructor(props: IActionGroup, domains: ActionDomain[]) {
     super()
+    this.props = props
     this.domains = domains
-    // isTodayHandled
-    this.isTodayHandled = domains.some(
-      (d) =>
-        timeHandler.getYYYYMMDD(d.toResDTO().createdAt, atd.timezone) ===
-          timeHandler.getYYYYMMDD(new Date(), atd.timezone) &&
-        0 < d.toResDTO().level,
-    )
-    // total counts is number of actions committed that is at least level 1 or higher
-    this.totalCount = domains.filter((d) => d.toResDTO().level).length
   }
 
   static fromMdb(
@@ -38,7 +31,7 @@ export class ActionGroupDomain extends DomainRoot {
     doc: ActionGroupDoc,
   ): ActionGroupDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
-    return new ActionGroupDomain(atd, [])
+    return new ActionGroupDomain(doc, [])
   }
 
   static fromWordChunk(
@@ -79,7 +72,15 @@ export class ActionGroupDomain extends DomainRoot {
       }
     }
 
-    return new ActionGroupDomain(atd, actionDomains)
+    const now = timeHandler.getToday(atd.timezone)
+    return new ActionGroupDomain(
+      {
+        name: ActionGroupFixedIdSuffix.PostWordConsistency,
+        createdAt: now,
+        updatedAt: now,
+      },
+      actionDomains,
+    )
   }
 
   /** Create sharedResource just for the word */
@@ -98,6 +99,27 @@ export class ActionGroupDomain extends DomainRoot {
       throw new BadRequestError(
         'Something went wrong while posting action group',
       )
+    }
+  }
+
+  toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
+    const fixedLevel = 4 // level 4 is fixed atm
+    const domains = this.domains.map((d) => d.toResDTO(fixedLevel))
+
+    // isTodayHandled
+    const isTodayHandled = domains.some(
+      (d) =>
+        timeHandler.getYYYYMMDD(d.createdAt, atd.timezone) ===
+          timeHandler.getYYYYMMDD(new Date(), atd.timezone) && 0 < d.level,
+    )
+    // total counts is number of actions committed that is at least level 1 or higher
+    const totalCount = domains.filter((d) => d.level).length
+
+    return {
+      props: this.props,
+      actions: this.domains.map((d) => d.toResDTO(fixedLevel)),
+      isTodayHandled,
+      totalCount,
     }
   }
 }

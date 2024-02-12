@@ -6,6 +6,13 @@ export interface IAction extends DataBasicsDate {
   id: string
   ownerID: string
   groupId: string
-  level: IActionLevel
   message: string
+}
+
+export interface IActionDerived extends IAction {
+  level: number // level is 100% decided by the ActionGroup
+}
+
+export interface IActionGroup extends DataBasicsDate {
+  name: string
 }

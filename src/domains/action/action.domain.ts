@@ -1,4 +1,4 @@
-import { IAction, IActionLevel } from './index.interface'
+import { IAction, IActionDerived, IActionLevel } from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { DomainRoot } from '../index.root'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
@@ -6,6 +6,9 @@ import { DataNotPresentError } from '@/errors/400/data-not-present.error'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 import { PostActionDTO } from '@/dto/post-action.dto'
 import { WordDomain } from '../word/word.domain'
+import { ActionGroupModel } from '@/schemas/action-group.schema'
+import { BadRequestError } from '@/errors/400/index.error'
+import { ParentNotExistOrNoPermissionError } from '@/errors/400/parent-not-exist-or-no-permission.error'
 
 export class ActionDomain extends DomainRoot {
   private readonly props: Partial<IAction>
@@ -32,7 +35,6 @@ export class ActionDomain extends DomainRoot {
     return new ActionDomain({
       ownerID: atd.userId,
       groupId: groupId,
-      level: 0,
       message: '',
       createdAt: date,
       updatedAt: date,
@@ -49,7 +51,6 @@ export class ActionDomain extends DomainRoot {
     return new ActionDomain({
       ownerID: atd.userId,
       groupId: groupId,
-      level: 4,
       message: '',
       createdAt: new Date(props.dateAdded),
       // the action cannot be updated, but since it is from word domain,
@@ -65,7 +66,6 @@ export class ActionDomain extends DomainRoot {
       id: props.id,
       ownerID: props.ownerID,
       groupId: props.groupId,
-      level: this.getActionLevel(props.level),
       message: props.message,
       createdAt: props.createdAt,
       updatedAt: props.updatedAt,
@@ -76,28 +76,40 @@ export class ActionDomain extends DomainRoot {
     atd: AccessTokenDomain,
     dto: PostActionDTO,
     model: ActionModel,
+    actionGroupModel: ActionGroupModel,
   ): Promise<ActionDomain> {
     // TODO: Post has to check the followings
     // TODO: 1. the group id exists
-    // TODO: 1. Group ID will decide the level based on the given time and given value.
-    // TODO: 2. the group is owned by the atd
-    // TODO: 3. the date has not passed
+    const doc = await actionGroupModel.findById(dto.groupId)
+    // const actionGroupDomain = ActionGroupDomain.fromMdb(atd, doc)
+
+    // Do not allow end users (or potential hackers) to know if the group exists or not.
+    if (!doc)
+      throw new ParentNotExistOrNoPermissionError('ActionGroup', dto.groupId)
+    if (doc.ownerId !== atd.userId)
+      throw new BadRequestError(
+        'You do not have permission to post action to this group',
+      )
+
+    // must also check if reserved named is used
+
+    // TODO: Check if action exists for today (This will be implemented in later future)
     // TODO: 4. The group validates that this action can be added (group is like a parent, and this is child. so it requires parent's validation)
     // TODO: 5. And more...
-
-    const fixedLevelForTestNow = 1 // TODO: Make sure that the group decides it.
 
     // Create it if passed:
     const docProps: ActionProps = {
       ownerID: atd.userId,
       groupId: dto.groupId,
-      level: fixedLevelForTestNow,
       message: dto.message || '',
     }
     return ActionDomain.fromMdb(await new model(docProps).save())
   }
 
-  toResDTO(): Partial<IAction> {
-    return this.props
+  toResDTO(level: number): Partial<IActionDerived> {
+    return {
+      ...this.props,
+      level: level,
+    }
   }
 }
