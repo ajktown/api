@@ -1,12 +1,14 @@
-import { Controller, Get, Req } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ActionGroupService } from '@/services/action-group.service'
+import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 
 export enum ActionGroupControllerPath {
   GetActionGroups = `action-groups`,
+  PostActionGroup = `action-group`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -20,6 +22,17 @@ export class ActionGroupController {
   async getActionGroups(@Req() req: Request) {
     return await this.actionGroupService.getPostWordsActionGroup(
       await AccessTokenDomain.fromReq(req, this.jwtService),
+    )
+  }
+
+  @Post(ActionGroupControllerPath.GetActionGroups)
+  async postActionGroup(
+    @Req() req: Request,
+    @Body() reqDto: PostActionGroupDTO,
+  ) {
+    return await this.actionGroupService.post(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      reqDto,
     )
   }
 }

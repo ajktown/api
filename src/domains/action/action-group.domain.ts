@@ -5,6 +5,14 @@ import { WordChunkDomain } from '../word/word-chunk.domain'
 import { ActionGroupFixedIdSuffix } from '@/constants/action-group.const'
 import { WordDomain } from '../word/word.domain'
 import { timeHandler } from '@/handlers/time.handler'
+import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
+import {
+  ActionGroupDoc,
+  ActionGroupModel,
+  ActionGroupProps,
+} from '@/schemas/action-group.schema'
+import { BadRequestError } from '@/errors/400/index.error'
+import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 
 export class ActionGroupDomain extends DomainRoot {
   private readonly isTodayHandled: boolean
@@ -23,6 +31,14 @@ export class ActionGroupDomain extends DomainRoot {
     )
     // total counts is number of actions committed that is at least level 1 or higher
     this.totalCount = domains.filter((d) => d.toResDTO().level).length
+  }
+
+  static fromMdb(
+    atd: AccessTokenDomain,
+    doc: ActionGroupDoc,
+  ): ActionGroupDomain {
+    if (typeof doc !== 'object') throw new DataNotObjectError()
+    return new ActionGroupDomain(atd, [])
   }
 
   static fromWordChunk(
@@ -64,5 +80,24 @@ export class ActionGroupDomain extends DomainRoot {
     }
 
     return new ActionGroupDomain(atd, actionDomains)
+  }
+
+  /** Create sharedResource just for the word */
+  static async post(
+    atd: AccessTokenDomain,
+    dto: PostActionGroupDTO,
+    model: ActionGroupModel,
+  ): Promise<ActionGroupDomain> {
+    try {
+      const props: ActionGroupProps = {
+        ownerId: atd.userId,
+        name: dto.name,
+      }
+      return ActionGroupDomain.fromMdb(atd, await new model(props).save())
+    } catch {
+      throw new BadRequestError(
+        'Something went wrong while posting action group',
+      )
+    }
   }
 }
