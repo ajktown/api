@@ -40,10 +40,5 @@ export class ActionGroupController {
     }
 
     return await this.actionGroupService.getById(id)
-  @Get(ActionGroupControllerPath.GetActionGroups)
-  async getActionGroups(@Req() req: Request) {
-    return await this.actionGroupService.getPostWordsActionGroup(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-    )
   }
 }
