@@ -13,32 +13,39 @@ import {
 } from '@/schemas/action-group.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
-import { IActionGroup } from './index.interface'
+import { IActionDerived, IActionGroup } from './index.interface'
 import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 
 export class ActionGroupDomain extends DomainRoot {
   private readonly props: IActionGroup
-  private readonly domains: ActionDomain[]
+  private readonly domains: Map<string, WordDomain> // date and word domain
 
-  private constructor(props: IActionGroup, domains: ActionDomain[]) {
+  private constructor(props: IActionGroup, domains: Map<string, WordDomain>) {
     super()
     this.props = props
     this.domains = domains
   }
 
-  static fromMdb(
-    atd: AccessTokenDomain,
-    doc: ActionGroupDoc,
-  ): ActionGroupDomain {
+  static fromMdb(doc: ActionGroupDoc): ActionGroupDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
-    return new ActionGroupDomain(doc, [])
+    const emptyMap = new Map<string, WordDomain>()
+    return new ActionGroupDomain(
+      {
+        id: doc.id,
+        name: doc.name,
+        createdAt: doc.createdAt,
+        updatedAt: doc.updatedAt,
+      },
+      emptyMap,
+    )
   }
 
   static fromWordChunk(
     atd: AccessTokenDomain,
     wordChunk: WordChunkDomain,
   ): ActionGroupDomain {
-    const groupId = atd.userId + ActionGroupFixedIdSuffix.PostWordConsistency
+    const groupId =
+      atd.userId + '_' + ActionGroupFixedIdSuffix.PostWordConsistency
 
     const dateWordDomainMap = new Map<string, WordDomain>() // i.e) 2024-01-01 => WordDomain
     for (const wordDomain of wordChunk.wordDomains) {
@@ -49,37 +56,15 @@ export class ActionGroupDomain extends DomainRoot {
       dateWordDomainMap.set(date, wordDomain)
     }
 
-    const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
-      365 - 1, // today is inclusive, so 365 - 1
-      atd.timezone,
-    )
-
-    const actionDomains: ActionDomain[] = []
-    for (
-      let date = start;
-      date <= end;
-      date = timeHandler.getNextDate(date, atd.timezone)
-    ) {
-      const wordDomain = dateWordDomainMap.get(
-        timeHandler.getYYYYMMDD(date, atd.timezone),
-      )
-      if (wordDomain) {
-        actionDomains.push(
-          ActionDomain.fromWordDomain(atd, groupId, wordDomain),
-        )
-      } else {
-        actionDomains.push(ActionDomain.fromEmpty(atd, groupId, date))
-      }
-    }
-
     const now = timeHandler.getToday(atd.timezone)
     return new ActionGroupDomain(
       {
+        id: groupId,
         name: ActionGroupFixedIdSuffix.PostWordConsistency,
         createdAt: now,
         updatedAt: now,
       },
-      actionDomains,
+      dateWordDomainMap,
     )
   }
 
@@ -94,7 +79,7 @@ export class ActionGroupDomain extends DomainRoot {
         ownerId: atd.userId,
         name: dto.name,
       }
-      return ActionGroupDomain.fromMdb(atd, await new model(props).save())
+      return ActionGroupDomain.fromMdb(await new model(props).save())
     } catch {
       throw new BadRequestError(
         'Something went wrong while posting action group',
@@ -103,21 +88,45 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
+    const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
+      365 - 1, // today is inclusive, so 365 - 1
+      atd.timezone,
+    )
+
+    const actionsDerived: IActionDerived[] = []
     const fixedLevel = 4 // level 4 is fixed atm
-    const domains = this.domains.map((d) => d.toResDTO(fixedLevel))
+
+    for (
+      let date = start;
+      date <= end;
+      date = timeHandler.getNextDate(date, atd.timezone)
+    ) {
+      const ad = this.domains.get(timeHandler.getYYYYMMDD(date, atd.timezone))
+      if (ad) {
+        actionsDerived.push(
+          ActionDomain.fromWordDomain(atd, this.props.id, ad).toResDTO(
+            fixedLevel,
+          ),
+        )
+      } else {
+        actionsDerived.push(
+          ActionDomain.fromEmpty(atd, this.props.id, date).toResDTO(0),
+        )
+      }
+    }
 
     // isTodayHandled
-    const isTodayHandled = domains.some(
-      (d) =>
-        timeHandler.getYYYYMMDD(d.createdAt, atd.timezone) ===
-          timeHandler.getYYYYMMDD(new Date(), atd.timezone) && 0 < d.level,
+    const isTodayHandled = actionsDerived.some(
+      (ad) =>
+        timeHandler.getYYYYMMDD(ad.createdAt, atd.timezone) ===
+          timeHandler.getYYYYMMDD(new Date(), atd.timezone) && 0 < ad.level,
     )
     // total counts is number of actions committed that is at least level 1 or higher
-    const totalCount = domains.filter((d) => d.level).length
+    const totalCount = actionsDerived.filter((d) => d.level).length
 
     return {
       props: this.props,
-      actions: this.domains.map((d) => d.toResDTO(fixedLevel)),
+      actions: actionsDerived,
       isTodayHandled,
       totalCount,
     }

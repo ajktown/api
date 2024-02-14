@@ -14,5 +14,6 @@ export interface IActionDerived extends IAction {
 }
 
 export interface IActionGroup extends DataBasicsDate {
+  id: string
   name: string
 }

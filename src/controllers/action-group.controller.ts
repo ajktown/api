@@ -8,7 +8,7 @@ import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 
 export enum ActionGroupControllerPath {
   GetActionGroups = `action-groups`,
-  PostActionGroup = `action-group`,
+  PostActionGroup = `action-groups`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -20,12 +20,13 @@ export class ActionGroupController {
 
   @Get(ActionGroupControllerPath.GetActionGroups)
   async getActionGroups(@Req() req: Request) {
-    return await this.actionGroupService.getPostWordsActionGroup(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-    )
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (
+      await this.actionGroupService.getPostWordsActionGroup(atd)
+    ).toResDTO(atd)
   }
 
-  @Post(ActionGroupControllerPath.GetActionGroups)
+  @Post(ActionGroupControllerPath.PostActionGroup)
   async postActionGroup(
     @Req() req: Request,
     @Body() reqDto: PostActionGroupDTO,

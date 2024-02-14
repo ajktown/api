@@ -11,9 +11,9 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { ParentNotExistOrNoPermissionError } from '@/errors/400/parent-not-exist-or-no-permission.error'
 
 export class ActionDomain extends DomainRoot {
-  private readonly props: Partial<IAction>
+  private readonly props: IAction
 
-  private constructor(props: Partial<IAction>) {
+  private constructor(props: IAction) {
     super()
     if (!props.ownerID) throw new DataNotPresentError('ownerID')
     this.props = props
@@ -33,6 +33,7 @@ export class ActionDomain extends DomainRoot {
     date: Date,
   ): ActionDomain {
     return new ActionDomain({
+      id: '',
       ownerID: atd.userId,
       groupId: groupId,
       message: '',
@@ -49,6 +50,7 @@ export class ActionDomain extends DomainRoot {
     const props = wordDomain.toResDTO(atd)
 
     return new ActionDomain({
+      id: '',
       ownerID: atd.userId,
       groupId: groupId,
       message: '',
@@ -106,7 +108,7 @@ export class ActionDomain extends DomainRoot {
     return ActionDomain.fromMdb(await new model(docProps).save())
   }
 
-  toResDTO(level: number): Partial<IActionDerived> {
+  toResDTO(level: number): IActionDerived {
     return {
       ...this.props,
       level: level,
