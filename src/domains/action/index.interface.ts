@@ -10,6 +10,7 @@ export interface IAction extends DataBasicsDate {
 }
 
 export interface IActionDerived extends IAction {
+  yyyymmdd: string // the date in YYYY-MM-DD format
   level: number // level is 100% decided by the ActionGroup
 }
 

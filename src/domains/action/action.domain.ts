@@ -9,6 +9,7 @@ import { WordDomain } from '../word/word.domain'
 import { ActionGroupModel } from '@/schemas/action-group.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { ParentNotExistOrNoPermissionError } from '@/errors/400/parent-not-exist-or-no-permission.error'
+import { timeHandler } from '@/handlers/time.handler'
 
 export class ActionDomain extends DomainRoot {
   private readonly props: IAction
@@ -108,9 +109,10 @@ export class ActionDomain extends DomainRoot {
     return ActionDomain.fromMdb(await new model(docProps).save())
   }
 
-  toResDTO(level: number): IActionDerived {
+  toResDTO(atd: AccessTokenDomain, level: number): IActionDerived {
     return {
       ...this.props,
+      yyyymmdd: timeHandler.getYYYYMMDD(this.props.createdAt, atd.timezone),
       level: level,
     }
   }

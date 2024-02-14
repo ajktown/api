@@ -106,12 +106,12 @@ export class ActionGroupDomain extends DomainRoot {
       if (ad) {
         actionsDerived.push(
           ActionDomain.fromWordDomain(atd, this.props.id, ad).toResDTO(
-            fixedLevel,
+            atd, fixedLevel,
           ),
         )
       } else {
         actionsDerived.push(
-          ActionDomain.fromEmpty(atd, this.props.id, date).toResDTO(0),
+          ActionDomain.fromEmpty(atd, this.props.id, date).toResDTO(atd, 0),
         )
       }
     }
