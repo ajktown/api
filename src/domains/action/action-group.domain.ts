@@ -95,10 +95,20 @@ export class ActionGroupDomain extends DomainRoot {
     atd: AccessTokenDomain,
     actionModel: ActionModel,
   ): Promise<this> {
-    // Check if action can be made
-    // TODO: Check if action exists for today (This will be implemented in later future)
-    // TODO: 4. The group validates that this action can be added (group is like a parent, and this is child. so it requires parent's validation)
-    // TODO: 5. And more...
+    // if today's action exists, throw error
+    actionModel.find(
+      {
+        ownerId: this.props.ownerId,
+        groupId: this.props.id,
+        createdAt: {
+          $gte: timeHandler.getToday(atd.timezone),
+        },
+      },
+      (err, doc) => {
+        if (err) throw new BadRequestError('Something went wrong')
+        if (doc) throw new BadRequestError('You already have action for today')
+      },
+    )
 
     // Create it if passed:
     const docProps: ActionProps = {
