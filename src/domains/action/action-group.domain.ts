@@ -128,6 +128,7 @@ export class ActionGroupDomain extends DomainRoot {
     return {
       props: this.props,
       actions: actionsDerived,
+      actionsLength: actionsDerived.length,
       isTodayHandled,
       totalCount,
     }
