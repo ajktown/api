@@ -8,9 +8,9 @@ import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 import { ActionGroupFixedId } from '@/constants/action-group.const'
 
 export enum ActionGroupControllerPath {
+  PostActionGroup = `action-groups`,
   GetActionGroupById = `action-groups/:id`,
   GetActionGroups = `action-groups`,
-  PostActionGroup = `action-groups`,
 }
 
 @Controller(AjkTownApiVersion.V1)
