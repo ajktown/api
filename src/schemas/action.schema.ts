@@ -20,9 +20,6 @@ export class ActionProps {
 
   @Prop()
   groupId: string // the group of the action
-
-  @Prop()
-  message: string // any unmodifiable message the end user wants to store with
 }
 
 export const ActionSchema = SchemaFactory.createForClass(ActionProps)

@@ -3,7 +3,6 @@ import { ActionDomain } from './action.domain'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { WordChunkDomain } from '../word/word-chunk.domain'
 import { ActionGroupFixedId } from '@/constants/action-group.const'
-import { WordDomain } from '../word/word.domain'
 import { timeHandler } from '@/handlers/time.handler'
 import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 import {
@@ -15,14 +14,20 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { IActionDerived, IActionGroup } from './index.interface'
 import { GetActionGroupRes } from '@/responses/get-action-groups.res'
+import { ActionModel, ActionProps } from '@/schemas/action.schema'
 
+/**
+ * ActionGroupDomain first contains only level 1~4 data.
+ * The level 0 (or does not exist) in the first place does not exist
+ * When toRes() is run, the 0s will be filled with EmptyActionDomain to make it for FE to consume easily.
+ */
 export class ActionGroupDomain extends DomainRoot {
   private readonly props: IActionGroup
-  private readonly dateDomainMap: Map<string, WordDomain> // date and word domain
+  private readonly dateDomainMap: Map<string, ActionDomain> // date and action domain
 
   private constructor(
     props: IActionGroup,
-    dateDomainMap: Map<string, WordDomain>,
+    dateDomainMap: Map<string, ActionDomain>,
   ) {
     super()
     this.props = props
@@ -31,11 +36,12 @@ export class ActionGroupDomain extends DomainRoot {
 
   static fromMdb(doc: ActionGroupDoc): ActionGroupDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
-    const emptyMap = new Map<string, WordDomain>()
+    const emptyMap = new Map<string, ActionDomain>()
     return new ActionGroupDomain(
       {
         id: doc.id,
         name: doc.name,
+        ownerId: doc.ownerId,
         createdAt: doc.createdAt,
         updatedAt: doc.updatedAt,
       },
@@ -47,19 +53,19 @@ export class ActionGroupDomain extends DomainRoot {
     atd: AccessTokenDomain,
     wordChunk: WordChunkDomain,
   ): ActionGroupDomain {
-    const dateWordDomainMap = new Map<string, WordDomain>() // i.e) 2024-01-01 => WordDomain
+    const fixedId = ActionGroupFixedId.DailyPostWordChallenge
+
+    const dateWordDomainMap = new Map<string, ActionDomain>() // i.e) 2024-01-01 => ActionDomain
     for (const wordDomain of wordChunk.wordDomains) {
-      const date = timeHandler.getYYYYMMDD(
-        wordDomain.toResDTO(atd).dateAdded,
-        atd.timezone,
-      )
-      dateWordDomainMap.set(date, wordDomain)
+      const ad = ActionDomain.fromWordDomain(atd, fixedId, wordDomain)
+      dateWordDomainMap.set(ad.yyyymmdd, ad)
     }
     const now = timeHandler.getToday(atd.timezone)
     return new ActionGroupDomain(
       {
-        id: ActionGroupFixedId.DailyPostWordChallenge,
-        name: ActionGroupFixedId.DailyPostWordChallenge,
+        id: fixedId,
+        ownerId: atd.userId,
+        name: fixedId,
         createdAt: now,
         updatedAt: now,
       },
@@ -67,7 +73,6 @@ export class ActionGroupDomain extends DomainRoot {
     )
   }
 
-  /** Create sharedResource just for the word */
   static async post(
     atd: AccessTokenDomain,
     dto: PostActionGroupDTO,
@@ -84,6 +89,29 @@ export class ActionGroupDomain extends DomainRoot {
         'Something went wrong while posting action group',
       )
     }
+  }
+
+  async postAction(
+    atd: AccessTokenDomain,
+    actionModel: ActionModel,
+  ): Promise<this> {
+    // Check if action can be made
+    // TODO: Check if action exists for today (This will be implemented in later future)
+    // TODO: 4. The group validates that this action can be added (group is like a parent, and this is child. so it requires parent's validation)
+    // TODO: 5. And more...
+
+    // Create it if passed:
+    const docProps: ActionProps = {
+      ownerID: this.props.ownerId,
+      groupId: this.props.id,
+    }
+    const actionDomain = ActionDomain.fromMdb(
+      atd,
+      await new actionModel(docProps).save(),
+    )
+    // update into the map
+    this.dateDomainMap.set(actionDomain.yyyymmdd, actionDomain)
+    return this
   }
 
   toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
@@ -103,15 +131,10 @@ export class ActionGroupDomain extends DomainRoot {
       const ad = this.dateDomainMap.get(
         timeHandler.getYYYYMMDD(date, atd.timezone),
       )
-      if (ad) {
+      if (ad) actionsDerived.push(ad.toResDTO(fixedLevel))
+      else {
         actionsDerived.push(
-          ActionDomain.fromWordDomain(atd, this.props.id, ad).toResDTO(
-            atd, fixedLevel,
-          ),
-        )
-      } else {
-        actionsDerived.push(
-          ActionDomain.fromEmpty(atd, this.props.id, date).toResDTO(atd, 0),
+          ActionDomain.fromEmpty(atd, this.props.id, date).toResDTO(0),
         )
       }
     }

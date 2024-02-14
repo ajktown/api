@@ -9,12 +9,16 @@ import {
   ActionGroupProps,
 } from '@/schemas/action-group.schema'
 import { InjectModel } from '@nestjs/mongoose'
+import { ActionGroupFixedId } from '@/constants/action-group.const'
+import { ActionModel, ActionProps } from '@/schemas/action.schema'
 
 @Injectable()
 export class ActionGroupService {
   constructor(
     @InjectModel(ActionGroupProps.name)
     private actionGroupModel: ActionGroupModel,
+    @InjectModel(ActionProps.name)
+    private actionModel: ActionModel,
     private wordService: WordService,
   ) {}
 
@@ -25,19 +29,27 @@ export class ActionGroupService {
     return ActionGroupDomain.post(atd, dto, this.actionGroupModel)
   }
 
-  async getPostWordsActionGroup(
+  async postActionByActionGroup(
     atd: AccessTokenDomain,
+    id: string,
   ): Promise<ActionGroupDomain> {
-    const query = new GetWordQueryDTO()
-    query.daysAgoUntilToday = 365 // shows only 365 days until today
-
-    return ActionGroupDomain.fromWordChunk(
-      atd,
-      await this.wordService.get(atd, query),
-    )
+    const actionGroup = await this.getById(atd, id)
+    return actionGroup.postAction(atd, this.actionModel)
   }
 
-  async getById(id: string): Promise<ActionGroupDomain> {
+  async getById(
+    atd: AccessTokenDomain,
+    id: string,
+  ): Promise<ActionGroupDomain> {
+    if (id === ActionGroupFixedId.DailyPostWordChallenge) {
+      const query = new GetWordQueryDTO()
+      query.daysAgoUntilToday = 365 // shows only 365 days until today
+      return ActionGroupDomain.fromWordChunk(
+        atd,
+        await this.wordService.get(atd, query),
+      )
+    }
+
     return ActionGroupDomain.fromMdb(
       await this.actionGroupModel.findById(id).exec(),
     )

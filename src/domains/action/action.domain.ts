@@ -1,4 +1,9 @@
-import { IAction, IActionDerived, IActionLevel } from './index.interface'
+import {
+  IAction,
+  IActionDerived,
+  IActionInput,
+  IActionLevel,
+} from './index.interface'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { DomainRoot } from '../index.root'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
@@ -11,13 +16,25 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { ParentNotExistOrNoPermissionError } from '@/errors/400/parent-not-exist-or-no-permission.error'
 import { timeHandler } from '@/handlers/time.handler'
 
+/**
+ * WARNING: Since ActionDomain is managed by ActionGroup to maintain its integrity,
+ * it cannot be created or updated without permission from ActionGroup,
+ * and therefore cannot be created or updated in this domain.
+ */
 export class ActionDomain extends DomainRoot {
   private readonly props: IAction
 
-  private constructor(props: IAction) {
+  private constructor(atd: AccessTokenDomain, input: IActionInput) {
     super()
-    if (!props.ownerID) throw new DataNotPresentError('ownerID')
-    this.props = props
+    if (!input.ownerID) throw new DataNotPresentError('ownerID')
+    this.props = {
+      ...input,
+      yyyymmdd: timeHandler.getYYYYMMDD(input.createdAt, atd.timezone),
+    }
+  }
+
+  get yyyymmdd(): string {
+    return this.props.yyyymmdd
   }
 
   // the action level only exists as defined in IActionLevel
@@ -33,11 +50,10 @@ export class ActionDomain extends DomainRoot {
     groupId: string,
     date: Date,
   ): ActionDomain {
-    return new ActionDomain({
+    return new ActionDomain(atd, {
       id: '',
       ownerID: atd.userId,
       groupId: groupId,
-      message: '',
       createdAt: date,
       updatedAt: date,
     })
@@ -50,11 +66,10 @@ export class ActionDomain extends DomainRoot {
   ): ActionDomain {
     const props = wordDomain.toResDTO(atd)
 
-    return new ActionDomain({
+    return new ActionDomain(atd, {
       id: '',
       ownerID: atd.userId,
       groupId: groupId,
-      message: '',
       createdAt: new Date(props.dateAdded),
       // the action cannot be updated, but since it is from word domain,
       // we can simply set the dateAdded as updatedAt.
@@ -62,16 +77,15 @@ export class ActionDomain extends DomainRoot {
     })
   }
 
-  static fromMdb(props: ActionDoc): ActionDomain {
-    if (typeof props !== 'object') throw new DataNotObjectError()
+  static fromMdb(atd: AccessTokenDomain, doc: ActionDoc): ActionDomain {
+    if (typeof doc !== 'object') throw new DataNotObjectError()
 
-    return new ActionDomain({
-      id: props.id,
-      ownerID: props.ownerID,
-      groupId: props.groupId,
-      message: props.message,
-      createdAt: props.createdAt,
-      updatedAt: props.updatedAt,
+    return new ActionDomain(atd, {
+      id: doc.id,
+      ownerID: doc.ownerID,
+      groupId: doc.groupId,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     })
   }
 
@@ -104,15 +118,13 @@ export class ActionDomain extends DomainRoot {
     const docProps: ActionProps = {
       ownerID: atd.userId,
       groupId: dto.groupId,
-      message: dto.message || '',
     }
-    return ActionDomain.fromMdb(await new model(docProps).save())
+    return ActionDomain.fromMdb(atd, await new model(docProps).save())
   }
 
-  toResDTO(atd: AccessTokenDomain, level: number): IActionDerived {
+  toResDTO(level: number): IActionDerived {
     return {
       ...this.props,
-      yyyymmdd: timeHandler.getYYYYMMDD(this.props.createdAt, atd.timezone),
       level: level,
     }
   }

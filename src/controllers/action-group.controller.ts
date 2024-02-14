@@ -5,10 +5,10 @@ import { JwtService } from '@nestjs/jwt'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ActionGroupService } from '@/services/action-group.service'
 import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
-import { ActionGroupFixedId } from '@/constants/action-group.const'
 
 export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
+  PostActionByActionGroup = `action-groups/:id/actions`,
   GetActionGroupById = `action-groups/:id`,
   GetActionGroups = `action-groups`,
 }
@@ -29,16 +29,17 @@ export class ActionGroupController {
     return (await this.actionGroupService.post(atd, reqDto)).toResDTO(atd)
   }
 
+  @Post(ActionGroupControllerPath.PostActionByActionGroup)
+  async postActionByActionGroup(@Req() req: Request, @Param('id') id: string) {
+    return this.actionGroupService.postActionByActionGroup(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      id,
+    )
+  }
+
   @Get(ActionGroupControllerPath.GetActionGroupById)
   async getActionGroups(@Req() req: Request, @Param('id') id: string) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-
-    if (id === ActionGroupFixedId.DailyPostWordChallenge) {
-      return (
-        await this.actionGroupService.getPostWordsActionGroup(atd)
-      ).toResDTO(atd)
-    }
-
-    return await this.actionGroupService.getById(id)
+    return (await this.actionGroupService.getById(atd, id)).toResDTO(atd)
   }
 }
