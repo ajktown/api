@@ -69,8 +69,9 @@ export class ActionGroupDomain extends DomainRoot {
 
     const map = new Map<string, ActionDomain>()
     const actionDocs = await actionModel.find({ groupId: id }).exec()
+
     for (const actionDoc of actionDocs) {
-      const ad = ActionDomain.fromMdb(null, actionDoc)
+      const ad = ActionDomain.fromMdb(atd, actionDoc)
       map.set(ad.yyyymmdd, ad)
     }
     return ActionGroupDomain.fromMdb(doc, map)
@@ -167,7 +168,8 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
-    if (this.props.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+    if (this.props.ownerId !== atd.userId)
+      throw new NotExistOrNoPermissionError()
 
     const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
       365 - 1, // today is inclusive, so 365 - 1
