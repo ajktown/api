@@ -8,8 +8,6 @@ export interface GetActionGroupRes {
   totalCount: number
 }
 
-// TODO: Modify back to simple loop
 export interface GetActionGroupsRes {
   ids: string[]
-  actionGroups: GetActionGroupRes[]
 }

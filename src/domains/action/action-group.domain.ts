@@ -34,6 +34,10 @@ export class ActionGroupDomain extends DomainRoot {
     this.dateDomainMap = dateDomainMap
   }
 
+  get id() {
+    return this.props.id
+  }
+
   static fromMdb(doc: ActionGroupDoc): ActionGroupDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
     const emptyMap = new Map<string, ActionDomain>()

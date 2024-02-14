@@ -27,12 +27,7 @@ export class ActionGroupsDomain extends DomainRoot {
     return new ActionGroupsDomain(domains)
   }
 
-  toResDTO(atd: AccessTokenDomain): GetActionGroupsRes {
-    const actionGroups = this.domains.map((d) => d.toResDTO(atd))
-
-    return {
-      ids: actionGroups.map((d) => d.props.id),
-      actionGroups,
-    }
+  toResDTO(): GetActionGroupsRes {
+    return { ids: this.domains.map((d) => d.id) }
   }
 }

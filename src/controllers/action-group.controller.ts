@@ -6,10 +6,13 @@ import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ActionGroupService } from '@/services/action-group.service'
 import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 
+/**
+ * Warning: Since Action Group is a huge domain, it only returns the ids of the action groups.
+ */
 export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
   PostActionByActionGroup = `action-groups/:id/actions`,
-  GetActionGroups = `action-groups`,
+  GetActionGroupIds = `action-group-ids`,
   GetActionGroupById = `action-groups/:id`,
 }
 
@@ -37,10 +40,10 @@ export class ActionGroupController {
     ).toResDTO(atd)
   }
 
-  @Get(ActionGroupControllerPath.GetActionGroups)
+  @Get(ActionGroupControllerPath.GetActionGroupIds)
   async GetActionGroups(@Req() req: Request) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.actionGroupService.get(atd)).toResDTO(atd)
+    return (await this.actionGroupService.get(atd)).toResDTO()
   }
 
   @Get(ActionGroupControllerPath.GetActionGroupById)
