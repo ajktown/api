@@ -8,6 +8,6 @@ export interface GetActionGroupRes {
   totalCount: number
 }
 
-export interface GetActionGroupsRes {
+export interface GetActionGroupIdsRes {
   ids: string[]
 }

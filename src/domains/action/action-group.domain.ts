@@ -15,6 +15,7 @@ import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { IActionDerived, IActionGroup } from './index.interface'
 import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
+import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -38,9 +39,11 @@ export class ActionGroupDomain extends DomainRoot {
     return this.props.id
   }
 
-  static fromMdb(doc: ActionGroupDoc): ActionGroupDomain {
+  private static fromMdb(
+    doc: ActionGroupDoc,
+    map: Map<string, ActionDomain>,
+  ): ActionGroupDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
-    const emptyMap = new Map<string, ActionDomain>()
     return new ActionGroupDomain(
       {
         id: doc.id,
@@ -49,8 +52,29 @@ export class ActionGroupDomain extends DomainRoot {
         createdAt: doc.createdAt,
         updatedAt: doc.updatedAt,
       },
-      emptyMap,
+      map,
     )
+  }
+
+  static async fromId(
+    atd: AccessTokenDomain,
+    id: string,
+    model: ActionGroupModel,
+    actionModel: ActionModel,
+  ): Promise<ActionGroupDomain> {
+    const doc = await model.findById(id).exec()
+    if (!doc) throw new NotExistOrNoPermissionError()
+
+    if (doc.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+
+    const map = new Map<string, ActionDomain>()
+    const actionDocs = await actionModel.find({ groupId: id }).exec()
+
+    for (const actionDoc of actionDocs) {
+      const ad = ActionDomain.fromMdb(atd, actionDoc)
+      map.set(ad.yyyymmdd, ad)
+    }
+    return ActionGroupDomain.fromMdb(doc, map)
   }
 
   static fromWordChunk(
@@ -100,7 +124,8 @@ export class ActionGroupDomain extends DomainRoot {
         ownerId: atd.userId,
         name: dto.name,
       }
-      return ActionGroupDomain.fromMdb(await new model(props).save())
+      const emptyMap = new Map<string, ActionDomain>()
+      return ActionGroupDomain.fromMdb(await new model(props).save(), emptyMap)
     } catch {
       throw new BadRequestError(
         'Something went wrong while posting action group',
@@ -143,6 +168,9 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
+    if (this.props.ownerId !== atd.userId)
+      throw new NotExistOrNoPermissionError()
+
     const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
       365 - 1, // today is inclusive, so 365 - 1
       atd.timezone,
