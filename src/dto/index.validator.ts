@@ -2,10 +2,10 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { TransformFnParams } from 'class-transformer'
 
 export const intoTrimmedString = ({ value }: TransformFnParams): string => {
-  if (typeof value !== "string") throw new BadRequestError('Invalid string value')
+  if (typeof value !== 'string')
+    throw new BadRequestError('Invalid string value')
   return value.trim()
 }
-
 
 /** Convert into boolean. Use ONLY after @Transform(intoBoolean) */
 export const intoBoolean = ({ value }: TransformFnParams): boolean => {

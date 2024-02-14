@@ -14,7 +14,7 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { IActionDerived, IActionGroup } from './index.interface'
 import { GetActionGroupRes } from '@/responses/get-action-groups.res'
-import { ActionModel, ActionProps } from '@/schemas/action.schema'
+import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -82,6 +82,19 @@ export class ActionGroupDomain extends DomainRoot {
     dto: PostActionGroupDTO,
     model: ActionGroupModel,
   ): Promise<ActionGroupDomain> {
+    let docs: ActionGroupDoc[] = []
+    try {
+      docs = await model
+        .find({
+          ownerId: atd.userId,
+          name: dto.name,
+        })
+        .exec()
+    } catch (err) {
+      throw new BadRequestError('Something went wrong')
+    }
+    if (docs.length) throw new BadRequestError('The name already exists')
+
     try {
       const props: ActionGroupProps = {
         ownerId: atd.userId,
@@ -100,19 +113,22 @@ export class ActionGroupDomain extends DomainRoot {
     actionModel: ActionModel,
   ): Promise<this> {
     // if today's action exists, throw error
-    actionModel.find(
-      {
-        ownerId: this.props.ownerId,
-        groupId: this.props.id,
-        createdAt: {
-          $gte: timeHandler.getToday(atd.timezone),
-        },
-      },
-      (err, doc) => {
-        if (err) throw new BadRequestError('Something went wrong')
-        if (doc) throw new BadRequestError('You already have action for today')
-      },
-    )
+    let docs: ActionDoc[] = []
+    try {
+      docs = await actionModel
+        .find({
+          ownerId: this.props.ownerId,
+          groupId: this.props.id,
+          createdAt: {
+            $gte: timeHandler.getToday(atd.timezone),
+          },
+        })
+        .exec()
+    } catch {
+      throw new BadRequestError('Something went wrong')
+    }
+    if (docs.length)
+      throw new BadRequestError('You already have action for today')
 
     // Create it if passed:
     const docProps: ActionProps = {
