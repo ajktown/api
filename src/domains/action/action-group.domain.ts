@@ -18,12 +18,12 @@ import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 
 export class ActionGroupDomain extends DomainRoot {
   private readonly props: IActionGroup
-  private readonly domains: Map<string, WordDomain> // date and word domain
+  private readonly dateDomainMap: Map<string, WordDomain> // date and word domain
 
-  private constructor(props: IActionGroup, domains: Map<string, WordDomain>) {
+  private constructor(props: IActionGroup, dateDomainMap: Map<string, WordDomain>) {
     super()
     this.props = props
-    this.domains = domains
+    this.dateDomainMap = dateDomainMap
   }
 
   static fromMdb(doc: ActionGroupDoc): ActionGroupDomain {
@@ -98,7 +98,7 @@ export class ActionGroupDomain extends DomainRoot {
       date <= end;
       date = timeHandler.getNextDate(date, atd.timezone)
     ) {
-      const ad = this.domains.get(timeHandler.getYYYYMMDD(date, atd.timezone))
+      const ad = this.dateDomainMap.get(timeHandler.getYYYYMMDD(date, atd.timezone))
       if (ad) {
         actionsDerived.push(
           ActionDomain.fromWordDomain(atd, this.props.id, ad).toResDTO(
