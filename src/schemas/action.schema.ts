@@ -16,7 +16,7 @@ export type ActionModel = Model<ActionDoc>
 })
 export class ActionProps {
   @Prop({ required: true })
-  ownerID: string // the owner id 5f85729......
+  ownerId: string // the owner id 5f85729......
 
   @Prop()
   groupId: string // the group of the action

@@ -115,24 +115,22 @@ export class ActionGroupDomain extends DomainRoot {
     // if today's action exists, throw error
     let docs: ActionDoc[] = []
     try {
-      docs = await actionModel
-        .find({
-          ownerId: this.props.ownerId,
-          groupId: this.props.id,
-          createdAt: {
-            $gte: timeHandler.getToday(atd.timezone),
-          },
-        })
-        .exec()
-    } catch {
-      throw new BadRequestError('Something went wrong')
+      docs = await actionModel.find({
+        ownerId: this.props.ownerId,
+        groupId: this.props.id,
+        createdAt: {
+          $gte: timeHandler.getStartOfToday(atd.timezone),
+        },
+      })
+    } catch (err) {
+      throw new BadRequestError(err)
     }
     if (docs.length)
       throw new BadRequestError('You already have action for today')
 
     // Create it if passed:
     const docProps: ActionProps = {
-      ownerID: this.props.ownerId,
+      ownerId: this.props.ownerId,
       groupId: this.props.id,
     }
     const actionDomain = ActionDomain.fromMdb(

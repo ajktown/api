@@ -4,7 +4,7 @@ export type IActionLevel = 0 | 1 | 2 | 3 | 4
 
 export interface IActionInput extends DataBasicsDate {
   id: string
-  ownerID: string
+  ownerId: string
   groupId: string
 }
 

@@ -26,7 +26,7 @@ export class ActionDomain extends DomainRoot {
 
   private constructor(atd: AccessTokenDomain, input: IActionInput) {
     super()
-    if (!input.ownerID) throw new DataNotPresentError('ownerID')
+    if (!input.ownerId) throw new DataNotPresentError('ownerID')
     this.props = {
       ...input,
       yyyymmdd: timeHandler.getYYYYMMDD(input.createdAt, atd.timezone),
@@ -52,7 +52,7 @@ export class ActionDomain extends DomainRoot {
   ): ActionDomain {
     return new ActionDomain(atd, {
       id: '',
-      ownerID: atd.userId,
+      ownerId: atd.userId,
       groupId: groupId,
       createdAt: date,
       updatedAt: date,
@@ -68,7 +68,7 @@ export class ActionDomain extends DomainRoot {
 
     return new ActionDomain(atd, {
       id: '',
-      ownerID: atd.userId,
+      ownerId: atd.userId,
       groupId: groupId,
       createdAt: new Date(props.dateAdded),
       // the action cannot be updated, but since it is from word domain,
@@ -82,7 +82,7 @@ export class ActionDomain extends DomainRoot {
 
     return new ActionDomain(atd, {
       id: doc.id,
-      ownerID: doc.ownerID,
+      ownerId: doc.ownerId,
       groupId: doc.groupId,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
@@ -116,7 +116,7 @@ export class ActionDomain extends DomainRoot {
 
     // Create it if passed:
     const docProps: ActionProps = {
-      ownerID: atd.userId,
+      ownerId: atd.userId,
       groupId: dto.groupId,
     }
     return ActionDomain.fromMdb(atd, await new model(docProps).save())

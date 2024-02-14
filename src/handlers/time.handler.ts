@@ -5,6 +5,9 @@ type JsDateAccepter = number | string | Date
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 
 export const timeHandler = {
+  getStartOfToday: (timezone: string): Date => {
+    return DateTime.now().setZone(timezone).startOf('day').toJSDate()
+  },
   getToday: (timezone: string): Date => {
     return DateTime.now().setZone(timezone).toJSDate()
   },
