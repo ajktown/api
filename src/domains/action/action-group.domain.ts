@@ -52,7 +52,6 @@ export class ActionGroupDomain extends DomainRoot {
       )
       dateWordDomainMap.set(date, wordDomain)
     }
-
     const now = timeHandler.getToday(atd.timezone)
     return new ActionGroupDomain(
       {
