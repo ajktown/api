@@ -2,7 +2,7 @@ import { DomainRoot } from '../index.root'
 import { ActionDomain } from './action.domain'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { WordChunkDomain } from '../word/word-chunk.domain'
-import { ActionGroupFixedIdSuffix } from '@/constants/action-group.const'
+import { ActionGroupFixedId } from '@/constants/action-group.const'
 import { WordDomain } from '../word/word.domain'
 import { timeHandler } from '@/handlers/time.handler'
 import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
@@ -44,9 +44,6 @@ export class ActionGroupDomain extends DomainRoot {
     atd: AccessTokenDomain,
     wordChunk: WordChunkDomain,
   ): ActionGroupDomain {
-    const groupId =
-      atd.userId + '_' + ActionGroupFixedIdSuffix.PostWordConsistency
-
     const dateWordDomainMap = new Map<string, WordDomain>() // i.e) 2024-01-01 => WordDomain
     for (const wordDomain of wordChunk.wordDomains) {
       const date = timeHandler.getYYYYMMDD(
@@ -59,8 +56,8 @@ export class ActionGroupDomain extends DomainRoot {
     const now = timeHandler.getToday(atd.timezone)
     return new ActionGroupDomain(
       {
-        id: groupId,
-        name: ActionGroupFixedIdSuffix.PostWordConsistency,
+        id: ActionGroupFixedId.DailyPostWordChallenge,
+        name: ActionGroupFixedId.DailyPostWordChallenge,
         createdAt: now,
         updatedAt: now,
       },

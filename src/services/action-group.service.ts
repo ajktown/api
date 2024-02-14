@@ -18,6 +18,13 @@ export class ActionGroupService {
     private wordService: WordService,
   ) {}
 
+  async post(
+    atd: AccessTokenDomain,
+    dto: PostActionGroupDTO,
+  ): Promise<ActionGroupDomain> {
+    return ActionGroupDomain.post(atd, dto, this.actionGroupModel)
+  }
+
   async getPostWordsActionGroup(
     atd: AccessTokenDomain,
   ): Promise<ActionGroupDomain> {
@@ -30,10 +37,9 @@ export class ActionGroupService {
     )
   }
 
-  async post(
-    atd: AccessTokenDomain,
-    dto: PostActionGroupDTO,
-  ): Promise<ActionGroupDomain> {
-    return ActionGroupDomain.post(atd, dto, this.actionGroupModel)
+  async getById(id: string): Promise<ActionGroupDomain> {
+    return ActionGroupDomain.fromMdb(
+      await this.actionGroupModel.findById(id).exec(),
+    )
   }
 }
