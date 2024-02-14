@@ -167,6 +167,8 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
+    if (this.props.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+
     const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
       365 - 1, // today is inclusive, so 365 - 1
       atd.timezone,
