@@ -1,0 +1,24 @@
+name: Infrastructure
+description: Improve CI/CD for the project
+labels:
+  - infra
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: |
+        What would you like to be added for CI/CD?
+        Please provide as much info as possible
+    validations:
+      required: true
+
+  - type: textarea
+    id: todos
+    attributes:
+      label: TODOs
+      value: |
+        ```
+        - [ ] TODO: Write your TODOs here
+        ```
+        

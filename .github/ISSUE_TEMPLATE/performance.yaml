@@ -1,0 +1,24 @@
+name: Performance
+description: Improve performance for the project
+labels:
+  - performance
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: |
+        What would you like to be changed for the improved performance?
+        Please provide as much info as possible
+    validations:
+      required: true
+
+  - type: textarea
+    id: todos
+    attributes:
+      label: TODOs
+      value: |
+        ```
+        - [ ] TODO: Write your TODOs here
+        ```
+        
