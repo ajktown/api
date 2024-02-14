@@ -11,7 +11,5 @@ export interface GetActionGroupRes {
 // TODO: Modify back to simple loop
 export interface GetActionGroupsRes {
   ids: string[]
-  actionGroups: {
-    [id: string]: GetActionGroupRes
-  }
+  actionGroups: GetActionGroupRes[]
 }
