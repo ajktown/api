@@ -11,7 +11,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose'
 import { ActionGroupFixedId } from '@/constants/action-group.const'
 import { ActionModel, ActionProps } from '@/schemas/action.schema'
-import { ActionGroupsDomain } from '@/domains/action/action-groups.domain'
+import { ActionGroupIdsDomain } from '@/domains/action/action-group-ids.domain'
 
 @Injectable()
 export class ActionGroupService {
@@ -38,8 +38,8 @@ export class ActionGroupService {
     return actionGroup.postAction(atd, this.actionModel)
   }
 
-  async get(atd: AccessTokenDomain): Promise<ActionGroupsDomain> {
-    return ActionGroupsDomain.fromMdb(atd, this.actionGroupModel)
+  async get(atd: AccessTokenDomain): Promise<ActionGroupIdsDomain> {
+    return ActionGroupIdsDomain.fromMdb(atd, this.actionGroupModel)
   }
 
   async getById(
@@ -55,8 +55,11 @@ export class ActionGroupService {
       )
     }
 
-    return ActionGroupDomain.fromMdb(
-      await this.actionGroupModel.findById(id).exec(),
+    return ActionGroupDomain.fromId(
+      atd,
+      id,
+      this.actionGroupModel,
+      this.actionModel,
     )
   }
 }
