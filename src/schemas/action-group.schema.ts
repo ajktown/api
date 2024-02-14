@@ -6,25 +6,25 @@ import {
   SchemaCollectionName,
 } from './index.collections'
 
-export type ActionDoc = HydratedDocument<ActionProps, DataBasicsDate>
+export type ActionGroupDoc = HydratedDocument<ActionGroupProps, DataBasicsDate>
 
-export type ActionModel = Model<ActionDoc>
+export type ActionGroupModel = Model<ActionGroupDoc>
 
 @Schema({
-  collection: SchemaCollectionName.Actions,
+  collection: SchemaCollectionName.ActionGroups,
   timestamps: defaultSchemaTimestampsConfig,
 })
-export class ActionProps {
+export class ActionGroupProps {
   @Prop({ required: true })
   ownerId: string // the owner id 5f85729......
 
   @Prop()
-  groupId: string // the group of the action
+  name: string
 }
 
-export const ActionSchema = SchemaFactory.createForClass(ActionProps)
+export const ActionGroupSchema = SchemaFactory.createForClass(ActionGroupProps)
 
-export const actionModelDefinition: ModelDefinition = {
-  name: ActionProps.name,
-  schema: ActionSchema,
+export const actionGroupModelDefinition: ModelDefinition = {
+  name: ActionGroupProps.name,
+  schema: ActionGroupSchema,
 }

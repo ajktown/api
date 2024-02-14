@@ -1,12 +1,19 @@
-import { Controller, Get, Req } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ActionGroupService } from '@/services/action-group.service'
+import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 
+/**
+ * Warning: Since Action Group is a huge domain, it only returns the ids of the action groups.
+ */
 export enum ActionGroupControllerPath {
-  GetActionGroups = `action-groups`,
+  PostActionGroup = `action-groups`,
+  PostActionByActionGroup = `action-groups/:id/actions`,
+  GetActionGroupIds = `action-group-ids`,
+  GetActionGroupById = `action-groups/:id`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -16,10 +23,32 @@ export class ActionGroupController {
     private readonly actionGroupService: ActionGroupService,
   ) {}
 
-  @Get(ActionGroupControllerPath.GetActionGroups)
-  async getActionGroups(@Req() req: Request) {
-    return await this.actionGroupService.getPostWordsActionGroup(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-    )
+  @Post(ActionGroupControllerPath.PostActionGroup)
+  async postActionGroup(
+    @Req() req: Request,
+    @Body() reqDto: PostActionGroupDTO,
+  ) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.actionGroupService.post(atd, reqDto)).toResDTO(atd)
+  }
+
+  @Post(ActionGroupControllerPath.PostActionByActionGroup)
+  async postActionByActionGroup(@Req() req: Request, @Param('id') id: string) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (
+      await this.actionGroupService.postActionByActionGroup(atd, id)
+    ).toResDTO(atd)
+  }
+
+  @Get(ActionGroupControllerPath.GetActionGroupIds)
+  async GetActionGroups(@Req() req: Request) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.actionGroupService.get(atd)).toResDTO()
+  }
+
+  @Get(ActionGroupControllerPath.GetActionGroupById)
+  async GetActionGroupById(@Req() req: Request, @Param('id') id: string) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.actionGroupService.getById(atd, id)).toResDTO(atd)
   }
 }

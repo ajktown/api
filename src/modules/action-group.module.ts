@@ -7,10 +7,17 @@ import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { supportsModelDefinition } from '@/schemas/deprecated-supports.schema'
 import { ActionGroupController } from '@/controllers/action-group.controller'
 import { ActionGroupService } from '@/services/action-group.service'
+import { actionModelDefinition } from '@/schemas/action.schema'
+import { actionGroupModelDefinition } from '@/schemas/action-group.schema'
 
 @Module({
   imports: [
-    MongooseModule.forFeature([wordModelDefinition, supportsModelDefinition]),
+    MongooseModule.forFeature([
+      wordModelDefinition,
+      supportsModelDefinition,
+      actionModelDefinition,
+      actionGroupModelDefinition,
+    ]),
   ],
   controllers: [ActionGroupController],
   providers: [

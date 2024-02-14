@@ -1,4 +1,4 @@
-// Make sure to start with "_" as the many times ownerId (userId) is used as a prefix.
-export enum ActionGroupFixedIdSuffix {
-  PostWordConsistency = '_post-word-consistency',
+// This is reserved and cannot be used
+export enum ActionGroupFixedId {
+  DailyPostWordChallenge = 'daily-post-word-challenge',
 }
