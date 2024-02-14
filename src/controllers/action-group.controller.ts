@@ -9,8 +9,8 @@ import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
   PostActionByActionGroup = `action-groups/:id/actions`,
-  GetActionGroupById = `action-groups/:id`,
   GetActionGroups = `action-groups`,
+  GetActionGroupById = `action-groups/:id`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -31,14 +31,20 @@ export class ActionGroupController {
 
   @Post(ActionGroupControllerPath.PostActionByActionGroup)
   async postActionByActionGroup(@Req() req: Request, @Param('id') id: string) {
-    return this.actionGroupService.postActionByActionGroup(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-      id,
-    )
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (
+      await this.actionGroupService.postActionByActionGroup(atd, id)
+    ).toResDTO(atd)
+  }
+
+  @Get(ActionGroupControllerPath.GetActionGroups)
+  async GetActionGroups(@Req() req: Request) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.actionGroupService.get(atd)).toResDTO(atd)
   }
 
   @Get(ActionGroupControllerPath.GetActionGroupById)
-  async getActionGroups(@Req() req: Request, @Param('id') id: string) {
+  async GetActionGroupById(@Req() req: Request, @Param('id') id: string) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
     return (await this.actionGroupService.getById(atd, id)).toResDTO(atd)
   }
