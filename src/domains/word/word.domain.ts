@@ -14,6 +14,7 @@ import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-fo
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
+import { ActionDomain } from '../action/action.domain'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -166,6 +167,10 @@ export class WordDomain extends DomainRoot {
       exampleLink: this.props.exampleLink,
       tags: this.props.tags,
     }
+  }
+
+  toActionDomain(atd: AccessTokenDomain, groupId: string): ActionDomain {
+    return ActionDomain.fromWordDomain(atd, groupId, this)
   }
 
   async updateWithPutDto(

@@ -31,6 +31,34 @@ export const timeHandler = {
     ]
   },
 
+  getNextDate: (givenDate: JsDateAccepter, timezone: string): Date => {
+    return DateTime.fromJSDate(new Date(givenDate))
+      .setZone(timezone)
+      .plus({ days: 1 })
+      .toJSDate()
+  },
+
+  getDateFromDaysAgoUntilToday: (
+    // if you want to have whole 365 days, set it as 364, as today will be included
+    // i.e) nDaysAgo = 1 (yesterday & today) has 2 days
+    nDaysAgo: number,
+    timezone: string,
+  ): [Date, Date] => {
+    const endOfToday = DateTime.now().setZone(timezone).endOf('day')
+    const nDaysAgoDate = endOfToday.minus({ days: nDaysAgo })
+
+    return [nDaysAgoDate.toJSDate(), endOfToday.toJSDate()]
+  },
+
+  getDateFromYear: (year: number, timezone: string): [Date, Date] => {
+    const startDate = new Date(`01-01-${year}`)
+    const endDate = new Date(`01-01-${year + 1}`)
+    return [
+      DateTime.fromJSDate(startDate).setZone(timezone).toJSDate(),
+      DateTime.fromJSDate(endDate).setZone(timezone).toJSDate(),
+    ]
+  },
+
   /** Return true or false if the givenDate is within the nDaysAgo */
   // TODO: Delete me. not used
   isWithinDaysAgo: (
@@ -39,5 +67,12 @@ export const timeHandler = {
     timezone: string,
   ) => {
     return nDaysAgo === timeHandler.getDaysAgo(givenDate, timezone)
+  },
+
+  /** Returns the date in the format of YYYY-MM-DD */
+  getYYYYMMDD: (date: JsDateAccepter, timezone: string): string => {
+    return DateTime.fromJSDate(new Date(date))
+      .setZone(timezone)
+      .toFormat('yyyy-MM-dd')
   },
 }
