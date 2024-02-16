@@ -52,8 +52,8 @@ export const timeHandler = {
     const today = timeHandler.getToday(timezone)
 
     return [
-      DateTime.fromJSDate(today).plus({ min: minsFrom }),
-      DateTime.fromJSDate(today).plus({ min: minsUntil }),
+      DateTime.fromJSDate(today).plus({ minutes: minsFrom }).toJSDate(),
+      DateTime.fromJSDate(today).plus({ minutes: minsUntil }).toJSDate(),
     ]
   },
 
