@@ -38,7 +38,7 @@ export class ActionGroupDomain extends DomainRoot {
   ) {
     super()
 
-    if (props.closeMinsBefore < 0 || 1439 < props.closeMinsBefore)
+    if (props.openMinsAfter < 0 || 1439 < props.openMinsAfter)
       throw new NumberNotInRangeError(
         'closeMinsBefore',
         props.closeMinsBefore,
@@ -46,7 +46,7 @@ export class ActionGroupDomain extends DomainRoot {
         1439,
       )
 
-    if (props.openMinsAfter < 0 || 1440 < props.openMinsAfter)
+    if (props.closeMinsBefore < 1 || 1440 < props.closeMinsBefore)
       throw new NumberNotInRangeError(
         'closeMinsBefore',
         props.closeMinsBefore,
@@ -245,10 +245,15 @@ export class ActionGroupDomain extends DomainRoot {
 
     return {
       props: this.props,
-      actions: actionsDerived,
       actionsLength: actionsDerived.length,
       isTodayHandled,
       totalCount,
+      isOpened: timeHandler.isWithinDates(
+        new Date(),
+        this.props.openAt,
+        this.props.closeAt,
+      ),
+      actions: actionsDerived,
     }
   }
 }

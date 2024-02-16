@@ -77,7 +77,9 @@ export const timeHandler = {
       DateTime.fromJSDate(endDate).setZone(timezone).toJSDate(),
     ]
   },
-
+  isWithinDates: (got: Date, from: Date, until: Date): boolean => {
+    return from.valueOf() <= got.valueOf() && got.valueOf() <= until.valueOf()
+  },
   /** Return true or false if the givenDate is within the nDaysAgo */
   // TODO: Delete me. not used
   isWithinDaysAgo: (
