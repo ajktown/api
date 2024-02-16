@@ -148,23 +148,10 @@ export class ActionGroupDomain extends DomainRoot {
     dto: PostActionGroupDTO,
     model: ActionGroupModel,
   ): Promise<ActionGroupDomain> {
-    let docs: ActionGroupDoc[] = []
-    try {
-      docs = await model
-        .find({
-          ownerId: atd.userId,
-          task: dto.task,
-        })
-        .exec()
-    } catch (err) {
-      throw new BadRequestError('Something went wrong')
-    }
-    if (docs.length) throw new BadRequestError('The name already exists')
-
     if (dto.closeMinsAfter <= dto.openMinsAfter) {
       // otherwise action group will be closed all the time
       throw new BadRequestError(
-        'closeMinsAfter must be bigger than openMinsAfter',
+        `closeMinsAfter must be bigger than openMinsAfter; got closeMinsAfter: ${dto.closeMinsAfter}, got openMinsAfter: ${dto.openMinsAfter} `,
       )
     }
 
