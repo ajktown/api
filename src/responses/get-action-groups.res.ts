@@ -7,7 +7,3 @@ export interface GetActionGroupRes {
   isTodayHandled: boolean
   totalCount: number
 }
-
-export interface GetActionGroupIdsRes {
-  ids: string[]
-}
