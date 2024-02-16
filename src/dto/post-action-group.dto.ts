@@ -1,5 +1,9 @@
 import { IsNumber, IsString } from 'class-validator'
-import { intoNumber, intoSupportedTimezone, intoTrimmedString } from './index.validator'
+import {
+  intoNumber,
+  intoSupportedTimezone,
+  intoTrimmedString,
+} from './index.validator'
 import { Transform } from 'class-transformer'
 
 export class PostActionGroupDTO {

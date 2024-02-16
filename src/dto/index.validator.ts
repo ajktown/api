@@ -2,6 +2,13 @@ import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
 import { BadRequestError } from '@/errors/400/index.error'
 import { TransformFnParams } from 'class-transformer'
 
+/**
+ * Warning: The range check must be done in the domain phase to ensure that the business logic
+ * is recorded in the same domain. It is better not to validate too much unless type is 100% checked.
+ * i.e) range of the number should not be checked here.
+ * i.e) tranform data into expected type is a must here.
+ */
+
 export const intoSupportedTimezone = ({ value }: TransformFnParams): string => {
   if (typeof value !== 'string')
     throw new BadRequestError('Invalid string value')
