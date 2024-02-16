@@ -1,0 +1,23 @@
+name: Dependency
+description: Update dependency versions for the project
+labels:
+  - dependency
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: |
+        What would you like to be refactored?
+        Please provide as much info as possible
+    validations:
+      required: true
+
+  - type: textarea
+    id: todos
+    attributes:
+      label: TODOs
+      value: |
+        ```
+        - [ ] TODO: Write your TODOs here
+        ```

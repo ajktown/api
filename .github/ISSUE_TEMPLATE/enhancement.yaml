@@ -1,0 +1,23 @@
+name: Enhancement Tracking Issue
+description: Provide supporting details for a feature in development
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: |
+        Before explain the feature, please provide some background and lacking points.
+        What is lacking? What is needed? Why is it needed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: todos
+    attributes:
+      label: TODOs
+      value: |
+        ```
+        - [ ] TODO: Write your TODOs here
+        ```

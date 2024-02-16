@@ -1,0 +1,23 @@
+name: Documentation
+description: Improve documentation for the project
+labels:
+  - documentation
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: Background
+      description: |
+        What would you like to be documented?
+        Please provide as much info as possible
+    validations:
+      required: true
+
+  - type: textarea
+    id: todos
+    attributes:
+      label: TODOs
+      value: |
+        ```
+        - [ ] TODO: Write your TODOs here
+        ```
