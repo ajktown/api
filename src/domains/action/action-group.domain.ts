@@ -21,6 +21,7 @@ import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
 import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
+import { NumberNotInRangeError } from '@/errors/400/index.num-not-in-range.error'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -37,14 +38,21 @@ export class ActionGroupDomain extends DomainRoot {
   ) {
     super()
 
-    if (props.closeMinsBefore < 0)
-      throw new BadRequestError('closeMinsBefore cannot be less than 0')
-    if (86400 <= props.closeMinsBefore)
-      throw new BadRequestError('closeMinsBefore must be less than 86400')
-    if (props.openMinsAfter <= 0)
-      throw new BadRequestError('openMinsAfter must be bigger than 0')
-    if (86400 <= props.openMinsAfter)
-      throw new BadRequestError('openMinsAfter cannot be more than 86400')
+    if (props.closeMinsBefore < 0 || 1439 < props.closeMinsBefore)
+      throw new NumberNotInRangeError(
+        'closeMinsBefore',
+        props.closeMinsBefore,
+        0,
+        1439,
+      )
+
+    if (props.openMinsAfter < 0 || 1440 < props.openMinsAfter)
+      throw new NumberNotInRangeError(
+        'closeMinsBefore',
+        props.closeMinsBefore,
+        1,
+        1440,
+      )
 
     if (!SupportedTimeZoneConst.has(props.timezone))
       throw new BadRequestError('Unsupported timezone')
@@ -127,7 +135,7 @@ export class ActionGroupDomain extends DomainRoot {
         task: fixedId,
         timezone: atd.timezone,
         openMinsAfter: 0,
-        closeMinsBefore: 86400,
+        closeMinsBefore: 1440,
         createdAt: now,
         updatedAt: now,
       },
