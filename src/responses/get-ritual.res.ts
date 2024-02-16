@@ -1,3 +1,3 @@
-export interface GetRitualRes {
-  actionGroupIds: string[]
-}
+import { IRitual } from '@/domains/ritual/index.interface'
+
+export type GetRitualRes = IRitual

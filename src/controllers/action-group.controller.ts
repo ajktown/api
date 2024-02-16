@@ -43,7 +43,7 @@ export class ActionGroupController {
   @Get(ActionGroupControllerPath.GetActionGroupIds)
   async GetActionGroups(@Req() req: Request) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.actionGroupService.get(atd)).toResDTO()
+    return (await this.actionGroupService.get(atd)).toResDTO(atd)
   }
 
   @Get(ActionGroupControllerPath.GetActionGroupById)
