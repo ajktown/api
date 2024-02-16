@@ -1,5 +1,5 @@
 import { IsNumber, IsString } from 'class-validator'
-import { intoSupportedTimezone, intoTrimmedString } from './index.validator'
+import { intoNumber, intoSupportedTimezone, intoTrimmedString } from './index.validator'
 import { Transform } from 'class-transformer'
 
 export class PostActionGroupDTO {
@@ -11,9 +11,11 @@ export class PostActionGroupDTO {
   @IsString()
   timezone: string
 
+  @Transform(intoNumber)
   @IsNumber()
   openMinsAfter: number
 
+  @Transform(intoNumber)
   @IsNumber()
   closeMinsAfter: number
 }
