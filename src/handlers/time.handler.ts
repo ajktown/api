@@ -44,6 +44,18 @@ export const timeHandler = {
       .plus({ days: 1 })
       .toJSDate()
   },
+  getTodayRangeByMins: (
+    timezone: string,
+    minsFrom: number,
+    minsUntil: number,
+  ): [Date, Date] => {
+    const today = timeHandler.getToday(timezone)
+
+    return [
+      DateTime.fromJSDate(today).plus({ min: minsFrom }),
+      DateTime.fromJSDate(today).plus({ min: minsUntil }),
+    ]
+  },
 
   getDateFromDaysAgoUntilToday: (
     // if you want to have whole 365 days, set it as 364, as today will be included

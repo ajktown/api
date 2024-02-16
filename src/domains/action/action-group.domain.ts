@@ -12,10 +12,15 @@ import {
 } from '@/schemas/action-group.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
-import { IActionDerived, IActionGroup } from './index.interface'
+import {
+  IActionDerived,
+  IActionGroup,
+  IActionGroupInput,
+} from './index.interface'
 import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
+import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -27,11 +32,34 @@ export class ActionGroupDomain extends DomainRoot {
   private readonly dateDomainMap: Map<string, ActionDomain> // date and action domain
 
   private constructor(
-    props: IActionGroup,
+    props: IActionGroupInput,
     dateDomainMap: Map<string, ActionDomain>,
   ) {
     super()
-    this.props = props
+
+    if (props.closeMinsBefore < 0)
+      throw new BadRequestError('closeMinsBefore cannot be less than 0')
+    if (86400 <= props.closeMinsBefore)
+      throw new BadRequestError('closeMinsBefore must be less than 86400')
+    if (props.openMinsAfter <= 0)
+      throw new BadRequestError('openMinsAfter must be bigger than 0')
+    if (86400 <= props.openMinsAfter)
+      throw new BadRequestError('openMinsAfter cannot be more than 86400')
+
+    if (!SupportedTimeZoneConst.has(props.timezone))
+      throw new BadRequestError('Unsupported timezone')
+
+    const [openAt, closeAt] = timeHandler.getTodayRangeByMins(
+      props.timezone,
+      props.openMinsAfter,
+      props.closeMinsBefore,
+    )
+    this.props = {
+      ...props,
+      openAt,
+      closeAt,
+      utc: '+9:00', // TODO: Get it from props.timezone. I dont know how at this point
+    }
     this.dateDomainMap = dateDomainMap
   }
 
@@ -47,8 +75,11 @@ export class ActionGroupDomain extends DomainRoot {
     return new ActionGroupDomain(
       {
         id: doc.id,
-        name: doc.name,
         ownerId: doc.ownerId,
+        task: doc.task,
+        timezone: doc.timezone,
+        openMinsAfter: doc.openMinsAfter,
+        closeMinsBefore: doc.closeMinsAfter,
         createdAt: doc.createdAt,
         updatedAt: doc.updatedAt,
       },
@@ -93,7 +124,10 @@ export class ActionGroupDomain extends DomainRoot {
       {
         id: fixedId,
         ownerId: atd.userId,
-        name: fixedId,
+        task: fixedId,
+        timezone: atd.timezone,
+        openMinsAfter: 0,
+        closeMinsBefore: 86400,
         createdAt: now,
         updatedAt: now,
       },
@@ -111,7 +145,7 @@ export class ActionGroupDomain extends DomainRoot {
       docs = await model
         .find({
           ownerId: atd.userId,
-          name: dto.name,
+          task: dto.task,
         })
         .exec()
     } catch (err) {
@@ -119,10 +153,20 @@ export class ActionGroupDomain extends DomainRoot {
     }
     if (docs.length) throw new BadRequestError('The name already exists')
 
+    if (dto.closeMinsAfter <= dto.openMinsAfter) {
+      // otherwise action group will be closed all the time
+      throw new BadRequestError(
+        'closeMinsAfter must be bigger than openMinsAfter',
+      )
+    }
+
     try {
       const props: ActionGroupProps = {
         ownerId: atd.userId,
-        name: dto.name,
+        timezone: dto.timezone,
+        task: dto.task,
+        openMinsAfter: dto.openMinsAfter,
+        closeMinsAfter: dto.closeMinsAfter,
       }
       const emptyMap = new Map<string, ActionDomain>()
       return ActionGroupDomain.fromMdb(await new model(props).save(), emptyMap)
