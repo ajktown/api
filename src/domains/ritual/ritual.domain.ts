@@ -1,6 +1,5 @@
 import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
-import { GetRitualRes } from '@/responses/get-ritual.res'
 import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 
@@ -32,7 +31,7 @@ export class RitualDomain extends DomainRoot {
     })
   }
 
-  toResDTO(atd: AccessTokenDomain): GetRitualRes {
+  toResDTO(atd: AccessTokenDomain): IRitual {
     if (atd.userId !== this.props.ownerId) {
       throw new ReadForbiddenError(atd, `Ritual`)
     }

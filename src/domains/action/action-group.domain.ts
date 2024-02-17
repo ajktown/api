@@ -57,6 +57,8 @@ export class ActionGroupDomain extends DomainRoot {
     if (!SupportedTimeZoneConst.has(props.timezone))
       throw new BadRequestError('Unsupported timezone')
 
+    if (props.task.length < 1) throw new BadRequestError('Task is too short')
+
     const [openAt, closeAt] = timeHandler.getTodayRangeByMins(
       props.timezone,
       props.openMinsAfter,
