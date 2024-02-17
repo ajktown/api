@@ -49,7 +49,7 @@ export const timeHandler = {
     minsFrom: number,
     minsUntil: number,
   ): [Date, Date] => {
-    const today = timeHandler.getToday(timezone)
+    const today = timeHandler.getStartOfToday(timezone)
 
     return [
       DateTime.fromJSDate(today).plus({ minutes: minsFrom }).toJSDate(),

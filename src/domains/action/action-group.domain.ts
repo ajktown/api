@@ -249,7 +249,7 @@ export class ActionGroupDomain extends DomainRoot {
       isTodayHandled,
       totalCount,
       isOpened: timeHandler.isWithinDates(
-        new Date(),
+        timeHandler.getStartOfToday(this.props.timezone),
         this.props.openAt,
         this.props.closeAt,
       ),
