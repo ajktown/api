@@ -132,7 +132,7 @@ export class ActionGroupDomain extends DomainRoot {
       {
         id: fixedId,
         ownerId: atd.userId,
-        task: fixedId,
+        task: 'Post at least a word a day challenge',
         timezone: 'Asia/Seoul', // default time zone
         openMinsAfter: 0,
         closeMinsBefore: 1440,
@@ -242,17 +242,26 @@ export class ActionGroupDomain extends DomainRoot {
         0 < ad.level,
     )
 
+    const isTimePassed = this.props.closeAt.valueOf() < new Date().valueOf()
+    const isTodaySuccessful = () => {
+      if (isTodayHandled) return true
+      if (isTimePassed) return false
+      return null
+    }
+
     return {
       props: this.props,
       actionsLength: actionsDerived.length,
       isTodayHandled,
       // total counts is number of actions committed that is at least level 1 or higher
       totalCount: actionsDerived.filter((d) => d.level).length,
+      isPassed: isTimePassed,
       isOpened: timeHandler.isWithinDates(
         new Date(),
         this.props.openAt,
         this.props.closeAt,
       ),
+      isTodaySuccessful: isTodaySuccessful(),
       actions: actionsDerived,
     }
   }
