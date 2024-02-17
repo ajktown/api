@@ -40,12 +40,6 @@ export class ActionGroupController {
     ).toResDTO(atd)
   }
 
-  @Get(ActionGroupControllerPath.GetActionGroupIds)
-  async GetActionGroups(@Req() req: Request) {
-    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.actionGroupService.get(atd)).toResDTO(atd)
-  }
-
   @Get(ActionGroupControllerPath.GetActionGroupById)
   async GetActionGroupById(@Req() req: Request, @Param('id') id: string) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
