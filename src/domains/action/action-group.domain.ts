@@ -133,7 +133,7 @@ export class ActionGroupDomain extends DomainRoot {
         id: fixedId,
         ownerId: atd.userId,
         task: fixedId,
-        timezone: atd.timezone,
+        timezone: "Asia/Seoul", // default time zone
         openMinsAfter: 0,
         closeMinsBefore: 1440,
         createdAt: now,
