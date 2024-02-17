@@ -127,13 +127,13 @@ export class ActionGroupDomain extends DomainRoot {
       const ad = ActionDomain.fromWordDomain(atd, fixedId, wordDomain)
       dateWordDomainMap.set(ad.yyyymmdd, ad)
     }
-    const now = timeHandler.getToday(atd.timezone)
+    const now = timeHandler.getToday('Asia/Seoul')
     return new ActionGroupDomain(
       {
         id: fixedId,
         ownerId: atd.userId,
         task: fixedId,
-        timezone: "Asia/Seoul", // default time zone
+        timezone: 'Asia/Seoul', // default time zone
         openMinsAfter: 0,
         closeMinsBefore: 1440,
         createdAt: now,
@@ -183,7 +183,7 @@ export class ActionGroupDomain extends DomainRoot {
         ownerId: this.props.ownerId,
         groupId: this.props.id,
         createdAt: {
-          $gte: timeHandler.getStartOfToday(atd.timezone),
+          $gte: timeHandler.getStartOfToday(this.props.timezone),
         },
       })
     } catch (err) {
@@ -212,7 +212,7 @@ export class ActionGroupDomain extends DomainRoot {
 
     const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
       365 - 1, // today is inclusive, so 365 - 1
-      atd.timezone,
+      this.props.timezone,
     )
 
     const actionsDerived: IActionDerived[] = []
@@ -221,10 +221,10 @@ export class ActionGroupDomain extends DomainRoot {
     for (
       let date = start;
       date <= end;
-      date = timeHandler.getNextDate(date, atd.timezone)
+      date = timeHandler.getNextDate(date, this.props.timezone)
     ) {
       const ad = this.dateDomainMap.get(
-        timeHandler.getYYYYMMDD(date, atd.timezone),
+        timeHandler.getYYYYMMDD(date, this.props.timezone),
       )
       if (ad) actionsDerived.push(ad.toResDTO(fixedLevel))
       else {
@@ -237,19 +237,19 @@ export class ActionGroupDomain extends DomainRoot {
     // isTodayHandled
     const isTodayHandled = actionsDerived.some(
       (ad) =>
-        timeHandler.getYYYYMMDD(ad.createdAt, atd.timezone) ===
-          timeHandler.getYYYYMMDD(new Date(), atd.timezone) && 0 < ad.level,
+        timeHandler.getYYYYMMDD(ad.createdAt, this.props.timezone) ===
+          timeHandler.getYYYYMMDD(new Date(), this.props.timezone) &&
+        0 < ad.level,
     )
-    // total counts is number of actions committed that is at least level 1 or higher
-    const totalCount = actionsDerived.filter((d) => d.level).length
 
     return {
       props: this.props,
       actionsLength: actionsDerived.length,
       isTodayHandled,
-      totalCount,
+      // total counts is number of actions committed that is at least level 1 or higher
+      totalCount: actionsDerived.filter((d) => d.level).length,
       isOpened: timeHandler.isWithinDates(
-        timeHandler.getStartOfToday(this.props.timezone),
+        new Date(),
         this.props.openAt,
         this.props.closeAt,
       ),
