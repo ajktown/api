@@ -40,8 +40,8 @@ export class ActionGroupDomain extends DomainRoot {
 
     if (props.openMinsAfter < 0 || 1439 < props.openMinsAfter)
       throw new NumberNotInRangeError(
-        'closeMinsBefore',
-        props.closeMinsBefore,
+        'openMinsAfter',
+        props.openMinsAfter,
         0,
         1439,
       )
