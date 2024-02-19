@@ -12,7 +12,6 @@ import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
   PostActionByActionGroup = `action-groups/:id/actions`,
-  GetActionGroupIds = `action-group-ids`,
   GetActionGroupById = `action-groups/:id`,
 }
 
