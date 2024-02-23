@@ -16,15 +16,8 @@ export class RitualGroupDomain extends DomainRoot {
     atd: AccessTokenDomain,
     actionGroupModel: ActionGroupModel,
   ): Promise<RitualGroupDomain> {
-    const docs = await actionGroupModel.find({
-      ownerId: atd.userId,
-    })
-
     return new RitualGroupDomain([
-      RitualDomain.fromUnassociatedActionGroupIds(
-        atd,
-        docs.map((doc) => doc.id),
-      ),
+      await RitualDomain.fromUnassociatedActionGroupIds(atd, actionGroupModel),
     ])
   }
 
