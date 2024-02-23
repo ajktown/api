@@ -32,7 +32,10 @@ export class RitualDomain extends DomainRoot {
       id: 'default',
       ownerId: atd.userId,
       name: 'Unassociated Ritual',
-      actionGroupIds: docs.map((doc) => doc.id),
+      actionGroupIds: docs
+        .sort((a, b) => a.openMinsAfter - b.openMinsAfter)
+        .sort((a, b) => a.closeMinsAfter - b.closeMinsAfter)
+        .map((doc) => doc.id),
     })
   }
 
