@@ -16,8 +16,17 @@ export interface IActionDerived extends IAction {
   level: number // level is 100% decided by the ActionGroup
 }
 
-export interface IActionGroup extends DataBasicsDate {
+export interface IActionGroupInput extends DataBasicsDate {
   id: string
   ownerId: string
-  name: string
+  task: string
+  timezone: string
+  openMinsAfter: number
+  closeMinsBefore: number
+}
+
+export interface IActionGroup extends IActionGroupInput {
+  openAt: Date
+  closeAt: Date
+  utc: string // i.e) +9:00 (timezone is private to shared data)
 }

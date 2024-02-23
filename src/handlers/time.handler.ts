@@ -44,6 +44,18 @@ export const timeHandler = {
       .plus({ days: 1 })
       .toJSDate()
   },
+  getTodayRangeByMins: (
+    timezone: string,
+    minsFrom: number,
+    minsUntil: number,
+  ): [Date, Date] => {
+    const today = timeHandler.getStartOfToday(timezone)
+
+    return [
+      DateTime.fromJSDate(today).plus({ minutes: minsFrom }).toJSDate(),
+      DateTime.fromJSDate(today).plus({ minutes: minsUntil }).toJSDate(),
+    ]
+  },
 
   getDateFromDaysAgoUntilToday: (
     // if you want to have whole 365 days, set it as 364, as today will be included
@@ -65,7 +77,9 @@ export const timeHandler = {
       DateTime.fromJSDate(endDate).setZone(timezone).toJSDate(),
     ]
   },
-
+  isWithinDates: (got: Date, from: Date, until: Date): boolean => {
+    return from.valueOf() <= got.valueOf() && got.valueOf() <= until.valueOf()
+  },
   /** Return true or false if the givenDate is within the nDaysAgo */
   // TODO: Delete me. not used
   isWithinDaysAgo: (

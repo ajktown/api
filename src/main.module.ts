@@ -15,15 +15,17 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor'
 import { PreferenceModule } from './modules/preference.module'
 import { SharedResourceModule } from './modules/shared-resource.module'
 import { ActionGroupModule } from './modules/action-group.module'
+import { RitualModule } from './modules/ritual.module'
 
 @Module({
   imports: [
     AuthModule,
+    PreferenceModule,
     WordModule,
     SemesterModule,
-    PreferenceModule,
-    SharedResourceModule,
+    RitualModule,
     ActionGroupModule,
+    SharedResourceModule,
     MongooseModule.forRoot(getMdbUriLambda()),
     JwtModule.register(getJwtOptionsLambda()),
   ],

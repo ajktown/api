@@ -12,7 +12,6 @@ import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
   PostActionByActionGroup = `action-groups/:id/actions`,
-  GetActionGroupIds = `action-group-ids`,
   GetActionGroupById = `action-groups/:id`,
 }
 
@@ -38,12 +37,6 @@ export class ActionGroupController {
     return (
       await this.actionGroupService.postActionByActionGroup(atd, id)
     ).toResDTO(atd)
-  }
-
-  @Get(ActionGroupControllerPath.GetActionGroupIds)
-  async GetActionGroups(@Req() req: Request) {
-    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.actionGroupService.get(atd)).toResDTO()
   }
 
   @Get(ActionGroupControllerPath.GetActionGroupById)
