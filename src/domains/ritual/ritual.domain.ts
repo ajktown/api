@@ -2,6 +2,7 @@ import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
+import { ActionGroupModel } from '@/schemas/action-group.schema'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -19,15 +20,22 @@ export class RitualDomain extends DomainRoot {
     this.props = input
   }
 
-  static fromUnassociatedActionGroupIds(
+  static async fromUnassociatedActionGroupIds(
     atd: AccessTokenDomain,
-    ids: string[],
-  ): RitualDomain {
+    actionGroupModel: ActionGroupModel,
+  ): Promise<RitualDomain> {
+    const docs = await actionGroupModel.find({
+      ownerId: atd.userId,
+    })
+
     return new RitualDomain({
       id: 'default',
       ownerId: atd.userId,
       name: 'Unassociated Ritual',
-      actionGroupIds: ids,
+      actionGroupIds: docs
+        .sort((a, b) => a.openMinsAfter - b.openMinsAfter)
+        .sort((a, b) => a.closeMinsAfter - b.closeMinsAfter)
+        .map((doc) => doc.id),
     })
   }
 
