@@ -5,6 +5,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
 import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { BadRequestError } from '@/errors/400/index.error'
+import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { getDetectedLanguageLambda } from '@/lambdas/get-detected-language.lambda'
 import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
@@ -57,6 +58,10 @@ export class WordService {
     atd: AccessTokenDomain,
     query: GetWordQueryDTO,
   ): Promise<WordChunkDomain> {
+    if (!atd) {
+      throw new NotExistOrNoPermissionError()
+    }
+
     return WordChunkDomain.fromMdb(
       atd,
       query,

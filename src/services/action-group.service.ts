@@ -37,24 +37,23 @@ export class ActionGroupService {
     return actionGroup.postAction(atd, this.actionModel)
   }
 
+  async getByUser(id: string): Promise<ActionGroupDomain> {
+    return ActionGroupDomain.fromId(id, this.actionGroupModel, this.actionModel)
+  }
+
   async getById(
-    atd: AccessTokenDomain,
+    nullableAtd: null | AccessTokenDomain,
     id: string,
   ): Promise<ActionGroupDomain> {
     if (id === ActionGroupFixedId.DailyPostWordChallenge) {
       const query = new GetWordQueryDTO()
       query.daysAgoUntilToday = 365 // shows only 365 days until today
       return ActionGroupDomain.fromWordChunk(
-        atd,
-        await this.wordService.get(atd, query),
+        nullableAtd,
+        await this.wordService.get(nullableAtd, query),
       )
     }
 
-    return ActionGroupDomain.fromId(
-      atd,
-      id,
-      this.actionGroupModel,
-      this.actionModel,
-    )
+    return ActionGroupDomain.fromId(id, this.actionGroupModel, this.actionModel)
   }
 }

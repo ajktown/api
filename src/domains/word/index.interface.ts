@@ -8,12 +8,12 @@ export interface ISharedWord {
   example: string
   exampleLink: string
   tags: string[]
+  dateAdded: number
 }
 export interface IWord extends ISharedWord, DataBasicsDate {
   id: string
   userId: string
   semester: number
   isFavorite: boolean
-  dateAdded: number
   isArchived: boolean
 }
