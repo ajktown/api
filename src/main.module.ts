@@ -16,10 +16,12 @@ import { PreferenceModule } from './modules/preference.module'
 import { SharedResourceModule } from './modules/shared-resource.module'
 import { ActionGroupModule } from './modules/action-group.module'
 import { RitualModule } from './modules/ritual.module'
+import { UserModule } from './modules/user.module'
 
 @Module({
   imports: [
     AuthModule,
+    UserModule,
     PreferenceModule,
     WordModule,
     SemesterModule,
