@@ -2,9 +2,10 @@ import { UserDoc, UserModel } from '@/schemas/deprecated-user.schema'
 import { IUser } from './index.interface'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
-import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { ForbiddenError } from '@/errors/403/index.error'
+import { MoreThanOneUserWithTheSameEmailAddressError } from '@/errors/400/more-than-one-user-with-same-email-address.error'
+import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
 
 export class UserDomain {
   private readonly props: Partial<IUser>
@@ -46,18 +47,39 @@ export class UserDomain {
     oauthPayload: OauthPayloadDomain,
     userModel: UserModel,
   ): Promise<UserDomain> {
-    const userDoc = await userModel.find(oauthPayload.toFind()).limit(1).exec()
-    if (userDoc.length > 1)
-      throw new BadRequestError(
-        'Two or more users fatally have the same email addresses',
-      )
-    if (userDoc.length === 0) {
+    const userDocs = await userModel.find(oauthPayload.toFind()).limit(1).exec()
+    if (userDocs.length > 1)
+      throw new MoreThanOneUserWithTheSameEmailAddressError()
+    if (userDocs.length === 0) {
       // no user found. create one
       return UserDomain.fromMdb(
         await oauthPayload.toUserModel(userModel).save(),
       )
     }
-    return UserDomain.fromMdb(userDoc[0])
+    return UserDomain.fromMdb(userDocs[0])
+  }
+
+  /**
+   * Find a user with email address.
+   * If no such user exists, it does not create the user and simply returns
+   * Not found error.
+   */
+  static async fromEmail(email: string, model: UserModel): Promise<UserDomain> {
+    const userDocs = await model
+      .find({
+        email,
+      })
+      .limit(1)
+      .exec()
+
+    if (2 <= userDocs.length)
+      throw new MoreThanOneUserWithTheSameEmailAddressError()
+
+    if (userDocs.length === 0) {
+      throw new NotExistOrNoPermissionError()
+    }
+
+    return UserDomain.fromMdb(userDocs[0])
   }
 
   static fromMdb(props: UserDoc): UserDomain {
