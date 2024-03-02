@@ -13,6 +13,10 @@ export class UserDomain {
     this.props = props
   }
 
+  get id() {
+    return this.props.id
+  }
+
   /** This can be run only when it is non-production */
   static underDevEnv(): UserDomain {
     if (envLambda.mode.isProduct())
