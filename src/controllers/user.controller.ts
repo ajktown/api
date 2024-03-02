@@ -8,7 +8,7 @@ import { UserService } from '@/services/user.service'
  * Owner of the resource however may not be set as public as the owner wishes
  * and may still return 403.
  */
-enum UserControllerPath {
+export enum UserControllerPath {
   GetRitualsOfUserByNickname = `users/mlajkim/rituals`, // it is fixed to mlajkim as this point
 }
 @Controller(AjkTownApiVersion.V1)
