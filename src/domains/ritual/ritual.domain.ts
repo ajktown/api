@@ -3,6 +3,7 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupModel } from '@/schemas/action-group.schema'
+import { UserDomain } from '../user/user.domain'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -39,10 +40,34 @@ export class RitualDomain extends DomainRoot {
     })
   }
 
+  static async fromUser(
+    user: UserDomain,
+    actionGroupModel: ActionGroupModel,
+  ): Promise<RitualDomain> {
+    const docs = await actionGroupModel.find({
+      ownerId: user.id,
+    })
+
+    return new RitualDomain({
+      id: 'default',
+      ownerId: user.id,
+      name: 'Unassociated Ritual',
+      actionGroupIds: docs
+        .sort((a, b) => a.openMinsAfter - b.openMinsAfter)
+        .sort((a, b) => a.closeMinsAfter - b.closeMinsAfter)
+        .map((doc) => doc.id),
+    })
+  }
+
   toResDTO(atd: AccessTokenDomain): IRitual {
     if (atd.userId !== this.props.ownerId) {
       throw new ReadForbiddenError(atd, `Ritual`)
     }
+    return this.props
+  }
+
+  // TODO: This should return IRitualShared
+  toSharedResDTO(): IRitual {
     return this.props
   }
 }

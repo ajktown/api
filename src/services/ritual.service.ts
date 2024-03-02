@@ -6,6 +6,7 @@ import {
 } from '@/schemas/action-group.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { RitualGroupDomain } from '@/domains/ritual/ritual-group.domain'
+import { UserDomain } from '@/domains/user/user.domain'
 
 @Injectable()
 export class RitualService {
@@ -16,5 +17,9 @@ export class RitualService {
 
   async get(atd: AccessTokenDomain): Promise<RitualGroupDomain> {
     return RitualGroupDomain.fromMdb(atd, this.actionGroupModel)
+  }
+
+  async byUser(userDomain: UserDomain): Promise<RitualGroupDomain> {
+    return RitualGroupDomain.fromUser(userDomain, this.actionGroupModel)
   }
 }

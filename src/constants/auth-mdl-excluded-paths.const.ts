@@ -2,6 +2,7 @@ import { ApiHomePath } from '@/controllers/app.controller'
 import { AuthControllerPath } from '@/controllers/auth.controller'
 import { AjkTownApiVersion } from '@/controllers/index.interface'
 import { SharedResourceControllerPath } from '@/controllers/shared-resource.controller'
+import { UserControllerPath } from '@/controllers/user.controller'
 import { RequestMethod } from '@nestjs/common'
 import { RouteInfo } from '@nestjs/common/interfaces'
 
@@ -20,6 +21,7 @@ const privateRootPaths: PathAndMethod[] = [
 
 // API First version paths
 const privateV1Paths: PathAndMethod[] = [
+  [UserControllerPath.GetRitualsOfUserByNickname, RequestMethod.GET],
   [AuthControllerPath.PostSignOut, RequestMethod.POST],
   [AuthControllerPath.PostGoogleAuth, RequestMethod.POST],
   [AuthControllerPath.PostDevTokenAuth, RequestMethod.POST],
