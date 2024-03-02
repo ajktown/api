@@ -73,6 +73,7 @@ export class UserDomain {
     })
   }
 
+  // TODO: We need atd here for security sake and resDTO must have atd
   toResDTO(): Partial<IUser> {
     return this.props
   }
