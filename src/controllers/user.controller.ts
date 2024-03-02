@@ -19,8 +19,8 @@ export class UserController {
   ) {}
 
   @Get(UserControllerPath.GetRitualsOfUserByNickname)
-  async getSemesters() {
-    const user = await this.userService.byNickname('mlajkim') // ! This is fixed as mlajkim, but will be changed to dynamic later
+  async getRitualsOfUserNameByNickname() {
+    const user = await this.userService.byNickname('mlajkim') // TODO: This is fixed as mlajkim, but will be changed to dynamic later
     return (await this.ritualService.byUser(user)).toSharedResDTO()
   }
 }
