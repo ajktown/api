@@ -126,7 +126,7 @@ export class ActionGroupDomain extends DomainRoot {
 
     const dateWordDomainMap = new Map<string, ActionDomain>() // i.e) 2024-01-01 => ActionDomain
     for (const wordDomain of wordChunk.wordDomains) {
-      const ad = ActionDomain.fromWordDomain(fixedTimeZone, fixedId, wordDomain)
+      const ad = ActionDomain.fromWordDomain(fixedId, fixedTimeZone, wordDomain)
       dateWordDomainMap.set(ad.yyyymmdd, ad)
     }
     const now = timeHandler.getToday(fixedTimeZone)
