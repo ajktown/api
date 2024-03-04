@@ -1,4 +1,4 @@
-import { BadRequestError } from './index.error'
+import { BadRequestError } from '../../400/index.error'
 
 /** Thrown when a certain resource is not found or the user does not have permission to access it.
  * This error is used when target resource's parent does not exist or the user does not have permission to access it.

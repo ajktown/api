@@ -10,7 +10,7 @@ import { SharedResourceDomain } from '@/domains/shared-resource/shared-resource.
 import { WordService } from './word.service'
 import { BadRequestError } from '@/errors/400/index.error'
 import { GetSharedResourcesQueryDTO } from '@/dto/get-shared-resources-query.dto'
-import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
+import { NotExistOrNoPermissionError } from '@/errors/404/NotFoundError/not-exist-or-no-permission.error'
 
 @Injectable()
 export class SharedResourceService {

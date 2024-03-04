@@ -13,7 +13,7 @@ import { PostActionDTO } from '@/dto/post-action.dto'
 import { WordDomain } from '../word/word.domain'
 import { ActionGroupModel } from '@/schemas/action-group.schema'
 import { BadRequestError } from '@/errors/400/index.error'
-import { ParentNotExistOrNoPermissionError } from '@/errors/400/parent-not-exist-or-no-permission.error'
+import { ParentNotExistOrNoPermissionError } from '@/errors/404/NotFoundError/parent-not-exist-or-no-permission.error'
 import { timeHandler } from '@/handlers/time.handler'
 
 /**

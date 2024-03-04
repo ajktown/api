@@ -19,7 +19,7 @@ import {
 } from './index.interface'
 import { GetActionGroupRes } from '@/responses/get-action-groups.res'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
-import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
+import { NotExistOrNoPermissionError } from '@/errors/404/NotFoundError/not-exist-or-no-permission.error'
 import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
 import { NumberNotInRangeError } from '@/errors/400/index.num-not-in-range.error'
 
