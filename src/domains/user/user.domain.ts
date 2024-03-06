@@ -5,7 +5,7 @@ import { OauthPayloadDomain } from '../auth/oauth-payload.domain'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { ForbiddenError } from '@/errors/403/index.error'
 import { MoreThanOneUserWithTheSameEmailAddressError } from '@/errors/400/more-than-one-user-with-same-email-address.error'
-import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
+import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 
 export class UserDomain {
   private readonly props: Partial<IUser>

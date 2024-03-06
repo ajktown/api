@@ -8,7 +8,7 @@ import {
 } from '@/schemas/shared-resources.schema'
 import { PostSharedResourceDTO } from '@/dto/post-shared-resource.dto'
 import { WordService } from '@/services/word.service'
-import { NotExistOrNoPermissionError } from '@/errors/400/not-exist-or-no-permission.error'
+import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { GetSharedResourceRes } from '@/responses/get-shared-resource.res'
 import { WordModel } from '@/schemas/deprecated-word.schema'
 import { WordDomain } from '../word/word.domain'
