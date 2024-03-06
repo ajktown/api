@@ -4,16 +4,10 @@ import {
   IActionInput,
   IActionLevel,
 } from './index.interface'
-import { AccessTokenDomain } from '../auth/access-token.domain'
 import { DomainRoot } from '../index.root'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
-import { DataNotPresentError } from '@/errors/400/data-not-present.error'
-import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
-import { PostActionDTO } from '@/dto/post-action.dto'
+import { ActionDoc } from '@/schemas/action.schema'
 import { WordDomain } from '../word/word.domain'
-import { ActionGroupModel } from '@/schemas/action-group.schema'
-import { BadRequestError } from '@/errors/400/index.error'
-import { ParentNotExistOrNoPermissionError } from '@/errors/404/parent-not-exist-or-no-permission.error'
 import { timeHandler } from '@/handlers/time.handler'
 
 /**
@@ -24,12 +18,11 @@ import { timeHandler } from '@/handlers/time.handler'
 export class ActionDomain extends DomainRoot {
   private readonly props: IAction
 
-  private constructor(atd: AccessTokenDomain, input: IActionInput) {
+  private constructor(timezone: string, input: IActionInput) {
     super()
-    if (!input.ownerId) throw new DataNotPresentError('ownerID')
     this.props = {
       ...input,
-      yyyymmdd: timeHandler.getYYYYMMDD(input.createdAt, atd.timezone),
+      yyyymmdd: timeHandler.getYYYYMMDD(input.createdAt, timezone),
     }
   }
 
@@ -46,13 +39,13 @@ export class ActionDomain extends DomainRoot {
    * Returns empty action domain for the given date
    */
   static fromEmpty(
-    atd: AccessTokenDomain,
     groupId: string,
+    timezone: string,
     date: Date,
   ): ActionDomain {
-    return new ActionDomain(atd, {
+    return new ActionDomain(timezone, {
       id: '',
-      ownerId: atd.userId,
+      ownerId: '',
       groupId: groupId,
       createdAt: date,
       updatedAt: date,
@@ -60,15 +53,15 @@ export class ActionDomain extends DomainRoot {
   }
 
   static fromWordDomain(
-    atd: AccessTokenDomain,
     groupId: string,
+    timezone: string,
     wordDomain: WordDomain,
   ): ActionDomain {
-    const props = wordDomain.toResDTO(atd)
+    const props = wordDomain.toSharedResDTO()
 
-    return new ActionDomain(atd, {
+    return new ActionDomain(timezone, {
       id: '',
-      ownerId: atd.userId,
+      ownerId: '',
       groupId: groupId,
       createdAt: new Date(props.dateAdded),
       // the action cannot be updated, but since it is from word domain,
@@ -77,49 +70,16 @@ export class ActionDomain extends DomainRoot {
     })
   }
 
-  static fromMdb(atd: AccessTokenDomain, doc: ActionDoc): ActionDomain {
+  static fromMdb(timezone: string, doc: ActionDoc): ActionDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
 
-    return new ActionDomain(atd, {
+    return new ActionDomain(timezone, {
       id: doc.id,
       ownerId: doc.ownerId,
       groupId: doc.groupId,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     })
-  }
-
-  static async post(
-    atd: AccessTokenDomain,
-    dto: PostActionDTO,
-    model: ActionModel,
-    actionGroupModel: ActionGroupModel,
-  ): Promise<ActionDomain> {
-    // TODO: Post has to check the followings
-    // TODO: 1. the group id exists
-    const doc = await actionGroupModel.findById(dto.groupId)
-    // const actionGroupDomain = ActionGroupDomain.fromMdb(atd, doc)
-
-    // Do not allow end users (or potential hackers) to know if the group exists or not.
-    if (!doc)
-      throw new ParentNotExistOrNoPermissionError('ActionGroup', dto.groupId)
-    if (doc.ownerId !== atd.userId)
-      throw new BadRequestError(
-        'You do not have permission to post action to this group',
-      )
-
-    // must also check if reserved named is used
-
-    // TODO: Check if action exists for today (This will be implemented in later future)
-    // TODO: 4. The group validates that this action can be added (group is like a parent, and this is child. so it requires parent's validation)
-    // TODO: 5. And more...
-
-    // Create it if passed:
-    const docProps: ActionProps = {
-      ownerId: atd.userId,
-      groupId: dto.groupId,
-    }
-    return ActionDomain.fromMdb(atd, await new model(docProps).save())
   }
 
   toResDTO(level: number): IActionDerived {

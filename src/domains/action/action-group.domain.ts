@@ -98,7 +98,6 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   static async fromId(
-    atd: AccessTokenDomain,
     id: string,
     model: ActionGroupModel,
     actionModel: ActionModel,
@@ -106,36 +105,37 @@ export class ActionGroupDomain extends DomainRoot {
     const doc = await model.findById(id).exec()
     if (!doc) throw new NotExistOrNoPermissionError()
 
-    if (doc.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
-
     const map = new Map<string, ActionDomain>()
     const actionDocs = await actionModel.find({ groupId: id }).exec()
 
     for (const actionDoc of actionDocs) {
-      const ad = ActionDomain.fromMdb(atd, actionDoc)
+      const ad = ActionDomain.fromMdb(doc.timezone, actionDoc)
       map.set(ad.yyyymmdd, ad)
     }
     return ActionGroupDomain.fromMdb(doc, map)
   }
 
   static fromWordChunk(
-    atd: AccessTokenDomain,
+    nullableAtd: null | AccessTokenDomain,
     wordChunk: WordChunkDomain,
   ): ActionGroupDomain {
+    if (!nullableAtd) throw new NotExistOrNoPermissionError()
+
+    const fixedTimeZone = 'Asia/Seoul' // TODO: Don't fix it.
     const fixedId = ActionGroupFixedId.DailyPostWordChallenge
 
     const dateWordDomainMap = new Map<string, ActionDomain>() // i.e) 2024-01-01 => ActionDomain
     for (const wordDomain of wordChunk.wordDomains) {
-      const ad = ActionDomain.fromWordDomain(atd, fixedId, wordDomain)
+      const ad = ActionDomain.fromWordDomain(fixedId, fixedTimeZone, wordDomain)
       dateWordDomainMap.set(ad.yyyymmdd, ad)
     }
-    const now = timeHandler.getToday('Asia/Seoul')
+    const now = timeHandler.getToday(fixedTimeZone)
     return new ActionGroupDomain(
       {
         id: fixedId,
-        ownerId: atd.userId,
+        ownerId: nullableAtd.userId,
         task: 'Post at least a word a day challenge',
-        timezone: 'Asia/Seoul', // default time zone
+        timezone: fixedTimeZone,
         openMinsAfter: 0,
         closeMinsBefore: 1440,
         createdAt: now,
@@ -200,7 +200,7 @@ export class ActionGroupDomain extends DomainRoot {
       groupId: this.props.id,
     }
     const actionDomain = ActionDomain.fromMdb(
-      atd,
+      this.props.timezone,
       await new actionModel(docProps).save(),
     )
     // update into the map
@@ -208,9 +208,11 @@ export class ActionGroupDomain extends DomainRoot {
     return this
   }
 
-  toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
-    if (this.props.ownerId !== atd.userId)
+  toSharedResDTO(ownerId: string): GetActionGroupRes {
+    // TODO: This is temporary
+    if (this.props.ownerId !== ownerId) {
       throw new NotExistOrNoPermissionError()
+    }
 
     const [start, end] = timeHandler.getDateFromDaysAgoUntilToday(
       365 - 1, // today is inclusive, so 365 - 1
@@ -231,7 +233,11 @@ export class ActionGroupDomain extends DomainRoot {
       if (ad) actionsDerived.push(ad.toResDTO(fixedLevel))
       else {
         actionsDerived.push(
-          ActionDomain.fromEmpty(atd, this.props.id, date).toResDTO(0),
+          ActionDomain.fromEmpty(
+            this.props.id,
+            this.props.timezone,
+            date,
+          ).toResDTO(0),
         )
       }
     }
@@ -266,5 +272,9 @@ export class ActionGroupDomain extends DomainRoot {
       isTodaySuccessful: isTodaySuccessful(),
       actions: actionsDerived,
     }
+  }
+
+  toResDTO(atd: AccessTokenDomain): GetActionGroupRes {
+    return this.toSharedResDTO(atd.userId)
   }
 }
