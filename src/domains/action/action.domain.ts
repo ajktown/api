@@ -8,9 +8,6 @@ import { DomainRoot } from '../index.root'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { ActionDoc } from '@/schemas/action.schema'
 import { WordDomain } from '../word/word.domain'
-import { ActionGroupModel } from '@/schemas/action-group.schema'
-import { BadRequestError } from '@/errors/400/index.error'
-import { ParentNotExistOrNoPermissionError } from '@/errors/404/parent-not-exist-or-no-permission.error'
 import { timeHandler } from '@/handlers/time.handler'
 
 /**
