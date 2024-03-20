@@ -1,5 +1,9 @@
-import { IRitual } from '@/domains/ritual/index.interface'
+import { IParentRitual, IRitual } from '@/domains/ritual/index.interface'
 
 export interface GetRitualsRes {
-  rituals: IRitual[]
+  rituals: IParentRitual[]
+}
+
+export interface GetRitualByIdRes {
+  ritual: IRitual
 }

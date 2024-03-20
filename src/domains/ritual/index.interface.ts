@@ -12,5 +12,9 @@ export interface IRitual {
   id: string
   ownerId: string
   name: string
+  orderedActionGroupIds: string[]
+}
+
+export interface IParentRitual extends IRitual {
   actionGroupIds: string[]
 }

@@ -2,8 +2,9 @@ import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
-import { ActionGroupDoc } from '@/schemas/action-group.schema'
-import { RitualDoc, RitualModel } from '@/schemas/ritual.schema'
+import { RitualModel } from '@/schemas/ritual.schema'
+import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { GetRitualByIdRes } from '@/responses/get-ritual.res'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -21,6 +22,19 @@ export class RitualDomain extends DomainRoot {
     this.props = input
   }
 
+  get id() {
+    return this.props.id
+  }
+
+  static fromParentRitual(props: IRitual): RitualDomain {
+    return new RitualDomain({
+      id: props.id,
+      ownerId: props.ownerId,
+      name: props.name,
+      orderedActionGroupIds: props.orderedActionGroupIds,
+    })
+  }
+
   /**
    * Post a default ritual for the user.
    * This is called when the user has no ritual, but
@@ -33,38 +47,40 @@ export class RitualDomain extends DomainRoot {
     const newRitualDoc = await new model({
       ownerId: atd.userId,
       name: 'Default Ritual',
-      actionGroupIds: [],
+      orderedActionGroupIds: [],
     }).save()
 
     return new RitualDomain({
       id: newRitualDoc.id,
       ownerId: newRitualDoc.ownerId,
       name: newRitualDoc.name,
-      actionGroupIds: newRitualDoc.actionGroupIds,
+      orderedActionGroupIds: newRitualDoc.orderedActionGroupIds,
     })
   }
 
-  static fromDoc(
-    doc: RitualDoc,
-    actionGroupDocs: ActionGroupDoc[],
-  ): RitualDomain {
+  toResDTO(): GetRitualByIdRes {
+    return {
+      ritual: this.props,
+    }
+  }
+
+  async patch(
+    dto: PatchRitualGroupBodyDTO,
+    model: RitualModel,
+  ): Promise<RitualDomain> {
+    const doc = await model.findByIdAndUpdate(
+      this.id,
+      {
+        // name: dto.name, // TODO: Name is not yet supported
+        orderedActionGroupIds: dto.actionGroupIds,
+      },
+      { new: true },
+    )
     return new RitualDomain({
       id: doc.id,
       ownerId: doc.ownerId,
       name: doc.name,
-      actionGroupIds: actionGroupDocs.map((doc) => doc.id),
+      orderedActionGroupIds: doc.orderedActionGroupIds,
     })
-  }
-
-  toResDTO(atd: AccessTokenDomain): IRitual {
-    if (atd.userId !== this.props.ownerId) {
-      throw new ReadForbiddenError(atd, `Ritual`)
-    }
-    return this.props
-  }
-
-  // TODO: This should return IRitualShared
-  toSharedResDTO(): IRitual {
-    return this.props
   }
 }
