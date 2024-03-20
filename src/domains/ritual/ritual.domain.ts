@@ -44,15 +44,32 @@ export class RitualDomain extends DomainRoot {
     })
   }
 
+  /**
+   * Ritual takes responsibility of the order of action groups
+   */
   static fromDoc(
     doc: RitualDoc,
     actionGroupDocs: ActionGroupDoc[],
   ): RitualDomain {
+    // map contains user's own order of action groups
+    // the lower the i (or index), the higher the priority it should be seen
+    // despite of its openMinsAfter or closeMinsAfter
+    const map = new Map(doc.actionGroupIds.map((id, i) => [id, i]))
+
     return new RitualDomain({
       id: doc.id,
       ownerId: doc.ownerId,
       name: doc.name,
-      actionGroupIds: actionGroupDocs.map((doc) => doc.id),
+      actionGroupIds: actionGroupDocs
+        .sort((a, b) => {
+          if (map.has(a.id) && map.has(b.id)) {
+            return map.get(a.id) - map.get(b.id)
+          }
+          if (a.closeMinsAfter !== b.closeMinsAfter)
+            return a.closeMinsAfter - b.closeMinsAfter
+          return a.openMinsAfter - b.openMinsAfter
+        })
+        .map((doc) => doc.id),
     })
   }
 
