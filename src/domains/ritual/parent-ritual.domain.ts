@@ -3,8 +3,7 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IParentRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupDoc } from '@/schemas/action-group.schema'
-import { RitualDoc, RitualModel } from '@/schemas/ritual.schema'
-import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { RitualDoc } from '@/schemas/ritual.schema'
 
 /**
  * ParentRitualDomain has both values:
@@ -29,7 +28,7 @@ export class ParentRitualDomain extends DomainRoot {
   }
 
   /**
-   * Ritual takes responsibility of the order of action groups
+   * ParentRitual takes responsibility of the order of action groups
    */
   static fromDoc(
     doc: RitualDoc,
@@ -72,16 +71,5 @@ export class ParentRitualDomain extends DomainRoot {
   // TODO: This should return IRitualShared
   toSharedResDTO(): IParentRitual {
     return this.props
-  }
-
-  async patch(dto: PatchRitualGroupBodyDTO, model: RitualModel): Promise<void> {
-    await model.findByIdAndUpdate(
-      this.id,
-      {
-        // name: dto.name, // TODO: Name is not yet supported
-        orderedActionGroupIds: dto.orderedActionGroupIds,
-      },
-      { new: true },
-    )
   }
 }

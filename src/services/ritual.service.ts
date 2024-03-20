@@ -9,6 +9,7 @@ import { RitualGroupDomain } from '@/domains/ritual/ritual-group.domain'
 import { UserDomain } from '@/domains/user/user.domain'
 import { RitualModel, RitualProps } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { RitualDomain } from '@/domains/ritual/ritual.domain'
 
 @Injectable()
 export class RitualService {
@@ -44,8 +45,8 @@ export class RitualService {
   async patchDefault(
     atd: AccessTokenDomain,
     dto: PatchRitualGroupBodyDTO,
-  ): Promise<void> {
+  ): Promise<RitualDomain> {
     const ritualGroup = await this.byAtd(atd)
-    ritualGroup.patchDefault(dto, this.ritualModel)
+    return ritualGroup.getDefault().patch(dto, this.ritualModel)
   }
 }

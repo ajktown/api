@@ -4,6 +4,7 @@ import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { GetRitualByIdRes } from '@/responses/get-ritual.res'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -23,6 +24,15 @@ export class RitualDomain extends DomainRoot {
 
   get id() {
     return this.props.id
+  }
+
+  static fromParentRitual(props: IRitual): RitualDomain {
+    return new RitualDomain({
+      id: props.id,
+      ownerId: props.ownerId,
+      name: props.name,
+      orderedActionGroupIds: props.orderedActionGroupIds,
+    })
   }
 
   /**
@@ -48,30 +58,29 @@ export class RitualDomain extends DomainRoot {
     })
   }
 
-  toResDTO(): IRitual {
-    return this.props
-  }
-
-  toDerivedResDTO(atd: AccessTokenDomain): IRitual {
-    if (atd.userId !== this.props.ownerId) {
-      throw new ReadForbiddenError(atd, `Ritual`)
+  toResDTO(): GetRitualByIdRes {
+    return {
+      ritual: this.props,
     }
-    return this.props
   }
 
-  // TODO: This should return IRitualShared
-  toSharedResDTO(): IRitual {
-    return this.props
-  }
-
-  async patch(dto: PatchRitualGroupBodyDTO, model: RitualModel): Promise<void> {
-    await model.findByIdAndUpdate(
+  async patch(
+    dto: PatchRitualGroupBodyDTO,
+    model: RitualModel,
+  ): Promise<RitualDomain> {
+    const doc = await model.findByIdAndUpdate(
       this.id,
       {
         // name: dto.name, // TODO: Name is not yet supported
-        orderedActionGroupIds: dto.orderedActionGroupIds,
+        orderedActionGroupIds: dto.actionGroupIds,
       },
       { new: true },
     )
+    return new RitualDomain({
+      id: doc.id,
+      ownerId: doc.ownerId,
+      name: doc.name,
+      orderedActionGroupIds: doc.orderedActionGroupIds,
+    })
   }
 }
