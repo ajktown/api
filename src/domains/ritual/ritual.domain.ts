@@ -38,14 +38,14 @@ export class RitualDomain extends DomainRoot {
     const newRitualDoc = await new model({
       ownerId: atd.userId,
       name: 'Default Ritual',
-      actionGroupIds: [],
+      orderedActionGroupIds: [],
     }).save()
 
     return new RitualDomain({
       id: newRitualDoc.id,
       ownerId: newRitualDoc.ownerId,
       name: newRitualDoc.name,
-      actionGroupIds: newRitualDoc.actionGroupIds,
+      orderedActionGroupIds: newRitualDoc.orderedActionGroupIds,
     })
   }
 
@@ -59,13 +59,13 @@ export class RitualDomain extends DomainRoot {
     // map contains user's own order of action groups
     // the lower the i (or index), the higher the priority it should be seen
     // despite of its openMinsAfter or closeMinsAfter
-    const map = new Map(doc.actionGroupIds.map((id, i) => [id, i]))
+    const map = new Map(doc.orderedActionGroupIds.map((id, i) => [id, i]))
 
     return new RitualDomain({
       id: doc.id,
       ownerId: doc.ownerId,
       name: doc.name,
-      actionGroupIds: actionGroupDocs
+      orderedActionGroupIds: actionGroupDocs
         .sort((a, b) => {
           if (map.has(a.id) && map.has(b.id)) {
             return map.get(a.id) - map.get(b.id)
@@ -99,7 +99,7 @@ export class RitualDomain extends DomainRoot {
       this.id,
       {
         // name: dto.name, // TODO: Name is not yet supported
-        actionGroupIds: dto.actionGroupIds,
+        orderedActionGroupIds: dto.orderedActionGroupIds,
       },
       { new: true },
     )

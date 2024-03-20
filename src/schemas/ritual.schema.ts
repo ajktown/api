@@ -24,7 +24,7 @@ export class RitualProps {
   name: string // not required to be unique
 
   @Prop({ required: true })
-  actionGroupIds: string[]
+  orderedActionGroupIds: string[]
 }
 
 export const RitualSchema = SchemaFactory.createForClass(RitualProps)

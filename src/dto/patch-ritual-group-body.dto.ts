@@ -7,5 +7,5 @@ export class PatchRitualGroupBodyDTO {
   @Transform(intoArray)
   @IsOptional()
   @IsArray()
-  actionGroupIds: string[]
+  orderedActionGroupIds: string[]
 }
