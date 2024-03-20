@@ -8,6 +8,7 @@ export enum SchemaCollectionName {
   SharedResources = `shared-resources`,
   Actions = 'actions',
   ActionGroups = 'action-groups',
+  Rituals = `rituals`,
 }
 
 export enum DiscriminatorKey {
