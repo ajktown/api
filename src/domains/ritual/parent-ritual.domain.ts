@@ -64,7 +64,7 @@ export class ParentRitualDomain extends DomainRoot {
 
   toDerivedResDTO(atd: AccessTokenDomain): IParentRitual {
     if (atd.userId !== this.props.ownerId) {
-      throw new ReadForbiddenError(atd, `Ritual`)
+      throw new ReadForbiddenError(atd, `ParentRitual`)
     }
     return this.props
   }
