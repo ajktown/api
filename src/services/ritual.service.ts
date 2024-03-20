@@ -15,10 +15,16 @@ export class RitualService {
     private actionGroupModel: ActionGroupModel,
   ) {}
 
+  /**
+   * get returns RitualDomain of a user by access token domain (or requester)
+   */
   async get(atd: AccessTokenDomain): Promise<RitualGroupDomain> {
     return RitualGroupDomain.fromMdb(atd, this.actionGroupModel)
   }
 
+  /**
+   * byUser returns RitualDomain of a user by user domain.
+   */
   async byUser(userDomain: UserDomain): Promise<RitualGroupDomain> {
     return RitualGroupDomain.fromUser(userDomain, this.actionGroupModel)
   }
