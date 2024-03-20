@@ -73,7 +73,7 @@ export class RitualGroupDomain extends DomainRoot {
     )
   }
 
-  toDeprecatedResDTO(atd: AccessTokenDomain): GetRitualsRes {
+  toResDTO(atd: AccessTokenDomain): GetRitualsRes {
     return {
       rituals: this.domains.map((domain) => domain.toResDTO(atd)),
     }

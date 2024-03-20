@@ -22,6 +22,6 @@ export class RitualController {
   @Get(RitualControllerPath.GetRituals)
   async getRituals(@Req() req: Request) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.ritualService.byAtd(atd)).toDeprecatedResDTO(atd)
+    return (await this.ritualService.byAtd(atd)).toResDTO(atd)
   }
 }
