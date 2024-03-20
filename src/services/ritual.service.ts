@@ -33,6 +33,10 @@ export class RitualService {
    * byUser returns RitualDomain of a user by user domain.
    */
   async byUser(userDomain: UserDomain): Promise<RitualGroupDomain> {
-    return RitualGroupDomain.fromUser(userDomain, this.actionGroupModel)
+    return RitualGroupDomain.fromUser(
+      userDomain,
+      this.ritualModel,
+      this.actionGroupModel,
+    )
   }
 }
