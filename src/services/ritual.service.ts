@@ -19,9 +19,9 @@ export class RitualService {
   ) {}
 
   /**
-   * get returns RitualDomain of a user by access token domain (or requester)
+   * byAtd returns RitualDomain of a user by access token domain (or requester)
    */
-  async get(atd: AccessTokenDomain): Promise<RitualGroupDomain> {
+  async byAtd(atd: AccessTokenDomain): Promise<RitualGroupDomain> {
     return RitualGroupDomain.fromMdb(
       atd,
       this.ritualModel,
