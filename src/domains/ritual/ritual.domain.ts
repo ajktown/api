@@ -2,8 +2,8 @@ import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
-import { ActionGroupModel } from '@/schemas/action-group.schema'
-import { UserDomain } from '../user/user.domain'
+import { ActionGroupDoc } from '@/schemas/action-group.schema'
+import { RitualDoc, RitualModel } from '@/schemas/ritual.schema'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -21,41 +21,38 @@ export class RitualDomain extends DomainRoot {
     this.props = input
   }
 
-  static async fromUnassociatedActionGroupIds(
+  /**
+   * Post a default ritual for the user.
+   * This is called when the user has no ritual, but
+   * it guarantees that the API works fine, even if it is called more than once.
+   */
+  static async postDefault(
     atd: AccessTokenDomain,
-    actionGroupModel: ActionGroupModel,
+    model: RitualModel,
   ): Promise<RitualDomain> {
-    const docs = await actionGroupModel.find({
+    const newRitualDoc = await new model({
       ownerId: atd.userId,
-    })
+      name: 'Default Ritual',
+      actionGroupIds: [],
+    }).save()
 
     return new RitualDomain({
-      id: 'default',
-      ownerId: atd.userId,
-      name: 'Unassociated Ritual',
-      actionGroupIds: docs
-        .sort((a, b) => a.openMinsAfter - b.openMinsAfter)
-        .sort((a, b) => a.closeMinsAfter - b.closeMinsAfter)
-        .map((doc) => doc.id),
+      id: newRitualDoc.id,
+      ownerId: newRitualDoc.ownerId,
+      name: newRitualDoc.name,
+      actionGroupIds: newRitualDoc.actionGroupIds,
     })
   }
 
-  static async fromUser(
-    user: UserDomain,
-    actionGroupModel: ActionGroupModel,
-  ): Promise<RitualDomain> {
-    const docs = await actionGroupModel.find({
-      ownerId: user.id,
-    })
-
+  static fromDoc(
+    doc: RitualDoc,
+    actionGroupDocs: ActionGroupDoc[],
+  ): RitualDomain {
     return new RitualDomain({
-      id: 'default',
-      ownerId: user.id,
-      name: 'Unassociated Ritual',
-      actionGroupIds: docs
-        .sort((a, b) => a.openMinsAfter - b.openMinsAfter)
-        .sort((a, b) => a.closeMinsAfter - b.closeMinsAfter)
-        .map((doc) => doc.id),
+      id: doc.id,
+      ownerId: doc.ownerId,
+      name: doc.name,
+      actionGroupIds: actionGroupDocs.map((doc) => doc.id),
     })
   }
 
