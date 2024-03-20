@@ -15,6 +15,6 @@ export interface IRitual {
   orderedActionGroupIds: string[]
 }
 
-// export interface IRitualDerived {
-//   actionGroupIds: string[]
-// }
+export interface IParentRitual extends IRitual {
+  actionGroupIds: string[]
+}

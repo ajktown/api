@@ -2,8 +2,7 @@ import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
-import { ActionGroupDoc } from '@/schemas/action-group.schema'
-import { RitualDoc, RitualModel } from '@/schemas/ritual.schema'
+import { RitualModel } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 
 /**
@@ -46,35 +45,6 @@ export class RitualDomain extends DomainRoot {
       ownerId: newRitualDoc.ownerId,
       name: newRitualDoc.name,
       orderedActionGroupIds: newRitualDoc.orderedActionGroupIds,
-    })
-  }
-
-  /**
-   * Ritual takes responsibility of the order of action groups
-   */
-  static fromDoc(
-    doc: RitualDoc,
-    actionGroupDocs: ActionGroupDoc[],
-  ): RitualDomain {
-    // map contains user's own order of action groups
-    // the lower the i (or index), the higher the priority it should be seen
-    // despite of its openMinsAfter or closeMinsAfter
-    const map = new Map(doc.orderedActionGroupIds.map((id, i) => [id, i]))
-
-    return new RitualDomain({
-      id: doc.id,
-      ownerId: doc.ownerId,
-      name: doc.name,
-      orderedActionGroupIds: actionGroupDocs
-        .sort((a, b) => {
-          if (map.has(a.id) && map.has(b.id)) {
-            return map.get(a.id) - map.get(b.id)
-          }
-          if (a.closeMinsAfter !== b.closeMinsAfter)
-            return a.closeMinsAfter - b.closeMinsAfter
-          return a.openMinsAfter - b.openMinsAfter
-        })
-        .map((doc) => doc.id),
     })
   }
 

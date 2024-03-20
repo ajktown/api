@@ -8,17 +8,18 @@ import { RitualModel } from '@/schemas/ritual.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { ParentRitualDomain } from './parent-ritual.domain'
 
 export class RitualGroupDomain extends DomainRoot {
-  private readonly domains: RitualDomain[]
+  private readonly domains: ParentRitualDomain[]
 
-  private constructor(domains: RitualDomain[]) {
+  private constructor(domains: ParentRitualDomain[]) {
     super()
     this.domains = domains
   }
 
   // default is the first one always.
-  private getDefault(): RitualDomain {
+  private getDefault(): ParentRitualDomain {
     if (this.domains.length === 0) throw new NotExistOrNoPermissionError()
     return this.domains[0]
   }
@@ -50,7 +51,7 @@ export class RitualGroupDomain extends DomainRoot {
       ownerId: atd.userId,
     })
     return new RitualGroupDomain(
-      ritualDocs.map((doc) => RitualDomain.fromDoc(doc, actionGroupDocs)),
+      ritualDocs.map((doc) => ParentRitualDomain.fromDoc(doc, actionGroupDocs)),
     )
   }
 
@@ -76,7 +77,7 @@ export class RitualGroupDomain extends DomainRoot {
       ownerId: userDomain.id,
     })
     return new RitualGroupDomain(
-      ritualDocs.map((doc) => RitualDomain.fromDoc(doc, actionGroupDocs)),
+      ritualDocs.map((doc) => ParentRitualDomain.fromDoc(doc, actionGroupDocs)),
     )
   }
 
