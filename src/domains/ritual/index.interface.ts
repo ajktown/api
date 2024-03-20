@@ -14,3 +14,7 @@ export interface IRitual {
   name: string
   actionGroupIds: string[]
 }
+
+// export interface IRitualDerived {
+//   actionGroupIds: string[]
+// }

@@ -4,6 +4,7 @@ import { IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupDoc } from '@/schemas/action-group.schema'
 import { RitualDoc, RitualModel } from '@/schemas/ritual.schema'
+import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -19,6 +20,10 @@ export class RitualDomain extends DomainRoot {
   private constructor(input: IRitual) {
     super()
     this.props = input
+  }
+
+  get id() {
+    return this.props.id
   }
 
   /**
@@ -73,7 +78,11 @@ export class RitualDomain extends DomainRoot {
     })
   }
 
-  toResDTO(atd: AccessTokenDomain): IRitual {
+  toResDTO(): IRitual {
+    return this.props
+  }
+
+  toDerivedResDTO(atd: AccessTokenDomain): IRitual {
     if (atd.userId !== this.props.ownerId) {
       throw new ReadForbiddenError(atd, `Ritual`)
     }
@@ -83,5 +92,16 @@ export class RitualDomain extends DomainRoot {
   // TODO: This should return IRitualShared
   toSharedResDTO(): IRitual {
     return this.props
+  }
+
+  async patch(dto: PatchRitualGroupBodyDTO, model: RitualModel): Promise<void> {
+    await model.findByIdAndUpdate(
+      this.id,
+      {
+        // name: dto.name, // TODO: Name is not yet supported
+        actionGroupIds: dto.actionGroupIds,
+      },
+      { new: true },
+    )
   }
 }

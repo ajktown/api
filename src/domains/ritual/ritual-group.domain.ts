@@ -7,6 +7,7 @@ import { UserDomain } from '../user/user.domain'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
+import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 
 export class RitualGroupDomain extends DomainRoot {
   private readonly domains: RitualDomain[]
@@ -14,6 +15,12 @@ export class RitualGroupDomain extends DomainRoot {
   private constructor(domains: RitualDomain[]) {
     super()
     this.domains = domains
+  }
+
+  // default is the first one always.
+  private getDefault(): RitualDomain {
+    if (this.domains.length === 0) throw new NotExistOrNoPermissionError()
+    return this.domains[0]
   }
 
   /**
@@ -75,7 +82,7 @@ export class RitualGroupDomain extends DomainRoot {
 
   toResDTO(atd: AccessTokenDomain): GetRitualsRes {
     return {
-      rituals: this.domains.map((domain) => domain.toResDTO(atd)),
+      rituals: this.domains.map((domain) => domain.toDerivedResDTO(atd)),
     }
   }
 
@@ -84,5 +91,12 @@ export class RitualGroupDomain extends DomainRoot {
     return {
       rituals: this.domains.map((domain) => domain.toSharedResDTO()),
     }
+  }
+
+  async patchDefault(
+    dto: PatchRitualGroupBodyDTO,
+    model: RitualModel,
+  ): Promise<void> {
+    await this.getDefault().patch(dto, model)
   }
 }
