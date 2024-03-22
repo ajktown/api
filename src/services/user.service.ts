@@ -1,6 +1,7 @@
 import { UserDomain } from '@/domains/user/user.domain'
 import { BadRequestError } from '@/errors/400/index.error'
 import { envLambda } from '@/lambdas/get-env.lambda'
+import { GetUsersRes } from '@/responses/get-users.res'
 import { UserModel, UserProps } from '@/schemas/deprecated-user.schema'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
@@ -11,6 +12,19 @@ export class UserService {
     @InjectModel(UserProps.name)
     private userModel: UserModel,
   ) {}
+
+  // TODO: Should return domain, but for now, simplicity.
+  async getUsers(): Promise<GetUsersRes> {
+    // get all users
+    const users = await this.userModel.find()
+    const totalNumberOfUsers = users.length
+    const lastFiveJoinedDate = users
+      .sort((a, b) => b.dateAdded - a.dateAdded)
+      .slice(0, 5)
+      .map((user) => new Date(user.dateAdded).toISOString())
+
+    return { totalNumberOfUsers, lastFiveJoinedDate }
+  }
 
   /** Returns user by nickname */
   async byNickname(nickname: string): Promise<UserDomain> {

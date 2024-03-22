@@ -10,6 +10,7 @@ import { ActionGroupService } from '@/services/action-group.service'
  * and may still return 403.
  */
 export enum UserControllerPath {
+  GetUsers = `users`,
   GetRitualsOfUserByNickname = `users/mlajkim/rituals`, // it is fixed to mlajkim as this point
   GetActionGroupsOfUserById = `users/mlajkim/action-groups/:id`, // it is fixed to mlajkim as this point
 }
@@ -20,6 +21,11 @@ export class UserController {
     private readonly ritualService: RitualService,
     private readonly actionGroupService: ActionGroupService,
   ) {}
+
+  @Get(UserControllerPath.GetUsers)
+  async getUsers() {
+    return this.userService.getUsers()
+  }
 
   @Get(UserControllerPath.GetRitualsOfUserByNickname)
   async getRitualsOfUserNameByNickname() {
