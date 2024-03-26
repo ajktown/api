@@ -1,7 +1,6 @@
 import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
-import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 import { GetRitualByIdRes } from '@/responses/get-ritual.res'
