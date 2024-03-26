@@ -10,6 +10,7 @@
 - [AJK Town API](#ajk-town-api)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
+  - [For Developers](#for-developers)
   - [Public Image](#public-image)
     - [Push image command](#push-image-command)
   - [For Envoy](#for-envoy)
@@ -28,6 +29,9 @@
 `AJK Town API` is the second generation project produced by AJK Town, or AJ Kim. It was renamed after "Wordy", which once contained both API server and the Frontend source code packaged together. They are now separated into two repositories `AJK Town API` and `AJK Town Wordnote`.
 
 https://api.ajktown.com
+
+## For Developers
+- [Developer guide](https://github.com/ajktown/docs/tree/main/dev_api)
 
 ## Public Image
 
