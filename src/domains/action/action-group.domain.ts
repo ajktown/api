@@ -175,10 +175,12 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   async postAction(
-    // TODO: atd is not yet used
     atd: AccessTokenDomain,
     actionModel: ActionModel,
   ): Promise<this> {
+    // check if is owned by the user
+    if (this.props.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+
     // if today's action exists, throw error
     let docs: ActionDoc[] = []
     try {
