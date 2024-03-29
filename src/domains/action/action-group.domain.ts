@@ -179,6 +179,9 @@ export class ActionGroupDomain extends DomainRoot {
     atd: AccessTokenDomain,
     actionModel: ActionModel,
   ): Promise<this> {
+    // check if is owned by the user
+    if (this.props.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+
     // if today's action exists, throw error
     let docs: ActionDoc[] = []
     try {
