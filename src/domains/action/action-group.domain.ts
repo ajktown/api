@@ -175,7 +175,6 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   async postAction(
-    // TODO: atd is not yet used
     atd: AccessTokenDomain,
     actionModel: ActionModel,
   ): Promise<this> {
