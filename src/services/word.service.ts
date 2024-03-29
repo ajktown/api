@@ -55,15 +55,15 @@ export class WordService {
 
   /** Get words with given query */
   async get(
-    atd: AccessTokenDomain,
+    nullableAtd: null | AccessTokenDomain,
     query: GetWordQueryDTO,
   ): Promise<WordChunkDomain> {
-    if (!atd) {
+    if (!nullableAtd) {
       throw new NotExistOrNoPermissionError()
     }
 
     return WordChunkDomain.fromMdb(
-      atd,
+      nullableAtd,
       query,
       this.wordModel,
       this.supportModel,
