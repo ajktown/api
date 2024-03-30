@@ -26,6 +26,10 @@ export class ActionDomain extends DomainRoot {
     }
   }
 
+  get createdAtValue(): number {
+    return this.props.createdAt.valueOf()
+  }
+
   get yyyymmdd(): string {
     return this.props.yyyymmdd
   }
