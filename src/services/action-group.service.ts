@@ -56,4 +56,15 @@ export class ActionGroupService {
 
     return ActionGroupDomain.fromId(id, this.actionGroupModel, this.actionModel)
   }
+
+  /**
+   * Delete every actions associated to the action group that is TODAY!
+   */
+  async deleteTodayAction(
+    atd: AccessTokenDomain,
+    actionGroupId: string,
+  ): Promise<ActionGroupDomain> {
+    const actionGroup = await this.getById(atd, actionGroupId)
+    return actionGroup.deleteTodayAction(atd, this.actionModel)
+  }
 }

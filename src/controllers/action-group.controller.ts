@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
@@ -13,6 +13,7 @@ export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
   PostActionByActionGroup = `action-groups/:id/actions`,
   GetActionGroupById = `action-groups/:id`,
+  DeleteTodayActionByActionGroup = `action-groups/:id/actions/today`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -43,5 +44,16 @@ export class ActionGroupController {
   async GetActionGroupById(@Req() req: Request, @Param('id') id: string) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
     return (await this.actionGroupService.getById(atd, id)).toResDTO(atd)
+  }
+
+  @Delete(ActionGroupControllerPath.DeleteTodayActionByActionGroup)
+  async deleteTodayActionByActionGroup(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.actionGroupService.deleteTodayAction(atd, id)).toResDTO(
+      atd,
+    )
   }
 }

@@ -179,7 +179,8 @@ export class ActionGroupDomain extends DomainRoot {
     actionModel: ActionModel,
   ): Promise<this> {
     // check if is owned by the user
-    if (this.props.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+    if (this.props.ownerId !== atd.userId)
+      throw new NotExistOrNoPermissionError()
 
     // if today's action exists, throw error
     let docs: ActionDoc[] = []
@@ -208,6 +209,42 @@ export class ActionGroupDomain extends DomainRoot {
     )
     // update into the map
     this.dateDomainMap.set(actionDomain.yyyymmdd, actionDomain)
+    return this
+  }
+
+  /**
+   * Delete every action associated to the action group that is TODAY!
+   */
+  async deleteTodayAction(
+    atd: AccessTokenDomain,
+    model: ActionModel,
+  ): Promise<this> {
+    if (this.props.ownerId !== atd.userId)
+      throw new NotExistOrNoPermissionError()
+
+    // get todays actions
+    let docs: ActionDoc[] = []
+    try {
+      docs = await model.find({
+        ownerId: this.props.ownerId,
+        groupId: this.props.id,
+        createdAt: {
+          $gte: timeHandler.getStartOfToday(this.props.timezone),
+        },
+      })
+    } catch (err) {
+      throw new BadRequestError(err)
+    }
+
+    if (docs.length === 0) throw new NotExistOrNoPermissionError()
+
+    // delete docs
+    for (const doc of docs) {
+      await doc.deleteOne()
+      this.dateDomainMap.delete(
+        timeHandler.getYYYYMMDD(doc.createdAt, this.props.timezone),
+      )
+    }
     return this
   }
 
