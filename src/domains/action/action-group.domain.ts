@@ -223,7 +223,6 @@ export class ActionGroupDomain extends DomainRoot {
     )
 
     const actionsDerived: IActionDerived[] = []
-    const fixedLevel = 4 // level 4 is fixed atm
 
     for (
       let date = start;
@@ -233,8 +232,11 @@ export class ActionGroupDomain extends DomainRoot {
       const ad = this.dateDomainMap.get(
         timeHandler.getYYYYMMDD(date, this.props.timezone),
       )
-      if (ad) actionsDerived.push(ad.toResDTO(fixedLevel))
-      else {
+
+      // action group assigns levels from the following logic:
+      //
+      // if no action committed in the first place, it is level 0:
+      if (!ad) {
         actionsDerived.push(
           ActionDomain.fromEmpty(
             this.props.id,
@@ -242,7 +244,17 @@ export class ActionGroupDomain extends DomainRoot {
             date,
           ).toResDTO(0),
         )
+        continue
       }
+      //
+      // if action committed but is late, it is level 1:
+      if (this.props.closeAt.valueOf() < ad.createdAtValue) {
+        actionsDerived.push(ad.toResDTO(1))
+        continue
+      }
+      //
+      // ideal: level 4
+      actionsDerived.push(ad.toResDTO(4))
     }
 
     // isTodayHandled
