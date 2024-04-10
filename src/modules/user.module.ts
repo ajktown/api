@@ -13,6 +13,7 @@ import { TermToExamplePrompt } from '@/prompts/term-to-example.prompt'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { ActionGroupService } from '@/services/action-group.service'
 import { ritualModelDefinition } from '@/schemas/ritual.schema'
+import { preferenceModelDefinition } from '@/schemas/preference.schema'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ritualModelDefinition } from '@/schemas/ritual.schema'
       supportsModelDefinition,
       actionModelDefinition,
       ritualModelDefinition,
+      preferenceModelDefinition,
     ]),
   ],
   controllers: [UserController],
