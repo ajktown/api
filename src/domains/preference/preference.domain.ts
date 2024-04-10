@@ -13,6 +13,7 @@ import { GetPreferenceRes } from '@/responses/get-preference.res'
 import { DictPreferenceDomain } from './index.dict.domain'
 
 export class PreferenceDomain {
+  private readonly PRIVATE_MAX_RECENT_TAGS = 5
   private readonly props: Partial<IPreference>
 
   private constructor(props: Partial<IPreference>) {
@@ -24,6 +25,11 @@ export class PreferenceDomain {
   get id() {
     return this.props.id
   }
+
+  /**
+   * returns user's preference domain.
+   * If user doesn't have a preference, it creates a new one.
+   */
 
   static async fromMdbByAtd(
     atd: AccessTokenDomain,
@@ -49,6 +55,7 @@ export class PreferenceDomain {
         id: atd.userId + 'temporary_preference_id',
         ownerId: atd.userId,
         nativeLanguages: [],
+        recentTags: [],
       })
 
       await temp.toDoc(model).save()
@@ -64,6 +71,7 @@ export class PreferenceDomain {
       ownerId: doc.ownerID,
       nativeLanguages: doc.nativeLanguages as GlobalLanguageCode[],
       dictPreference: DictPreferenceDomain.fromDoc(doc),
+      recentTags: doc.recentTags ?? ([] as string[]),
     })
   }
 
@@ -72,6 +80,7 @@ export class PreferenceDomain {
       ownerID: this.props.ownerId,
       nativeLanguages: this.props.nativeLanguages,
       selectedDictIds: this.props.dictPreference.selectedDictIds,
+      recentTags: this.props.recentTags,
     }
     return new preferenceModel(preferenceProps)
   }
@@ -98,6 +107,28 @@ export class PreferenceDomain {
           // ownerId never changes
           nativeLanguages,
           selectedDictIds,
+        },
+        { new: true },
+      )
+      .exec()
+    return PreferenceDomain.fromMdbByAtd(atd, model)
+  }
+
+  async updateWithNewTags(
+    atd: AccessTokenDomain,
+    newTags: string[],
+    model: PreferenceModel,
+  ): Promise<PreferenceDomain> {
+    const updatedRecentTags = Array.from(
+      new Set([...newTags, ...this.props.recentTags]),
+    ).slice(0, this.PRIVATE_MAX_RECENT_TAGS)
+
+    // make sure it updates the db before modifying the domain data itself
+    await model
+      .findByIdAndUpdate(
+        this.id,
+        {
+          recentTags: updatedRecentTags,
         },
         { new: true },
       )

@@ -7,6 +7,7 @@ export interface IPreference extends DataBasicsDate {
   ownerId: string
   nativeLanguages: GlobalLanguageCode[]
   dictPreference: DictPreferenceDomain
+  recentTags: string[]
 }
 
 export interface IDictPreference {
