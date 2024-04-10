@@ -53,6 +53,7 @@ export class WordService {
       atd,
       this.wordModel,
       this.supportModel,
+      this.preferenceModel,
     )
   }
 
