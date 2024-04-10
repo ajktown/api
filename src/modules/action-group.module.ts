@@ -9,6 +9,7 @@ import { ActionGroupController } from '@/controllers/action-group.controller'
 import { ActionGroupService } from '@/services/action-group.service'
 import { actionModelDefinition } from '@/schemas/action.schema'
 import { actionGroupModelDefinition } from '@/schemas/action-group.schema'
+import { preferenceModelDefinition } from '@/schemas/preference.schema'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { actionGroupModelDefinition } from '@/schemas/action-group.schema'
       supportsModelDefinition,
       actionModelDefinition,
       actionGroupModelDefinition,
+      preferenceModelDefinition,
     ]),
   ],
   controllers: [ActionGroupController],

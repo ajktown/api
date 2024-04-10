@@ -14,6 +14,7 @@ import {
   SupportModel,
 } from '@/schemas/deprecated-supports.schema'
 import { WordProps, WordModel } from '@/schemas/deprecated-word.schema'
+import { PreferenceModel, PreferenceProps } from '@/schemas/preference.schema'
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
@@ -24,6 +25,8 @@ export class WordService {
     private wordModel: WordModel,
     @InjectModel(SupportProps.name)
     private supportModel: SupportModel,
+    @InjectModel(PreferenceProps.name)
+    private preferenceModel: PreferenceModel,
     private termToExamplePrompt: TermToExamplePrompt,
     private getWordQueryFactory: GetWordQueryFactory,
     private readonly logger: Logger,
