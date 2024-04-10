@@ -23,6 +23,12 @@ export class PreferenceProps {
 
   @Prop()
   selectedDictIds: string[] // i.e) ['google_en_en', 'naver_dictionary_ko_ko']
+
+  // store user's recent tags when the following happens:
+  //  - new tags are posted for newly-created words
+  //  - new tags are posted for already-created words
+  @Prop({ default: [] })
+  recentTags: string[]
 }
 
 export const PreferenceSchema = SchemaFactory.createForClass(PreferenceProps)
