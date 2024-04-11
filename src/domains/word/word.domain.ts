@@ -14,6 +14,8 @@ import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-fo
 import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { DataNotPresentError } from '@/errors/400/data-not-present.error'
+import { PreferenceModel } from '@/schemas/preference.schema'
+import { PreferenceDomain } from '../preference/preference.domain'
 
 // TODO: Write this domain in a standard format
 // Doc: https://dev.to/bendix/applying-domain-driven-design-principles-to-a-nest-js-project-5f7b
@@ -98,6 +100,7 @@ export class WordDomain extends DomainRoot {
     atd: AccessTokenDomain,
     model: WordModel,
     supportModel: SupportModel,
+    preferenceModel: PreferenceModel,
   ): Promise<WordDomain> {
     const newlyPostedWordDomain = WordDomain.fromMdb(
       await this.toDoc(model).save(),
@@ -112,6 +115,19 @@ export class WordDomain extends DomainRoot {
       // Something went wrong, and therefore should delete the word from persistence
       await newlyPostedWordDomain.delete(atd, model, supportModel)
       throw new BadRequestError('Something went wrong while posting word')
+    }
+
+    // if tags are found, modify tags
+    if (this.props.tags.length > 0) {
+      const preferenceDomain = await PreferenceDomain.fromMdbByAtd(
+        atd,
+        preferenceModel,
+      )
+      await preferenceDomain.updateWithNewTags(
+        atd,
+        this.props.tags,
+        preferenceModel,
+      )
     }
 
     return newlyPostedWordDomain
