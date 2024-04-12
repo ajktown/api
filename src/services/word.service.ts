@@ -89,7 +89,12 @@ export class WordService {
       throw new BadRequestError('Require at least one or more field to update!')
     }
     const wordDomain = await this.getById(id)
-    return wordDomain.updateWithPutDto(atd, dto, this.wordModel)
+    return wordDomain.updateWithPutDto(
+      atd,
+      dto,
+      this.wordModel,
+      this.preferenceModel,
+    )
   }
 
   async deleteById(id: string, atd: AccessTokenDomain): Promise<void> {

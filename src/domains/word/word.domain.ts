@@ -189,29 +189,37 @@ export class WordDomain extends DomainRoot {
     atd: AccessTokenDomain,
     dto: PutWordByIdBodyDTO,
     wordModel: WordModel,
+    preferenceModel: PreferenceModel,
   ): Promise<WordDomain> {
     if (atd.userId !== this.props.userId) {
       throw new UpdateForbiddenError(atd, `Word`)
     }
-    return WordDomain.fromMdb(
-      await wordModel
-        .findByIdAndUpdate(
-          this.id,
-          {
-            language: dto.languageCode,
-            isFavorite: dto.isFavorite,
-            word: dto.term,
-            pronun: dto.pronunciation,
-            meaning: dto.definition,
-            example: dto.example,
-            exampleLink: dto.exampleLink,
-            tag: dto.tags,
-            isArchived: dto.isArchived,
-          },
-          { new: true },
-        )
-        .exec(),
-    )
+    const updateWord = await wordModel
+      .findByIdAndUpdate(
+        this.id,
+        {
+          language: dto.languageCode,
+          isFavorite: dto.isFavorite,
+          word: dto.term,
+          pronun: dto.pronunciation,
+          meaning: dto.definition,
+          example: dto.example,
+          exampleLink: dto.exampleLink,
+          tag: dto.tags,
+          isArchived: dto.isArchived,
+        },
+        { new: true },
+      )
+      .exec()
+
+    if (dto.tags && dto.tags.length > 0) {
+      const preferenceDomain = await PreferenceDomain.fromMdbByAtd(
+        atd,
+        preferenceModel,
+      )
+      await preferenceDomain.updateWithNewTags(atd, dto.tags, preferenceModel)
+    }
+    return WordDomain.fromMdb(updateWord)
   }
 
   /** Deletes word from persistence, if access is given */
