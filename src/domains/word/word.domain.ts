@@ -194,6 +194,9 @@ export class WordDomain extends DomainRoot {
     if (atd.userId !== this.props.userId) {
       throw new UpdateForbiddenError(atd, `Word`)
     }
+    const existingWord = await wordModel.findById(this.id).exec()
+    const existingTags = existingWord ? existingWord.tag : []
+
     const updateWord = await wordModel
       .findByIdAndUpdate(
         this.id,
@@ -212,12 +215,14 @@ export class WordDomain extends DomainRoot {
       )
       .exec()
 
-    if (dto.tags && dto.tags.length > 0) {
+    const newTags = dto.tags.filter((tag) => !existingTags.includes(tag))
+
+    if (newTags.length > 0) {
       const preferenceDomain = await PreferenceDomain.fromMdbByAtd(
         atd,
         preferenceModel,
       )
-      await preferenceDomain.updateWithNewTags(atd, dto.tags, preferenceModel)
+      await preferenceDomain.updateWithNewTags(atd, newTags, preferenceModel)
     }
     return WordDomain.fromMdb(updateWord)
   }
