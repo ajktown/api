@@ -194,7 +194,6 @@ export class WordDomain extends DomainRoot {
     if (atd.userId !== this.props.userId) {
       throw new UpdateForbiddenError(atd, `Word`)
     }
-    const existingWord = await wordModel.findById(this.id).exec()
     const existingTags = existingWord ? existingWord.tag : []
 
     const updateWord = await wordModel
