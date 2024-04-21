@@ -18,9 +18,9 @@ export class RitualGroupDomain extends DomainRoot {
   }
 
   // default is the first one always.
-  getDefault(): RitualDomain {
+  getDefault(): ParentRitualDomain {
     if (this.domains.length === 0) throw new NotExistOrNoPermissionError()
-    return RitualDomain.fromParentRitual(this.domains[0].toResDTO())
+    return this.domains[0]
   }
 
   /**
@@ -82,14 +82,14 @@ export class RitualGroupDomain extends DomainRoot {
 
   toResDTO(atd: AccessTokenDomain): GetRitualsRes {
     return {
-      rituals: this.domains.map((domain) => domain.toDerivedResDTO(atd)),
+      rituals: this.domains.map((domain) => domain.toDerivedResDTO(atd).ritual),
     }
   }
 
   // TODO: There should be Shared type for now
   toSharedResDTO(): GetRitualsRes {
     return {
-      rituals: this.domains.map((domain) => domain.toSharedResDTO()),
+      rituals: this.domains.map((domain) => domain.toSharedResDTO().ritual),
     }
   }
 }

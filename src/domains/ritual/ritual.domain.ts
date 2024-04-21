@@ -4,6 +4,7 @@ import { IRitual } from './index.interface'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 import { GetRitualByIdRes } from '@/responses/get-ritual.res'
+import { ParentRitualDomain } from './parent-ritual.domain'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -25,7 +26,8 @@ export class RitualDomain extends DomainRoot {
     return this.props.id
   }
 
-  static fromParentRitual(props: IRitual): RitualDomain {
+  static fromParentRitual(domain: ParentRitualDomain): RitualDomain {
+    const props = domain.toResDTO().ritual
     return new RitualDomain({
       id: props.id,
       ownerId: props.ownerId,
