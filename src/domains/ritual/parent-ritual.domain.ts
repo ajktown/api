@@ -4,6 +4,7 @@ import { IParentRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupDoc } from '@/schemas/action-group.schema'
 import { RitualDoc } from '@/schemas/ritual.schema'
+import { GetRitualByIdRes } from '@/responses/get-ritual.res'
 
 /**
  * ParentRitualDomain has both values:
@@ -57,19 +58,21 @@ export class ParentRitualDomain extends DomainRoot {
     })
   }
 
-  toResDTO(): IParentRitual {
-    return this.props
+  toResDTO(): GetRitualByIdRes {
+    return {
+      ritual: this.props,
+    }
   }
 
-  toDerivedResDTO(atd: AccessTokenDomain): IParentRitual {
+  toDerivedResDTO(atd: AccessTokenDomain): GetRitualByIdRes {
     if (atd.userId !== this.props.ownerId) {
       throw new ReadForbiddenError(atd, `ParentRitual`)
     }
-    return this.props
+    return this.toResDTO() // for now only
   }
 
-  // TODO: This should return IRitualShared
-  toSharedResDTO(): IParentRitual {
-    return this.props
+  // TODO: This should return GetSharedRitualsRes or something
+  toSharedResDTO(): GetRitualByIdRes {
+    return this.toResDTO() // for now only
   }
 }
