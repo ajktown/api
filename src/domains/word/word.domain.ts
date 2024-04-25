@@ -213,7 +213,9 @@ export class WordDomain extends DomainRoot {
       )
       .exec()
 
-    const newTags = dto.tags.filter((tag) => !this.props.tags.includes(tag))
+    const newTags = dto.tags
+      ? dto.tags.filter((tag) => !this.props.tags.includes(tag))
+      : []
 
     if (newTags.length > 0) {
       const preferenceDomain = await PreferenceDomain.fromMdbByAtd(
