@@ -59,12 +59,6 @@ export class RitualDomain extends DomainRoot {
     })
   }
 
-  toResDTO(): GetRitualByIdRes {
-    return {
-      ritual: this.props,
-    }
-  }
-
   async patch(
     dto: PatchRitualGroupBodyDTO,
     model: RitualModel,
