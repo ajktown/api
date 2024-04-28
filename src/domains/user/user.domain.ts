@@ -6,6 +6,7 @@ import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { ForbiddenError } from '@/errors/403/index.error'
 import { MoreThanOneUserWithTheSameEmailAddressError } from '@/errors/400/more-than-one-user-with-same-email-address.error'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
+import { GetSharedUserRes } from '@/responses/get-user.res'
 
 export class UserDomain {
   private readonly props: Partial<IUser>
@@ -102,5 +103,17 @@ export class UserDomain {
   // TODO: We need atd here for security sake and resDTO must have atd
   toResDTO(): Partial<IUser> {
     return this.props
+  }
+
+  // This is fixed at this point to the mlajkim user
+  toSharedResDTO(): GetSharedUserRes {
+    return {
+      imageUrl: this.props.imageUrl,
+      firstName: 'Aaron',
+      middleName: 'Jeongwoo',
+      lastName: 'Kim',
+      nickname: 'mlajkim',
+      bio: 'Security Engineer at Line-Yahoo Corp.',
+    }
   }
 }
