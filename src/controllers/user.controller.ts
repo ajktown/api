@@ -11,6 +11,7 @@ import { ActionGroupService } from '@/services/action-group.service'
  */
 export enum UserControllerPath {
   GetUsers = `users`,
+  GetUserByNickname = `users/mlajkim`,
   GetRitualsOfUserByNickname = `users/mlajkim/rituals`, // it is fixed to mlajkim as this point
   GetActionGroupsOfUserById = `users/mlajkim/action-groups/:id`, // it is fixed to mlajkim as this point
 }
@@ -25,6 +26,11 @@ export class UserController {
   @Get(UserControllerPath.GetUsers)
   async getUsers() {
     return this.userService.getUsers()
+  }
+
+  @Get(UserControllerPath.GetUserByNickname)
+  async getUserByNickname() {
+    return (await this.userService.byNickname('mlajkim')).toSharedResDTO()
   }
 
   @Get(UserControllerPath.GetRitualsOfUserByNickname)

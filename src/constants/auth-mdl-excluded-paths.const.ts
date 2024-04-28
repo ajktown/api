@@ -21,6 +21,7 @@ const privateRootPaths: PathAndMethod[] = [
 
 // API First version paths
 const privateV1Paths: PathAndMethod[] = [
+  [UserControllerPath.GetUserByNickname, RequestMethod.GET],
   [UserControllerPath.GetRitualsOfUserByNickname, RequestMethod.GET],
   [UserControllerPath.GetActionGroupsOfUserById, RequestMethod.GET],
   [AuthControllerPath.PostSignOut, RequestMethod.POST],
