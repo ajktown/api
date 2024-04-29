@@ -109,6 +109,7 @@ export class UserDomain {
   toSharedResDTO(): GetSharedUserRes {
     return {
       imageUrl: this.props.imageUrl,
+      displayingName: 'Aaron Jeongwoo Kim', // TODO: Make sure to dynamically set with firstName, middleName, lastName
       firstName: 'Aaron',
       middleName: 'Jeongwoo',
       lastName: 'Kim',
