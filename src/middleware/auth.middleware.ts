@@ -1,11 +1,7 @@
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
+import { UnidentifiedUserError } from '@/errors/401/unidentified-user.error'
 import { envLambda } from '@/lambdas/get-env.lambda'
-import {
-  Injectable,
-  Logger,
-  NestMiddleware,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { NextFunction, Request, Response } from 'express'
 
@@ -27,7 +23,7 @@ export class AuthMiddleware implements NestMiddleware {
     } catch (err) {
       this.logger.error(err)
 
-      return res.status(err.getStatus()).send(new UnauthorizedException())
+      return res.status(err.getStatus()).send(new UnidentifiedUserError())
     }
 
     next()
