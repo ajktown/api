@@ -1,5 +1,5 @@
 import { GlobalLanguageCode } from '@/global.interface'
-import { IsArray, IsOptional } from 'class-validator'
+import { IsArray, IsOptional, IsString } from 'class-validator'
 import { intoUniqueArray } from './index.validator'
 import { Transform } from 'class-transformer'
 
@@ -14,4 +14,8 @@ export class PutPreferenceDto {
   @IsArray()
   @IsOptional()
   selectedDictIds: string[]
+
+  @IsString()
+  @IsOptional()
+  gptApiKey: string
 }
