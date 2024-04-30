@@ -30,6 +30,10 @@ export class PutWordByIdBodyDTO {
 
   @IsString()
   @IsOptional()
+  subDefinition: string
+
+  @IsString()
+  @IsOptional()
   example: string
 
   @IsString()

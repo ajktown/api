@@ -29,6 +29,7 @@ export class WordDomain extends DomainRoot {
     props.term = props.term?.trim() || ''
     props.pronunciation = props.pronunciation?.trim() || ''
     props.definition = props.definition?.trim() || ''
+    props.subDefinition = props.subDefinition?.trim() || ''
     props.example = props.example?.trim() || ''
     props.exampleLink = props.exampleLink?.trim() || ''
     props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
@@ -62,6 +63,7 @@ export class WordDomain extends DomainRoot {
       term: dto.term,
       pronunciation: dto.pronunciation,
       definition: dto.definition,
+      subDefinition: dto.subDefinition,
       example: dto.example,
       exampleLink: dto.exampleLink,
       tags: dto.tags,
@@ -82,6 +84,7 @@ export class WordDomain extends DomainRoot {
       term: props.word,
       pronunciation: props.pronun,
       definition: props.meaning,
+      subDefinition: props.subDefinition,
       example: props.example,
       exampleLink: props.exampleLink,
       tags: props.tag,
@@ -141,6 +144,7 @@ export class WordDomain extends DomainRoot {
       word: this.props.term,
       pronun: this.props.pronunciation,
       meaning: this.props.definition,
+      subDefinition: this.props.subDefinition,
       example: this.props.example,
       exampleLink: this.props.exampleLink,
       tag: this.props.tags,
@@ -178,6 +182,7 @@ export class WordDomain extends DomainRoot {
       term: this.props.term,
       pronunciation: this.props.pronunciation,
       definition: this.props.definition,
+      subDefinition: this.props.subDefinition,
       example: this.props.example,
       exampleLink: this.props.exampleLink,
       tags: this.props.tags,
@@ -204,6 +209,7 @@ export class WordDomain extends DomainRoot {
           word: dto.term,
           pronun: dto.pronunciation,
           meaning: dto.definition,
+          subDefinition: dto.subDefinition,
           example: dto.example,
           exampleLink: dto.exampleLink,
           tag: dto.tags,

@@ -43,7 +43,10 @@ export class WordProps {
   dateAdded: number // 1677483296006
 
   @Prop()
-  meaning: string
+  meaning: string // definition ("meaning" is deprecated expression from Wordy)
+
+  @Prop()
+  subDefinition: string // similar to meaning (or definition) please see details in word domain why subDefinition exists
 
   @Prop()
   pronun: string // pronunciation

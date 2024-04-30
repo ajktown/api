@@ -57,6 +57,10 @@ export class GetWordQueryDTO
 
   @IsOptional()
   @IsString()
+  subDefinition: string
+
+  @IsOptional()
+  @IsString()
   example: string
 
   @IsOptional()
