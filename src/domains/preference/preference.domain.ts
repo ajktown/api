@@ -11,6 +11,7 @@ import { PutPreferenceDto } from '@/dto/put-preference.dto'
 import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
 import { GetPreferenceRes } from '@/responses/get-preference.res'
 import { DictPreferenceDomain } from './index.dict.domain'
+import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
 
 export class PreferenceDomain {
   private readonly PRIVATE_MAX_RECENT_TAGS = 5
@@ -19,7 +20,9 @@ export class PreferenceDomain {
   private constructor(props: Partial<IPreference>) {
     if (!props.dictPreference)
       props.dictPreference = DictPreferenceDomain.getDefault()
+
     this.props = props
+    this.props.gptApiKey = this.props.gptApiKey ?? ``
   }
 
   get id() {
@@ -56,6 +59,7 @@ export class PreferenceDomain {
         ownerId: atd.userId,
         nativeLanguages: [],
         recentTags: [],
+        gptApiKey: ``,
       })
 
       await temp.toDoc(model).save()
@@ -72,6 +76,7 @@ export class PreferenceDomain {
       nativeLanguages: doc.nativeLanguages as GlobalLanguageCode[],
       dictPreference: DictPreferenceDomain.fromDoc(doc),
       recentTags: doc.recentTags ?? ([] as string[]),
+      gptApiKey: doc.gptApiKey ?? ``,
     })
   }
 
@@ -81,6 +86,7 @@ export class PreferenceDomain {
       nativeLanguages: this.props.nativeLanguages,
       selectedDictIds: this.props.dictPreference.selectedDictIds,
       recentTags: this.props.recentTags,
+      gptApiKey: this.props.gptApiKey,
     }
     return new preferenceModel(preferenceProps)
   }
@@ -97,6 +103,12 @@ export class PreferenceDomain {
     dto: PutPreferenceDto,
     model: PreferenceModel,
   ): Promise<PreferenceDomain> {
+    // WARNING
+    // Registration of GPT Key is only available to jkim67cloud@gmail.com, as it
+    // charges users. AJK TOwn is not in a stage to take the responsibilities
+    if (dto.gptApiKey && atd.email !== 'jkim67cloud@gmail.com')
+      throw new UpdateForbiddenError(atd, `Preference.gptApiKey`)
+
     const nativeLanguages = dto.nativeLanguages ?? []
     const selectedDictIds = dto.selectedDictIds ?? []
 
@@ -107,6 +119,7 @@ export class PreferenceDomain {
           // ownerId never changes
           nativeLanguages,
           selectedDictIds,
+          gptApiKey: dto.gptApiKey,
         },
         { new: true },
       )
