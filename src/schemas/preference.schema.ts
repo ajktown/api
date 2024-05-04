@@ -29,6 +29,9 @@ export class PreferenceProps {
   //  - new tags are posted for already-created words
   @Prop({ default: [] })
   recentTags: string[]
+
+  @Prop()
+  gptApiKey: string
 }
 
 export const PreferenceSchema = SchemaFactory.createForClass(PreferenceProps)

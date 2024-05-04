@@ -26,6 +26,9 @@ export class PostWordBodyDTO {
   definition: string
 
   @IsString()
+  subDefinition: string
+
+  @IsString()
   example: string
 
   @IsString()
