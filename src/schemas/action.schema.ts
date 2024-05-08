@@ -20,6 +20,10 @@ export class ActionProps {
 
   @Prop()
   groupId: string // the group of the action
+
+  // if action is not performed, even if it exists
+  @Prop()
+  isDummy: boolean
 }
 
 export const ActionSchema = SchemaFactory.createForClass(ActionProps)

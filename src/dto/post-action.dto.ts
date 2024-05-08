@@ -1,9 +1,10 @@
-import { IsString } from 'class-validator'
+import { IsBoolean, IsOptional } from 'class-validator'
+import { intoBoolean } from './index.validator'
+import { Transform } from 'class-transformer'
 
-export class PostActionDTO {
-  @IsString()
-  groupId: string
-
-  @IsString()
-  message: string
+export class PostActionBodyDTO {
+  @Transform(intoBoolean)
+  @IsBoolean()
+  @IsOptional()
+  isDummy: boolean
 }

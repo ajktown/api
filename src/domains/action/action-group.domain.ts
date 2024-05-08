@@ -22,6 +22,7 @@ import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
 import { NumberNotInRangeError } from '@/errors/400/index.num-not-in-range.error'
+import { PostActionBodyDTO } from '@/dto/post-action.dto'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -176,6 +177,7 @@ export class ActionGroupDomain extends DomainRoot {
 
   async postAction(
     atd: AccessTokenDomain,
+    dto: PostActionBodyDTO,
     actionModel: ActionModel,
   ): Promise<this> {
     // check if is owned by the user
@@ -202,6 +204,7 @@ export class ActionGroupDomain extends DomainRoot {
     const docProps: ActionProps = {
       ownerId: this.props.ownerId,
       groupId: this.props.id,
+      isDummy: dto.isDummy || false,
     }
     const actionDomain = ActionDomain.fromMdb(
       this.props.timezone,

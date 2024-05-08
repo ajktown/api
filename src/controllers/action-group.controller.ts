@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ActionGroupService } from '@/services/action-group.service'
 import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
+import { PostActionBodyDTO } from '@/dto/post-action.dto'
 
 /**
  * Warning: Since Action Group is a huge domain, it only returns the ids of the action groups.
@@ -33,10 +34,14 @@ export class ActionGroupController {
   }
 
   @Post(ActionGroupControllerPath.PostActionByActionGroup)
-  async postActionByActionGroup(@Req() req: Request, @Param('id') id: string) {
+  async postActionByActionGroup(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() dto: PostActionBodyDTO,
+  ) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
     return (
-      await this.actionGroupService.postActionByActionGroup(atd, id)
+      await this.actionGroupService.postActionByActionGroup(atd, id, dto)
     ).toResDTO(atd)
   }
 
