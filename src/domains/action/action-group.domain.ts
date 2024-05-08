@@ -288,6 +288,7 @@ export class ActionGroupDomain extends DomainRoot {
       }
       //
       // if action committed but is late, it is level 1:
+      // TODO: This part has a bug where if a day passes, if is not handled
       if (this.props.closeAt.valueOf() < ad.createdAtValue) {
         actionsDerived.push(ad.toResDTO(1))
         continue
