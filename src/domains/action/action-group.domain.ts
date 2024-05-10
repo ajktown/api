@@ -17,7 +17,12 @@ import {
   IActionGroup,
   IActionGroupInput,
 } from './index.interface'
-import { GetActionGroupRes } from '@/responses/get-action-groups.res'
+import {
+  ActionGroupState,
+  ActionGroupStateCommitment,
+  ActionGroupStateTime,
+  GetActionGroupRes,
+} from '@/responses/get-action-groups.res'
 import { ActionDoc, ActionModel, ActionProps } from '@/schemas/action.schema'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
@@ -76,6 +81,55 @@ export class ActionGroupDomain extends DomainRoot {
 
   get id() {
     return this.props.id
+  }
+
+  private get stateTime(): ActionGroupStateTime {
+    const now = new Date()
+    if (now.valueOf() < this.props.openAt.valueOf()) return 'Early'
+    if (now.valueOf() < this.props.closeAt.valueOf()) return 'OnTime'
+    return 'Late'
+  }
+
+  private get stateCommitment(): ActionGroupStateCommitment {
+    const now = new Date()
+    const got = this.dateDomainMap.get(
+      timeHandler.getYYYYMMDD(now, this.props.timezone),
+    )
+
+    if (got === undefined) return `NotCommitted`
+    if (got.toResDTO(0).isDummy) return `DummyCommitted`
+    return `Committed`
+  }
+
+  get state(): ActionGroupState {
+    return (this.stateTime + this.stateCommitment) as ActionGroupState
+  }
+
+  get isOnTimeCommittable(): boolean {
+    return this.state === `OnTimeCommitted`
+  }
+
+  get isDummyCommittable(): boolean {
+    return [
+      `EarlyNotCommitted`,
+      `OnTimeNotCommitted`,
+      `LateNotCommitted`,
+    ].includes(this.state)
+  }
+
+  get isLateCommittable(): boolean {
+    return this.state === `LateNotCommitted`
+  }
+
+  get isDeletable(): boolean {
+    return [
+      `EarlyCommitted`,
+      `EarlyDummyCommitted`,
+      `OnTimeCommitted`,
+      `OnTimeDummyCommitted`,
+      `LateCommitted`,
+      `LateDummyCommitted`,
+    ].includes(this.state)
   }
 
   private static fromMdb(
@@ -326,7 +380,14 @@ export class ActionGroupDomain extends DomainRoot {
         this.props.closeAt,
       ),
       isTodaySuccessful: isTodaySuccessful(),
+      state: this.state,
       actions: actionsDerived,
+      derivedState: {
+        isOnTimeCommittable: this.isOnTimeCommittable,
+        isDummyCommittable: this.isDummyCommittable,
+        isLateCommittable: this.isLateCommittable,
+        isDeletable: this.isDeletable,
+      }
     }
   }
 
