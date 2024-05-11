@@ -114,7 +114,7 @@ export class ActionGroupDomain extends DomainRoot {
     return [
       `EarlyNotCommitted`,
       `OnTimeNotCommitted`,
-      `LateNotCommitted`,
+      // `LateNotCommitted`, => If it is late, even dummy should not be committed, and is more of isLateCommittable==true
     ].includes(this.state)
   }
 
