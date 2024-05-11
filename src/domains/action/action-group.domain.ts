@@ -341,14 +341,35 @@ export class ActionGroupDomain extends DomainRoot {
         )
         continue
       }
-      //
-      // if action committed but is late, it is level 1:
-      // TODO: This part has a bug where if a day passes, if is not handled
-      if (this.props.closeAt.valueOf() < ad.createdAtValue) {
+      // if dummy, level 1:
+      if (ad.toResDTO(0).isDummy) {
         actionsDerived.push(ad.toResDTO(1))
         continue
       }
-      //
+      // dummy:
+      if (ad.isDummy) {
+        actionsDerived.push(ad.toResDTO(1))
+        continue
+      }
+
+      // if action committed but is late for that date, it is level 2:
+      // make sure to subtract this.props.closeAt.valueOf() from the days behind
+      // TODO: This is too complex, should have a good lambda or something.
+      const calculatedClosingDateFromToday =
+        this.props.closeAt.valueOf().valueOf() -
+        timeHandler.getStartOfToday(this.props.timezone).valueOf()
+      const [startOfDateThatAdCreatedAt] = timeHandler.getDateFromDaysAgo(
+        timeHandler.getDaysAgo(ad.createdAtValue, this.props.timezone),
+        this.props.timezone,
+      )
+      if (
+        calculatedClosingDateFromToday + startOfDateThatAdCreatedAt.valueOf() <
+        ad.createdAtValue
+      ) {
+        actionsDerived.push(ad.toResDTO(2))
+        continue
+      }
+
       // ideal: level 4
       actionsDerived.push(ad.toResDTO(4))
     }
