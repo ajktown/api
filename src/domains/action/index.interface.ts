@@ -6,6 +6,7 @@ export interface IActionInput extends DataBasicsDate {
   id: string
   ownerId: string
   groupId: string
+  isDummy: boolean
 }
 
 export interface IAction extends IActionInput {

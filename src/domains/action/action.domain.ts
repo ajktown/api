@@ -51,6 +51,7 @@ export class ActionDomain extends DomainRoot {
       id: '',
       ownerId: '',
       groupId: groupId,
+      isDummy: false,
       createdAt: date,
       updatedAt: date,
     })
@@ -67,6 +68,7 @@ export class ActionDomain extends DomainRoot {
       id: '',
       ownerId: '',
       groupId: groupId,
+      isDummy: false,
       createdAt: new Date(props.dateAdded),
       // the action cannot be updated, but since it is from word domain,
       // we can simply set the dateAdded as updatedAt.
@@ -81,6 +83,7 @@ export class ActionDomain extends DomainRoot {
       id: doc.id,
       ownerId: doc.ownerId,
       groupId: doc.groupId,
+      isDummy: doc.isDummy,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     })
