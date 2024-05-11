@@ -3,7 +3,6 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
-import { GetRitualByIdRes } from '@/responses/get-ritual.res'
 import { ParentRitualDomain } from './parent-ritual.domain'
 
 /**

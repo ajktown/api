@@ -387,7 +387,7 @@ export class ActionGroupDomain extends DomainRoot {
         isDummyCommittable: this.isDummyCommittable,
         isLateCommittable: this.isLateCommittable,
         isDeletable: this.isDeletable,
-      }
+      },
     }
   }
 
