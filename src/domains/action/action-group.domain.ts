@@ -106,7 +106,8 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   get isOnTimeCommittable(): boolean {
-    return this.state === `OnTimeCommitted`
+    // Since it is "OnTimeNotCommitted", meaning not committed yet, it is committable:
+    return this.state === `OnTimeNotCommitted`
   }
 
   get isDummyCommittable(): boolean {
