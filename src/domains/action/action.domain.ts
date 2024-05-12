@@ -26,6 +26,10 @@ export class ActionDomain extends DomainRoot {
     }
   }
 
+  get isDummy(): boolean {
+    return this.props.isDummy
+  }
+
   get createdAtValue(): number {
     return this.props.createdAt.valueOf()
   }
