@@ -6,7 +6,7 @@ import { Transform } from 'class-transformer'
 // ! Security Warning:
 
 // Semester cannot be set by end user
-export class PutWordByIdBodyDTO {
+export class PatchWordByIdBodyDTO {
   @IsString()
   @IsOptional()
   languageCode: GlobalLanguageCode

@@ -7,7 +7,7 @@ import {
 } from '@/schemas/preference.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { GlobalLanguageCode } from '@/global.interface'
-import { PutPreferenceDto } from '@/dto/put-preference.dto'
+import { PatchPreferenceDto } from '@/dto/put-preference.dto'
 import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
 import { GetPreferenceRes } from '@/responses/get-preference.res'
 import { DictPreferenceDomain } from './index.dict.domain'
@@ -100,7 +100,7 @@ export class PreferenceDomain {
 
   async updateWithPutDto(
     atd: AccessTokenDomain,
-    dto: PutPreferenceDto,
+    dto: PatchPreferenceDto,
     model: PreferenceModel,
   ): Promise<PreferenceDomain> {
     // WARNING

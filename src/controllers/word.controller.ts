@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   Req,
+  Patch,
 } from '@nestjs/common'
 import { WordService } from '@/services/word.service'
 import { AjkTownApiVersion } from './index.interface'
@@ -16,7 +17,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
-import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
+import { PatchWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { SemesterService } from '@/services/semester.service'
 import { PostWordRes } from '@/responses/post-word.res'
 
@@ -25,7 +26,7 @@ export enum WordControllerPath {
   GetWords = `words`,
   GetWordIds = `word-ids`,
   GetWordById = `words/:id`,
-  PutWordById = `/words/:id`,
+  PatchWordById = `/words/:id`,
   DeleteWordById = `words/:id`,
 }
 
@@ -75,14 +76,25 @@ export class WordController {
     )
   }
 
-  @Put(WordControllerPath.PutWordById)
+  // TODO: Delete me; deprecated and moved to PATCH instead
+  @Put(WordControllerPath.PatchWordById)
   async putWordById(
     @Req() req: Request,
     @Param('id') id: string,
-    @Body() dto: PutWordByIdBodyDTO,
+    @Body() body: PatchWordByIdBodyDTO,
   ) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.wordService.putWordById(id, atd, dto)).toResDTO(atd)
+    return (await this.wordService.patchWordById(id, atd, body)).toResDTO(atd)
+  }
+
+  @Patch(WordControllerPath.PatchWordById)
+  async patchWordById(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() body: PatchWordByIdBodyDTO,
+  ) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (await this.wordService.patchWordById(id, atd, body)).toResDTO(atd)
   }
 
   @Delete(WordControllerPath.DeleteWordById)

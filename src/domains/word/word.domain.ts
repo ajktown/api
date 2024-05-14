@@ -6,7 +6,7 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import { semesterLambda } from '@/lambdas/semester.lambda'
 import { SupportModel } from '@/schemas/deprecated-supports.schema'
 import { SupportDomain } from '../support/support.domain'
-import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
+import { PatchWordByIdBodyDTO } from '@/dto/put-word-body.dto'
 import { DomainRoot } from '../index.root'
 import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
 import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
@@ -192,7 +192,7 @@ export class WordDomain extends DomainRoot {
 
   async updateWithPutDto(
     atd: AccessTokenDomain,
-    dto: PutWordByIdBodyDTO,
+    dto: PatchWordByIdBodyDTO,
     wordModel: WordModel,
     preferenceModel: PreferenceModel,
   ): Promise<WordDomain> {
