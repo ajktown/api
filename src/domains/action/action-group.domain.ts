@@ -341,18 +341,13 @@ export class ActionGroupDomain extends DomainRoot {
         )
         continue
       }
-      // if dummy, level 1:
-      if (ad.toResDTO(0).isDummy) {
-        actionsDerived.push(ad.toResDTO(1))
-        continue
-      }
-      // dummy:
+      // if dummy, level 0:
       if (ad.isDummy) {
-        actionsDerived.push(ad.toResDTO(1))
+        actionsDerived.push(ad.toResDTO(0))
         continue
       }
 
-      // if action committed but is late for that date, it is level 2:
+      // if action committed but is late for that date, it is level 1:
       // make sure to subtract this.props.closeAt.valueOf() from the days behind
       // TODO: This is too complex, should have a good lambda or something.
       const calculatedClosingDateFromToday =
@@ -366,7 +361,7 @@ export class ActionGroupDomain extends DomainRoot {
         calculatedClosingDateFromToday + startOfDateThatAdCreatedAt.valueOf() <
         ad.createdAtValue
       ) {
-        actionsDerived.push(ad.toResDTO(2))
+        actionsDerived.push(ad.toResDTO(1))
         continue
       }
 
