@@ -17,7 +17,7 @@ import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { JwtService } from '@nestjs/jwt'
 import { Request } from 'express'
-import { PatchWordByIdBodyDTO } from '@/dto/put-word-body.dto'
+import { PatchWordByIdBodyDTO } from '@/dto/patch-word-body.dto'
 import { SemesterService } from '@/services/semester.service'
 import { PostWordRes } from '@/responses/post-word.res'
 

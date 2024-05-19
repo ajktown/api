@@ -12,7 +12,7 @@ import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permis
 import { GetSharedResourceRes } from '@/responses/get-shared-resource.res'
 import { WordModel } from '@/schemas/deprecated-word.schema'
 import { WordDomain } from '../word/word.domain'
-import { PatchSharedResourceDTO } from '@/dto/put-shared-resource-dto'
+import { PatchSharedResourceDTO } from '@/dto/patch-shared-resource-dto'
 
 export class SharedResourceDomain {
   readonly props: ISharedResource

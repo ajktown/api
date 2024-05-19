@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { PreferenceDomain } from '@/domains/preference/preference.domain'
 import { PreferenceModel, PreferenceProps } from '@/schemas/preference.schema'
-import { PatchPreferenceDto } from '@/dto/put-preference.dto'
+import { PatchPreferenceDto } from '@/dto/patch-preference.dto'
 
 @Injectable()
 export class PreferenceService {

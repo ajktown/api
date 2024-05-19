@@ -4,7 +4,7 @@ import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { PreferenceService } from '@/services/preference.service'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
-import { PatchPreferenceDto } from '@/dto/put-preference.dto'
+import { PatchPreferenceDto } from '@/dto/patch-preference.dto'
 
 export enum PreferenceControllerPath {
   GetPreference = `preference`,
