@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { PreferenceDomain } from '@/domains/preference/preference.domain'
 import { PreferenceModel, PreferenceProps } from '@/schemas/preference.schema'
-import { PutPreferenceDto } from '@/dto/put-preference.dto'
+import { PatchPreferenceDto } from '@/dto/patch-preference.dto'
 
 @Injectable()
 export class PreferenceService {
@@ -16,9 +16,9 @@ export class PreferenceService {
     return PreferenceDomain.fromMdbByAtd(atd, this.preferenceModel)
   }
 
-  async put(
+  async patch(
     atd: AccessTokenDomain,
-    dto: PutPreferenceDto,
+    dto: PatchPreferenceDto,
   ): Promise<PreferenceDomain> {
     const domain = await PreferenceDomain.fromMdbByAtd(
       atd,

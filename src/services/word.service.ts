@@ -3,7 +3,7 @@ import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 import { WordDomain } from '@/domains/word/word.domain'
 import { GetWordQueryDTO } from '@/dto/get-word-query.dto'
 import { PostWordBodyDTO } from '@/dto/post-word-body.dto'
-import { PutWordByIdBodyDTO } from '@/dto/put-word-body.dto'
+import { PatchWordByIdBodyDTO } from '@/dto/patch-word-body.dto'
 import { BadRequestError } from '@/errors/400/index.error'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
@@ -80,10 +80,10 @@ export class WordService {
     return WordDomain.fromMdb(await this.wordModel.findById(id).exec())
   }
 
-  async putWordById(
+  async patchWordById(
     id: string,
     atd: AccessTokenDomain,
-    dto: PutWordByIdBodyDTO,
+    dto: PatchWordByIdBodyDTO,
   ): Promise<WordDomain> {
     if (Object.keys(dto).length === 0) {
       throw new BadRequestError('Require at least one or more field to update!')
