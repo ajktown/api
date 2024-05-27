@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, Req, Patch } from '@nestjs/common'
+import { Body, Controller, Get, Req, Patch } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
@@ -23,17 +23,6 @@ export class PreferenceController {
     return (
       await this.preferenceService.get(
         await AccessTokenDomain.fromReq(req, this.jwtService),
-      )
-    ).toResDTO()
-  }
-
-  // TODO: Delete me; deprecated and moved to PATCH instead
-  @Put(PreferenceControllerPath.PatchPreference)
-  async putPreference(@Req() req: Request, @Body() body: PatchPreferenceDto) {
-    return (
-      await this.preferenceService.patch(
-        await AccessTokenDomain.fromReq(req, this.jwtService),
-        body,
       )
     ).toResDTO()
   }
