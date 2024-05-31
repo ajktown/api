@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Query,
   Req,
   Patch,
@@ -74,17 +73,6 @@ export class WordController {
     return (await this.wordService.getById(id)).toResDTO(
       await AccessTokenDomain.fromReq(req, this.jwtService),
     )
-  }
-
-  // TODO: Delete me; deprecated and moved to PATCH instead
-  @Put(WordControllerPath.PatchWordById)
-  async putWordById(
-    @Req() req: Request,
-    @Param('id') id: string,
-    @Body() body: PatchWordByIdBodyDTO,
-  ) {
-    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.wordService.patchWordById(id, atd, body)).toResDTO(atd)
   }
 
   @Patch(WordControllerPath.PatchWordById)
