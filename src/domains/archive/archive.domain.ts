@@ -17,7 +17,11 @@ export class ArchiveDomain extends DomainRoot {
     this.props = props as IArchive
   }
 
-  private static fromDoc(doc: ArchiveDoc): ArchiveDomain {
+  get isActionGroupArchived(): boolean {
+    return !!this.props.actionGroupId
+  }
+
+  static fromDoc(doc: ArchiveDoc): ArchiveDomain {
     if (typeof doc !== 'object') throw new DataNotObjectError()
 
     return new ArchiveDomain({
@@ -53,13 +57,5 @@ export class ArchiveDomain extends DomainRoot {
       message: dto.message,
     })
     return ArchiveDomain.fromDoc(doc)
-  }
-
-  toResDTO(atd: AccessTokenDomain): IArchive {
-    if (atd.userId !== this.props.ownerId) {
-      throw new ReadForbiddenError(atd, `Archive`)
-    }
-
-    return this.props
   }
 }
