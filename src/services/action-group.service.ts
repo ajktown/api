@@ -49,7 +49,13 @@ export class ActionGroupService {
     id: string,
     dto: PostArchiveActionGroupBodyDTO,
   ): Promise<void> {
-    await ArchiveDomain.archiveActionGroup(atd, id, dto, this.actionGroupModel, this.archiveModel)
+    await ArchiveDomain.archiveActionGroup(
+      atd,
+      id,
+      dto,
+      this.actionGroupModel,
+      this.archiveModel,
+    )
   }
 
   async getByUser(id: string): Promise<ActionGroupDomain> {

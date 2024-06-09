@@ -26,13 +26,7 @@ export class RitualDomain extends DomainRoot {
   }
 
   static fromParentRitual(domain: ParentRitualDomain): RitualDomain {
-    const props = domain.toResDTO().ritual
-    return new RitualDomain({
-      id: props.id,
-      ownerId: props.ownerId,
-      name: props.name,
-      orderedActionGroupIds: props.orderedActionGroupIds,
-    })
+    return new RitualDomain(domain.iRitual)
   }
 
   /**

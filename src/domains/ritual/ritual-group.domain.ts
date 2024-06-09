@@ -8,6 +8,9 @@ import { RitualModel } from '@/schemas/ritual.schema'
 import { BadRequestError } from '@/errors/400/index.error'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { ParentRitualDomain } from './parent-ritual.domain'
+import { ArchiveModel } from '@/schemas/archive.schema'
+import { ArchiveDomain } from '../archive/archive.domain'
+import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
 
 export class RitualGroupDomain extends DomainRoot {
   private readonly domains: ParentRitualDomain[]
@@ -31,6 +34,7 @@ export class RitualGroupDomain extends DomainRoot {
     atd: AccessTokenDomain,
     ritualModel: RitualModel,
     actionGroupModel: ActionGroupModel,
+    archiveModel: ArchiveModel,
     disableRecursion: boolean = false,
   ): Promise<RitualGroupDomain> {
     const ritualDocs = await ritualModel.find({
@@ -43,14 +47,35 @@ export class RitualGroupDomain extends DomainRoot {
       }
 
       await RitualDomain.postDefault(atd, ritualModel)
-      return RitualGroupDomain.fromMdb(atd, ritualModel, actionGroupModel, true)
+      return RitualGroupDomain.fromMdb(
+        atd,
+        ritualModel,
+        actionGroupModel,
+        archiveModel,
+        true,
+      )
     }
+
+    // Retrieve archived action group ids:
+    const docs = await archiveModel.find({
+      ownerId: atd.userId,
+    })
+    const archivedActionGroupIds = docs
+      .map((doc) => ArchiveDomain.fromDoc(doc))
+      .filter((d) => d.isActionGroupArchived)
+      .map((d) => d.actionGroupId)
 
     const actionGroupDocs = await actionGroupModel.find({
       ownerId: atd.userId,
     })
     return new RitualGroupDomain(
-      ritualDocs.map((doc) => ParentRitualDomain.fromDoc(doc, actionGroupDocs)),
+      ritualDocs.map((doc) =>
+        ParentRitualDomain.fromDoc(
+          doc,
+          actionGroupDocs,
+          archivedActionGroupIds,
+        ),
+      ),
     )
   }
 
@@ -63,6 +88,7 @@ export class RitualGroupDomain extends DomainRoot {
     userDomain: UserDomain,
     ritualModel: RitualModel,
     actionGroupModel: ActionGroupModel,
+    archiveModel: ArchiveModel,
   ): Promise<RitualGroupDomain> {
     const ritualDocs = await ritualModel.find({
       ownerId: userDomain.id,
@@ -75,14 +101,32 @@ export class RitualGroupDomain extends DomainRoot {
     const actionGroupDocs = await actionGroupModel.find({
       ownerId: userDomain.id,
     })
+
+    // Retrieve archived action group ids:
+    const docs = await archiveModel.find({
+      ownerId: userDomain.id,
+    })
+    const archivedActionGroupIds = docs
+      .map((doc) => ArchiveDomain.fromDoc(doc))
+      .filter((d) => d.isActionGroupArchived)
+      .map((d) => d.actionGroupId)
+
     return new RitualGroupDomain(
-      ritualDocs.map((doc) => ParentRitualDomain.fromDoc(doc, actionGroupDocs)),
+      ritualDocs.map((doc) =>
+        ParentRitualDomain.fromDoc(
+          doc,
+          actionGroupDocs,
+          archivedActionGroupIds,
+        ),
+      ),
     )
   }
 
-  toResDTO(atd: AccessTokenDomain): GetRitualsRes {
+  toResDTO(atd: AccessTokenDomain, dto: GetRitualQueryDTO): GetRitualsRes {
     return {
-      rituals: this.domains.map((domain) => domain.toDerivedResDTO(atd).ritual),
+      rituals: this.domains.map(
+        (domain) => domain.toDerivedResDTO(atd, dto).ritual,
+      ),
     }
   }
 

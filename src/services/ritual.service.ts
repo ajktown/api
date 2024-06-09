@@ -11,6 +11,7 @@ import { RitualModel, RitualProps } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 import { ParentRitualDomain } from '@/domains/ritual/parent-ritual.domain'
 import { RitualDomain } from '@/domains/ritual/ritual.domain'
+import { ArchiveModel, ArchiveProps } from '@/schemas/archive.schema'
 
 @Injectable()
 export class RitualService {
@@ -19,6 +20,8 @@ export class RitualService {
     private ritualModel: RitualModel,
     @InjectModel(ActionGroupProps.name)
     private actionGroupModel: ActionGroupModel,
+    @InjectModel(ArchiveProps.name)
+    private archiveModel: ArchiveModel,
   ) {}
 
   /**
@@ -29,6 +32,7 @@ export class RitualService {
       atd,
       this.ritualModel,
       this.actionGroupModel,
+      this.archiveModel,
     )
   }
 
@@ -40,6 +44,7 @@ export class RitualService {
       userDomain,
       this.ritualModel,
       this.actionGroupModel,
+      this.archiveModel,
     )
   }
 

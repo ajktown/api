@@ -6,7 +6,6 @@ import { BadRequestError } from '@/errors/400/index.error'
 import { DataNotObjectError } from '@/errors/400/data-not-object.error'
 import { PostArchiveActionGroupBodyDTO } from '@/dto/post-archived-action-group.dto'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
-import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupModel } from '@/schemas/action-group.schema'
 
 export class ArchiveDomain extends DomainRoot {
@@ -19,6 +18,10 @@ export class ArchiveDomain extends DomainRoot {
 
   get isActionGroupArchived(): boolean {
     return !!this.props.actionGroupId
+  }
+
+  get actionGroupId(): string {
+    return this.props.actionGroupId || ''
   }
 
   static fromDoc(doc: ArchiveDoc): ArchiveDomain {
@@ -42,10 +45,14 @@ export class ArchiveDomain extends DomainRoot {
     // check if such action group exists in the database OR it is owned by the user:
     const actionGroup = await model.findById(id)
     if (!actionGroup) throw new NotExistOrNoPermissionError()
-    if (actionGroup.ownerId !== atd.userId) throw new NotExistOrNoPermissionError()
+    if (actionGroup.ownerId !== atd.userId)
+      throw new NotExistOrNoPermissionError()
 
     // check if action group is already archived:
-    const docs = await archiveModel.find({ ownerId: atd.userId, actionGroupId: id })
+    const docs = await archiveModel.find({
+      ownerId: atd.userId,
+      actionGroupId: id,
+    })
     if (0 < docs.length) {
       throw new BadRequestError('Already archived action group')
     }
