@@ -14,6 +14,7 @@ import { GetWordQueryFactory } from '@/factories/get-word-query.factory'
 import { ActionGroupService } from '@/services/action-group.service'
 import { ritualModelDefinition } from '@/schemas/ritual.schema'
 import { preferenceModelDefinition } from '@/schemas/preference.schema'
+import { archiveModelDefinition } from '@/schemas/archive.schema'
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { preferenceModelDefinition } from '@/schemas/preference.schema'
       actionModelDefinition,
       ritualModelDefinition,
       preferenceModelDefinition,
+      archiveModelDefinition,
     ]),
   ],
   controllers: [UserController],

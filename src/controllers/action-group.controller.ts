@@ -6,6 +6,7 @@ import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { ActionGroupService } from '@/services/action-group.service'
 import { PostActionGroupDTO } from '@/dto/post-action-group.dto'
 import { PostActionBodyDTO } from '@/dto/post-action.dto'
+import { PostArchiveActionGroupBodyDTO } from '@/dto/post-archived-action-group.dto'
 
 /**
  * Warning: Since Action Group is a huge domain, it only returns the ids of the action groups.
@@ -13,6 +14,7 @@ import { PostActionBodyDTO } from '@/dto/post-action.dto'
 export enum ActionGroupControllerPath {
   PostActionGroup = `action-groups`,
   PostActionByActionGroup = `action-groups/:id/actions`,
+  PostArchiveActionGroup = `action-groups/:id/archive`,
   GetActionGroupById = `action-groups/:id`,
   DeleteTodayActionByActionGroup = `action-groups/:id/actions/today`,
 }
@@ -43,6 +45,19 @@ export class ActionGroupController {
     return (
       await this.actionGroupService.postActionByActionGroup(atd, id, dto)
     ).toResDTO(atd)
+  }
+
+  @Post(ActionGroupControllerPath.PostArchiveActionGroup)
+  async postArchiveActionGroup(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() dto: PostArchiveActionGroupBodyDTO,
+  ) {
+    await this.actionGroupService.archiveActionGroup(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      id,
+      dto,
+    )
   }
 
   @Get(ActionGroupControllerPath.GetActionGroupById)

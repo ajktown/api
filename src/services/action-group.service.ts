@@ -12,12 +12,17 @@ import { InjectModel } from '@nestjs/mongoose'
 import { ActionGroupFixedId } from '@/constants/action-group.const'
 import { ActionModel, ActionProps } from '@/schemas/action.schema'
 import { PostActionBodyDTO } from '@/dto/post-action.dto'
+import { PostArchiveActionGroupBodyDTO } from '@/dto/post-archived-action-group.dto'
+import { ArchiveModel, ArchiveProps } from '@/schemas/archive.schema'
+import { ArchiveDomain } from '@/domains/archive/archive.domain'
 
 @Injectable()
 export class ActionGroupService {
   constructor(
     @InjectModel(ActionGroupProps.name)
     private actionGroupModel: ActionGroupModel,
+    @InjectModel(ArchiveProps.name)
+    private archiveModel: ArchiveModel,
     @InjectModel(ActionProps.name)
     private actionModel: ActionModel,
     private wordService: WordService,
@@ -37,6 +42,14 @@ export class ActionGroupService {
   ): Promise<ActionGroupDomain> {
     const actionGroup = await this.getById(atd, id)
     return actionGroup.postAction(atd, dto, this.actionModel)
+  }
+
+  async archiveActionGroup(
+    atd: AccessTokenDomain,
+    id: string,
+    dto: PostArchiveActionGroupBodyDTO,
+  ): Promise<void> {
+    await ArchiveDomain.archiveActionGroup(atd, id, dto, this.actionGroupModel, this.archiveModel)
   }
 
   async getByUser(id: string): Promise<ActionGroupDomain> {
