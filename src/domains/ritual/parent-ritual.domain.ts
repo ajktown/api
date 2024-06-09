@@ -71,7 +71,6 @@ export class ParentRitualDomain extends DomainRoot {
   }
 
   toResDTO(dto: GetRitualQueryDTO): GetRitualByIdRes {
-    console.log(dto, this.props.archivedActionGroupSet)
     if (!dto || dto.isArchived === undefined) {
       return {
         ritual: this.props,
