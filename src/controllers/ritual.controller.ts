@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Patch, Req } from '@nestjs/common'
+import { Body, Controller, Get, Patch, Query, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { RitualService } from '@/services/ritual.service'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
 
 /**
  * Warning: Since Action Group is a huge domain, it only returns the ids of the action groups.
@@ -23,9 +24,9 @@ export class RitualController {
   ) {}
 
   @Get(RitualControllerPath.GetRituals)
-  async getRituals(@Req() req: Request) {
+  async getRituals(@Req() req: Request, @Query() dto: GetRitualQueryDTO) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.ritualService.byAtd(atd)).toResDTO(atd)
+    return (await this.ritualService.byAtd(atd)).toResDTO(atd, dto)
   }
 
   @Patch(RitualControllerPath.PatchDefaultRitual)
@@ -34,6 +35,6 @@ export class RitualController {
     @Body() dto: PatchRitualGroupBodyDTO,
   ) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.ritualService.patchDefault(atd, dto)).toResDTO()
+    return (await this.ritualService.patchDefault(atd, dto)).toResDTO(undefined)
   }
 }

@@ -1,10 +1,11 @@
 import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
-import { IParentRitual } from './index.interface'
+import { IParentRitual, IRitual } from './index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupDoc } from '@/schemas/action-group.schema'
 import { RitualDoc } from '@/schemas/ritual.schema'
 import { GetRitualByIdRes } from '@/responses/get-ritual.res'
+import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
 
 /**
  * ParentRitualDomain has both values:
@@ -28,12 +29,22 @@ export class ParentRitualDomain extends DomainRoot {
     return this.props.id
   }
 
+  get iRitual(): IRitual {
+    return {
+      id: this.props.id,
+      ownerId: this.props.ownerId,
+      name: this.props.name,
+      orderedActionGroupIds: this.props.orderedActionGroupIds,
+    }
+  }
+
   /**
    * ParentRitual takes responsibility of the order of action groups
    */
   static fromDoc(
     doc: RitualDoc,
     actionGroupDocs: ActionGroupDoc[],
+    archivedActionGroupIds: string[],
   ): ParentRitualDomain {
     // map contains user's own order of action groups
     // the lower the i (or index), the higher the priority it should be seen
@@ -55,24 +66,57 @@ export class ParentRitualDomain extends DomainRoot {
           return a.openMinsAfter - b.openMinsAfter
         })
         .map((doc) => doc.id),
+      archivedActionGroupSet: new Set(archivedActionGroupIds),
     })
   }
 
-  toResDTO(): GetRitualByIdRes {
+  toResDTO(dto: GetRitualQueryDTO): GetRitualByIdRes {
+    if (!dto || dto.isArchived === undefined) {
+      return {
+        ritual: this.props,
+      }
+    }
+
+    if (dto.isArchived) {
+      return {
+        ritual: {
+          ...this.props,
+          actionGroupIds: this.props.actionGroupIds.filter((id) =>
+            this.props.archivedActionGroupSet.has(id),
+          ),
+          orderedActionGroupIds: this.props.orderedActionGroupIds.filter((id) =>
+            this.props.archivedActionGroupSet.has(id),
+          ),
+        },
+      }
+    }
+
     return {
-      ritual: this.props,
+      ritual: {
+        ...this.props,
+        actionGroupIds: this.props.actionGroupIds.filter(
+          (id) => !this.props.archivedActionGroupSet.has(id),
+        ),
+        orderedActionGroupIds: this.props.orderedActionGroupIds.filter(
+          (id) => !this.props.archivedActionGroupSet.has(id),
+        ),
+      },
     }
   }
 
-  toDerivedResDTO(atd: AccessTokenDomain): GetRitualByIdRes {
+  toDerivedResDTO(
+    atd: AccessTokenDomain,
+    dto: GetRitualQueryDTO,
+  ): GetRitualByIdRes {
     if (atd.userId !== this.props.ownerId) {
       throw new ReadForbiddenError(atd, `ParentRitual`)
     }
-    return this.toResDTO() // for now only
+    return this.toResDTO(dto) // for now only
   }
 
   // TODO: This should return GetSharedRitualsRes or something
   toSharedResDTO(): GetRitualByIdRes {
-    return this.toResDTO() // for now only
+    // Only non-archived action groups visible at this moment:
+    return this.toResDTO({ isArchived: false }) // for now only
   }
 }

@@ -33,6 +33,14 @@ export const intoBoolean = ({ value }: TransformFnParams): boolean => {
   throw new BadRequestError('Invalid boolean value')
 }
 
+/** converts into boolean OR undefined */
+export const intoBooleanOrUndefined = (
+  params: TransformFnParams,
+): boolean | undefined => {
+  if (params.value === undefined) return undefined
+  return intoBoolean(params)
+}
+
 export const intoNumber = ({ value }: TransformFnParams): number => {
   const num = Number(value)
   if (!isNaN(num)) return num

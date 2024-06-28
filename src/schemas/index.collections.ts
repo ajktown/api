@@ -7,6 +7,7 @@ export enum SchemaCollectionName {
   Preferences = `preferences`,
   SharedResources = `shared-resources`,
   Actions = 'actions',
+  Archives = `archives`,
   ActionGroups = 'action-groups',
   Rituals = `rituals`,
 }

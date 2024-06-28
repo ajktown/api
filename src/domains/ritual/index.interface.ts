@@ -18,4 +18,5 @@ export interface IRitual {
 
 export interface IParentRitual extends IRitual {
   actionGroupIds: string[]
+  archivedActionGroupSet: Set<string>
 }
