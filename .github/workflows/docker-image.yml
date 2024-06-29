@@ -26,7 +26,7 @@ jobs:
 
     - name: Build the Docker image for PR
       if: github.event_name == 'pull_request'
-      run: docker build . --file Dockerfile --tag ajktown/api:pr-${{ github.event.pull_request.number }}
+      run: docker build . --file Dockerfile --tag ajktown/api:pr${{ github.event.pull_request.number }}
 
     - name: Push the Docker image for PR
       if: github.event_name == 'pull_request'
