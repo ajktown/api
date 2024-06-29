@@ -30,7 +30,7 @@ jobs:
 
     - name: Push the Docker image for PR
       if: github.event_name == 'pull_request'
-      run: docker push ajktown/api:pr-${{ github.event.pull_request.number }}
+      run: docker push ajktown/api:pr${{ github.event.pull_request.number }}
 
     - name: Build the Docker image as latest
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
