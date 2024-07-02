@@ -12,7 +12,7 @@
   - [Overview](#overview)
   - [For Developers](#for-developers)
   - [Public Image](#public-image)
-    - [Push image command](#push-image-command)
+    - [Push image command locally](#push-image-command-locally)
   - [For Envoy](#for-envoy)
   - [About the starter of this project](#about-the-starter-of-this-project)
     - [Description](#description)
@@ -37,13 +37,12 @@ https://api.ajktown.com
 
 https://hub.docker.com/r/ajktown/api/tags
 
-### Push image command
-You musth have permission to push to the repository.
+### Push image command locally
+By default, the GitHub Action will build and push the image to the Docker Hub. If you want to push the image locally, you can use the following commands:
 ```sh
 
 docker build -t ajktown/api:latest .
 docker push ajktown/api:latest
-kubectl apply -f k8s
 
 ```
 
