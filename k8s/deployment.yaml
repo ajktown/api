@@ -52,7 +52,7 @@ spec:
         - name: LISTENING_PORT
           value: "3000"
         - name: ALLOWED_CORS
-          value: "https://wordnote.ajktown.com,https://consistency.ajktown.com"
+          value: "https://wordnote.ajktown.com,https://consistency.ajktown.com,https://golf.ajktown.com"
         - name: ENV
           value: "prod"
         - name: IS_CHAT_GPT_ENABLED
