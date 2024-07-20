@@ -43,7 +43,7 @@ export const envLambda = {
   },
   getCorsOrigin: (): string[] => {
     const got = envLambda.get(SupportedEnvAttr.Cors)
-    if (!got) return ['http://localhost:3000,http://localhost:3100'] // default value
+    if (!got) return ['http://localhost:3000,http://localhost:3100','http://localhost:3200'] // default value
 
     return got.split(',')
   },
