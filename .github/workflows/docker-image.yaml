@@ -32,10 +32,10 @@ jobs:
       if: github.event_name == 'pull_request'
       run: docker push ajktown/api:pr${{ github.event.pull_request.number }}
 
-    - name: Build the Docker image as latest
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: docker build . --file Dockerfile --tag ajktown/api:latest
+    # - name: Build the Docker image as latest
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: docker build . --file Dockerfile --tag ajktown/api:latest
 
-    - name: Push the Docker image as latest
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: docker push ajktown/api:latest
+    # - name: Push the Docker image as latest
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: docker push ajktown/api:latest
