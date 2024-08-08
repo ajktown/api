@@ -35,6 +35,6 @@ export class RitualController {
     @Body() dto: PatchRitualGroupBodyDTO,
   ) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    return (await this.ritualService.patchDefault(atd, dto)).toResDTO(undefined)
+    return (await this.ritualService.patchDefault(atd, dto)).toResDTO(dto)
   }
 }

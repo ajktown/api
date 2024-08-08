@@ -6,6 +6,7 @@ import { ActionGroupDoc } from '@/schemas/action-group.schema'
 import { RitualDoc } from '@/schemas/ritual.schema'
 import { GetRitualByIdRes } from '@/responses/get-ritual.res'
 import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
+import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
 
 /**
  * ParentRitualDomain has both values:
@@ -70,8 +71,8 @@ export class ParentRitualDomain extends DomainRoot {
     })
   }
 
-  toResDTO(dto: GetRitualQueryDTO): GetRitualByIdRes {
-    if (!dto || dto.isArchived === undefined) {
+  toResDTO(dto: GetRitualQueryDTO | PatchRitualGroupBodyDTO): GetRitualByIdRes {
+    if (dto?.isArchived === undefined) {
       return {
         ritual: this.props,
       }
