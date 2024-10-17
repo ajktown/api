@@ -27,6 +27,7 @@ export interface IActionGroupInput extends DataBasicsDate {
 }
 
 export interface IActionGroup extends IActionGroupInput {
+  firstYear: number // first year that this action group is created
   openAt: Date
   closeAt: Date
   utc: string // i.e) +9:00 (timezone is private to shared data)
