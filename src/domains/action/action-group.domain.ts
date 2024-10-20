@@ -72,6 +72,7 @@ export class ActionGroupDomain extends DomainRoot {
     )
     this.props = {
       ...props,
+      firstYear: timeHandler.getYear(props.createdAt, props.timezone),
       openAt,
       closeAt,
       utc: '+9:00', // TODO: Get it from props.timezone. I dont know how at this point

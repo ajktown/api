@@ -26,6 +26,14 @@ export const timeHandler = {
 
     return ((now.valueOf() - convertedDate.valueOf()) / DAY_IN_MS) | 0
   },
+  /**
+   * Returns the year of the given date
+   * @returns year like 2022, 2023 etc
+   */
+  getYear: (givenDate: JsDateAccepter, timezone: string): number => {
+    return DateTime.fromJSDate(new Date(givenDate)).setZone(timezone).year
+  },
+
   /** Returns JS Start Date and End Date from given nDaysAgo */
   getDateFromDaysAgo: (nDaysAgo: number, timezone: string): [Date, Date] => {
     const nDaysAgoDate = DateTime.now()
