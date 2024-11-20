@@ -22,13 +22,13 @@ import { InjectModel } from '@nestjs/mongoose'
 export class WordService {
   constructor(
     @InjectModel(WordProps.name)
-    private wordModel: WordModel,
+    private readonly wordModel: WordModel,
     @InjectModel(SupportProps.name)
-    private supportModel: SupportModel,
+    private readonly supportModel: SupportModel,
     @InjectModel(PreferenceProps.name)
-    private preferenceModel: PreferenceModel,
-    private termToExamplePrompt: TermToExamplePrompt,
-    private getWordQueryFactory: GetWordQueryFactory,
+    private readonly preferenceModel: PreferenceModel,
+    private readonly termToExamplePrompt: TermToExamplePrompt,
+    private readonly getWordQueryFactory: GetWordQueryFactory,
     private readonly logger: Logger,
   ) {}
 

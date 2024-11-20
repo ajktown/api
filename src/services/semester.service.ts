@@ -18,10 +18,10 @@ import { WordChunkDomain } from '@/domains/word/word-chunk.domain'
 export class SemesterService {
   constructor(
     @InjectModel(WordProps.name)
-    private wordModel: WordModel,
+    private readonly wordModel: WordModel,
     @InjectModel(SupportProps.name)
-    private supportModel: SupportModel,
-    private getWordQueryFactory: GetWordQueryFactory,
+    private readonly supportModel: SupportModel,
+    private readonly getWordQueryFactory: GetWordQueryFactory,
   ) {}
 
   async getSemesters(atd: AccessTokenDomain): Promise<SemesterChunkDomain> {

@@ -20,12 +20,12 @@ import { ArchiveDomain } from '@/domains/archive/archive.domain'
 export class ActionGroupService {
   constructor(
     @InjectModel(ActionGroupProps.name)
-    private actionGroupModel: ActionGroupModel,
+    private readonly actionGroupModel: ActionGroupModel,
     @InjectModel(ArchiveProps.name)
-    private archiveModel: ArchiveModel,
+    private readonly archiveModel: ArchiveModel,
     @InjectModel(ActionProps.name)
-    private actionModel: ActionModel,
-    private wordService: WordService,
+    private readonly actionModel: ActionModel,
+    private readonly wordService: WordService,
   ) {}
 
   async post(
