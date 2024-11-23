@@ -16,8 +16,8 @@ import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permis
 export class SharedResourceService {
   constructor(
     @InjectModel(SharedResourceProps.name)
-    private sharedResourceModel: SharedResourceModel,
-    private wordService: WordService,
+    private readonly sharedResourceModel: SharedResourceModel,
+    private readonly wordService: WordService,
   ) {}
 
   async post(

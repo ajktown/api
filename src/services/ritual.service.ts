@@ -17,11 +17,11 @@ import { ArchiveModel, ArchiveProps } from '@/schemas/archive.schema'
 export class RitualService {
   constructor(
     @InjectModel(RitualProps.name)
-    private ritualModel: RitualModel,
+    private readonly ritualModel: RitualModel,
     @InjectModel(ActionGroupProps.name)
-    private actionGroupModel: ActionGroupModel,
+    private readonly actionGroupModel: ActionGroupModel,
     @InjectModel(ArchiveProps.name)
-    private archiveModel: ArchiveModel,
+    private readonly archiveModel: ArchiveModel,
   ) {}
 
   /**

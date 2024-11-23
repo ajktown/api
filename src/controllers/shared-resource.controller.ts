@@ -24,9 +24,9 @@ export class SharedResourceController {
     private readonly jwtService: JwtService,
     private readonly sharedResourceService: SharedResourceService,
     @InjectModel(SharedResourceProps.name)
-    private sharedResourceModel: SharedResourceModel,
+    private readonly sharedResourceModel: SharedResourceModel,
     @InjectModel(WordProps.name)
-    private wordModel: WordModel,
+    private readonly wordModel: WordModel,
   ) {}
 
   @Post(SharedResourceControllerPath.PostSharedResource)

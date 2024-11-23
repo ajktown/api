@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose'
 export class UserService {
   constructor(
     @InjectModel(UserProps.name)
-    private userModel: UserModel,
+    private readonly userModel: UserModel,
   ) {}
 
   // TODO: Should return domain, but for now, simplicity.
