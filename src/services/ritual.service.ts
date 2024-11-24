@@ -48,16 +48,18 @@ export class RitualService {
     )
   }
 
+  /**
+   * This method will update for you, but won't return updated version.
+   * just simply use the byAtd or byUser according to your needs.
+   */
   async patchDefault(
     atd: AccessTokenDomain,
     dto: PatchRitualGroupBodyDTO,
-  ): Promise<ParentRitualDomain> {
+  ): Promise<void> {
     const ritualGroup = await this.byAtd(atd)
     await RitualDomain.fromParentRitual(ritualGroup.getDefault()).patch(
       dto,
       this.ritualModel,
     )
-
-    return (await this.byAtd(atd)).getDefault()
   }
 }
