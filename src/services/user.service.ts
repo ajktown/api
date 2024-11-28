@@ -29,6 +29,10 @@ export class UserService {
   }
 
   async patchUser(atd: AccessTokenDomain, body: PatchUserDTO): Promise<void> {
+    // if body length is 0, it is a bad request:
+    if (Object.keys(body).length === 0)
+      throw new BadRequestError('Body [PatchUserDTO] is empty')
+
     // nicname update requires the following check:
     // the nickname must be unique:
 
