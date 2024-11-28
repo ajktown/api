@@ -29,6 +29,7 @@ export class UserDomain {
     return new UserDomain({
       id: 'abc',
       federalID: 'abc',
+      nickname: 'mlajkim',
       givenName: 'AJ',
       familyName: 'Kim',
       email: 'jkim67cloud@gmail.com',
@@ -89,6 +90,7 @@ export class UserDomain {
     return new UserDomain({
       id: props.id,
       federalID: props.federalID,
+      nickname: props.nickname,
       givenName: props.firstName,
       familyName: props.lastName,
       email: props.email,

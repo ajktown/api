@@ -1,8 +1,12 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Body, Controller, Get, Param, Patch, Req } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { RitualService } from '@/services/ritual.service'
 import { UserService } from '@/services/user.service'
 import { ActionGroupService } from '@/services/action-group.service'
+import { JwtService } from '@nestjs/jwt'
+import { PatchUserDTO } from '@/dto/patch-user.dto'
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
+import { Request } from 'express'
 
 /**
  * Every endpoints of UserController is public and does not require any authentication.
@@ -11,6 +15,7 @@ import { ActionGroupService } from '@/services/action-group.service'
  */
 export enum UserControllerPath {
   GetUsers = `users`,
+  PatchUsers = `users`,
   GetUserByNickname = `users/mlajkim`,
   GetRitualsOfUserByNickname = `users/mlajkim/rituals`, // it is fixed to mlajkim as this point
   GetActionGroupsOfUserById = `users/mlajkim/action-groups/:id`, // it is fixed to mlajkim as this point
@@ -18,6 +23,7 @@ export enum UserControllerPath {
 @Controller(AjkTownApiVersion.V1)
 export class UserController {
   constructor(
+    private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly ritualService: RitualService,
     private readonly actionGroupService: ActionGroupService,
@@ -26,6 +32,14 @@ export class UserController {
   @Get(UserControllerPath.GetUsers)
   async getUsers() {
     return this.userService.getUsers()
+  }
+
+  @Patch(UserControllerPath.PatchUsers)
+  async patchUsers(@Body() body: PatchUserDTO, @Req() req: Request) {
+    return this.userService.patchUser(
+      await AccessTokenDomain.fromReq(req, this.jwtService),
+      body,
+    )
   }
 
   @Get(UserControllerPath.GetUserByNickname)

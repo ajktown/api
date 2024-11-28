@@ -50,10 +50,14 @@ export class OauthPayloadDomain {
     }
   }
 
+  /**
+   * This method is used to create a new user from the OAuth payload from trusted provider like Google etc
+   */
   toUserModel(userModel: UserModel): UserDoc {
     const props: UserProps = {
       federalProvider: this.props.federalProvider,
       federalID: this.props.federalId,
+      nickname: undefined, // nickname is first undefined, and users will be asked to set it later
       firstName: this.props.firstName,
       lastName: this.props.lastName,
       email: this.props.userEmail,

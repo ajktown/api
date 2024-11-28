@@ -1,4 +1,6 @@
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { UserDomain } from '@/domains/user/user.domain'
+import { PatchUserDTO } from '@/dto/patch-user.dto'
 import { BadRequestError } from '@/errors/400/index.error'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { GetUsersRes } from '@/responses/get-users.res'
@@ -24,6 +26,21 @@ export class UserService {
       .map((user) => new Date(user.dateAdded).toISOString())
 
     return { totalNumberOfUsers, lastFiveJoinedDate }
+  }
+
+  async patchUser(atd: AccessTokenDomain, body: PatchUserDTO): Promise<void> {
+    // nicname update requires the following check:
+    // the nickname must be unique:
+
+    const users = await this.userModel.find({ nickname: body.nickname })
+    if (users.length > 0)
+      throw new BadRequestError(`Nickname [${body.nickname}] already exists`)
+
+    // update the user
+    await this.userModel.updateOne(
+      { _id: atd.userId },
+      { nickname: body.nickname },
+    )
   }
 
   /** Returns user by nickname */
