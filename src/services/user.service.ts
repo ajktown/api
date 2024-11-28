@@ -28,7 +28,7 @@ export class UserService {
     return { totalNumberOfUsers, lastFiveJoinedDate }
   }
 
-  async patchUser(atd: AccessTokenDomain, body: PatchUserDTO): Promise<void> {
+  async patchUser(atd: AccessTokenDomain, body: PatchUserDTO): Promise<UserDomain> {
     // if body length is 0, it is a bad request:
     if (Object.keys(body).length === 0)
       throw new BadRequestError('Body [PatchUserDTO] is empty')
@@ -36,15 +36,21 @@ export class UserService {
     // nicname update requires the following check:
     // the nickname must be unique:
 
+    // TODO: Right now only can update the nickname, and therefore only check the nickname.
     const users = await this.userModel.find({ nickname: body.nickname })
     if (users.length > 0)
       throw new BadRequestError(`Nickname [${body.nickname}] already exists`)
 
-    // update the user
-    await this.userModel.updateOne(
-      { _id: atd.userId },
-      { nickname: body.nickname },
-    )
+    // update based on the user's email, as email is the unique identifier
+    return UserDomain.fromMdb(await this.userModel
+      .findOneAndUpdate(
+        { email: atd.email },
+        {
+          nickname: body.nickname,
+        },
+        { new: true },
+      )
+      .exec())
   }
 
   /** Returns user by nickname */
