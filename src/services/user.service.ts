@@ -47,8 +47,15 @@ export class UserService {
         `Multiple users with nickname [${body.nickname}] found`,
       )
 
-    if (users.length > 0)
+    if (users.length > 0) {
+      if (users[0].email === atd.email) {
+        throw new BadRequestError(
+          `Your nickname [${users[0].nickname}] is already set as [${body.nickname}]`,
+        )
+      }
+
       throw new BadRequestError(`Nickname [${body.nickname}] already exists`)
+    }
 
     // update based on the user's email, as email is the unique identifier
     return UserDomain.fromMdb(
