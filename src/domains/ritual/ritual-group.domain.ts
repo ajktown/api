@@ -5,12 +5,12 @@ import { GetRitualsRes } from '@/responses/get-ritual.res'
 import { RitualDomain } from './ritual.domain'
 import { UserDomain } from '../user/user.domain'
 import { RitualModel } from '@/schemas/ritual.schema'
-import { BadRequestError } from '@/errors/400/index.error'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
 import { ParentRitualDomain } from './parent-ritual.domain'
 import { ArchiveModel } from '@/schemas/archive.schema'
 import { ArchiveDomain } from '../archive/archive.domain'
 import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
+import { CriticalError } from '@/errors/500/critical.error'
 
 export class RitualGroupDomain extends DomainRoot {
   private readonly domains: ParentRitualDomain[]
@@ -43,7 +43,9 @@ export class RitualGroupDomain extends DomainRoot {
 
     if (ritualDocs.length === 0) {
       if (disableRecursion) {
-        throw new BadRequestError('Something went wrong critically')
+        throw new CriticalError(
+          'RitualDocs are still not found when recursion is disabled',
+        )
       }
 
       await RitualDomain.postDefault(atd, ritualModel)

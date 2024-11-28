@@ -36,10 +36,12 @@ export class UserController {
 
   @Patch(UserControllerPath.PatchUsers)
   async patchUsers(@Body() body: PatchUserDTO, @Req() req: Request) {
-    return (await this.userService.patchUser(
-      await AccessTokenDomain.fromReq(req, this.jwtService),
-      body,
-    )).toResDTO()
+    return (
+      await this.userService.patchUser(
+        await AccessTokenDomain.fromReq(req, this.jwtService),
+        body,
+      )
+    ).toResDTO()
   }
 
   @Get(UserControllerPath.GetUserByNickname)
