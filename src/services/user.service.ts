@@ -1,5 +1,8 @@
+import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { UserDomain } from '@/domains/user/user.domain'
+import { PatchUserDTO } from '@/dto/patch-user.dto'
 import { BadRequestError } from '@/errors/400/index.error'
+import { CriticalError } from '@/errors/500/critical.error'
 import { envLambda } from '@/lambdas/get-env.lambda'
 import { GetUsersRes } from '@/responses/get-users.res'
 import { UserModel, UserProps } from '@/schemas/deprecated-user.schema'
@@ -24,6 +27,48 @@ export class UserService {
       .map((user) => new Date(user.dateAdded).toISOString())
 
     return { totalNumberOfUsers, lastFiveJoinedDate }
+  }
+
+  async patchUser(
+    atd: AccessTokenDomain,
+    body: PatchUserDTO,
+  ): Promise<UserDomain> {
+    // if body length is 0, it is a bad request:
+    if (Object.keys(body).length === 0)
+      throw new BadRequestError('Body [PatchUserDTO] is empty')
+
+    // nicname update requires the following check:
+    // the nickname must be unique:
+
+    // TODO: Right now only can update the nickname, and therefore only check the nickname.
+    const users = await this.userModel.find({ nickname: body.nickname })
+    if (users.length > 1)
+      throw new CriticalError(
+        `Multiple users with nickname [${body.nickname}] found`,
+      )
+
+    if (users.length > 0) {
+      if (users[0].email === atd.email) {
+        throw new BadRequestError(
+          `Your nickname [${users[0].nickname}] is already set as [${body.nickname}]`,
+        )
+      }
+
+      throw new BadRequestError(`Nickname [${body.nickname}] already exists`)
+    }
+
+    // update based on the user's email, as email is the unique identifier
+    return UserDomain.fromMdb(
+      await this.userModel
+        .findOneAndUpdate(
+          { email: atd.email },
+          {
+            nickname: body.nickname,
+          },
+          { new: true },
+        )
+        .exec(),
+    )
   }
 
   /** Returns user by nickname */

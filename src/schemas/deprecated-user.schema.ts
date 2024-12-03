@@ -22,6 +22,9 @@ export class UserProps {
   federalID: string
 
   @Prop()
+  nickname: undefined | string // undefined if not yet set
+
+  @Prop()
   lastName: string
 
   @Prop()
