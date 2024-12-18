@@ -31,6 +31,7 @@ interface ActionGroupDerivedState {
 }
 export interface GetActionGroupRes {
   props: IActionGroup
+  streak: number
   actionsLength: number
   isTodayHandled: boolean
   totalCount: number
