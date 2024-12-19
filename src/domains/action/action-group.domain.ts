@@ -333,7 +333,7 @@ export class ActionGroupDomain extends DomainRoot {
       //
       // if no action committed in the first place, it is level 0:
       if (!ad) {
-        streak = 0 // reset streak as it is not committed
+        if (date !== end) streak = 0 // reset streak as it is not committed (BUT today is inclusive)
         actionsDerived.push(
           ActionDomain.fromEmpty(
             this.props.id,
@@ -345,7 +345,7 @@ export class ActionGroupDomain extends DomainRoot {
       }
       // if dummy, level 0:
       if (ad.isDummy) {
-        streak = 0 // reset streak as it is not committedstreaks = 0 // reset streak as it is not committed
+        streak = 0 // Dummy commit is considered no longer doable. So, reset streak.
         actionsDerived.push(ad.toResDTO(0))
         continue
       }
