@@ -333,7 +333,9 @@ export class ActionGroupDomain extends DomainRoot {
       //
       // if no action committed in the first place, it is level 0:
       if (!ad) {
-        if (date !== end) streak = 0 // reset streak as it is not committed (BUT today is inclusive)
+        // reset streak as it is not committed (BUT today is inclusive):
+        if (date.valueOf() !== end.valueOf()) streak = 0
+
         actionsDerived.push(
           ActionDomain.fromEmpty(
             this.props.id,
@@ -351,7 +353,7 @@ export class ActionGroupDomain extends DomainRoot {
       }
 
       // From now on, action is done despite it is late:
-      streak += 1 // increment streak
+      streak += 1
 
       // if action committed but is late for that date, it is level 1:
       // make sure to subtract this.props.closeAt.valueOf() from the days behind
