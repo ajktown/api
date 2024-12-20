@@ -319,7 +319,7 @@ export class ActionGroupDomain extends DomainRoot {
     )
 
     const actionsDerived: IActionDerived[] = []
-
+    let streak = 0 // To motivate users to keep the streak
     for (
       let date = start;
       date <= end;
@@ -333,6 +333,9 @@ export class ActionGroupDomain extends DomainRoot {
       //
       // if no action committed in the first place, it is level 0:
       if (!ad) {
+        // reset streak as it is not committed (BUT today is inclusive):
+        if (date.valueOf() !== end.valueOf()) streak = 0
+
         actionsDerived.push(
           ActionDomain.fromEmpty(
             this.props.id,
@@ -344,9 +347,13 @@ export class ActionGroupDomain extends DomainRoot {
       }
       // if dummy, level 0:
       if (ad.isDummy) {
+        streak = 0 // Dummy commit is considered no longer doable. So, reset streak.
         actionsDerived.push(ad.toResDTO(0))
         continue
       }
+
+      // From now on, action is done despite it is late:
+      streak += 1
 
       // if action committed but is late for that date, it is level 1:
       // make sure to subtract this.props.closeAt.valueOf() from the days behind
@@ -387,6 +394,7 @@ export class ActionGroupDomain extends DomainRoot {
 
     return {
       props: this.props,
+      streak,
       actionsLength: actionsDerived.length,
       isTodayHandled,
       // total counts is number of actions committed that is at least level 1 or higher
