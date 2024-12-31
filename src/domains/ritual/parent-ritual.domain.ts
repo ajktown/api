@@ -59,11 +59,19 @@ export class ParentRitualDomain extends DomainRoot {
       orderedActionGroupIds: doc.orderedActionGroupIds,
       actionGroupIds: actionGroupDocs
         .sort((a, b) => {
-          if (map.has(a.id) && map.has(b.id)) {
+          // If both are in the user-defined order, prioritize by their indices:
+          if (map.has(a.id) && map.has(b.id))
             return map.get(a.id) - map.get(b.id)
-          }
+
+          // If only one is in the user-defined order, prioritize it:
+          if (map.has(a.id)) return -1
+          if (map.has(b.id)) return 1
+
+          // Default fallback: prioritize by closeMinsAfter:
           if (a.closeMinsAfter !== b.closeMinsAfter)
             return a.closeMinsAfter - b.closeMinsAfter
+
+          // Further fallback: prioritize by openMinsAfter:
           return a.openMinsAfter - b.openMinsAfter
         })
         .map((doc) => doc.id),
