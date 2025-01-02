@@ -23,8 +23,8 @@ export const t_actionGroupDocs: Partial<ActionGroupDoc>[] = [
     ownerId: t_deprecatedUserId.One,
     task: 'random-test-data: Brush teeth',
     timezone: 'Asia/Seoul',
-    openMinsAfter: 1100, // 6:00 am
-    closeMinsAfter: 1250, // 8:50 am
+    openMinsAfter: 1100, // 6:20 pm
+    closeMinsAfter: 1250, // 8:50 pm
     createdAt: new Date('2024-02-17T10:49:05.474Z'),
     updatedAt: new Date('2024-02-17T10:49:05.474Z'),
   },
@@ -33,8 +33,8 @@ export const t_actionGroupDocs: Partial<ActionGroupDoc>[] = [
     ownerId: t_deprecatedUserId.One,
     task: 'random-test-data: Run Podcast',
     timezone: 'Asia/Seoul',
-    openMinsAfter: 779,
-    closeMinsAfter: 840,
+    openMinsAfter: 780, // 1:00 pm
+    closeMinsAfter: 840, // 2:00 pm
     createdAt: new Date('2024-03-20T06:48:47.108Z'),
     updatedAt: new Date('2024-03-20T06:48:47.108Z'),
   },
