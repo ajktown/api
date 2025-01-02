@@ -19,9 +19,8 @@ describe('ParentRitualDomain.fromDoc', () => {
     // Validate that `actionGroupIds` matches the expected order
     expect(res.ritual.actionGroupIds).toEqual([
       // The order is reversed as the ritual contains the user-customized ids:]
-      t_actionGroupId.One,
       t_actionGroupId.Two,
-      // t_actionGroupId.One,
+      t_actionGroupId.One,
     ])
   })
 })
