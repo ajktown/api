@@ -13,5 +13,5 @@ export const t_RitualDoc: Partial<RitualDoc> = {
   createdAt: new Date('2024-03-20T04:59:19.752Z'),
   updatedAt: new Date('2024-12-31T08:06:27.719Z'),
   __v: 0,
-  orderedActionGroupIds: [t_actionGroupId.Two, t_actionGroupId.One],
+  orderedActionGroupIds: [t_actionGroupId.Two, t_actionGroupId.One], // the order is reversed in purpose (related src/domains/ritual/parent-ritual.domain.spec.ts)
 }

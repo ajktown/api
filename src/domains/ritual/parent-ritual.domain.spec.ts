@@ -18,7 +18,7 @@ describe('ParentRitualDomain.fromDoc', () => {
     const res = parentRitualDomain.toResDTO({ isArchived: false })
     // Validate that `actionGroupIds` matches the expected order
     expect(res.ritual.actionGroupIds).toEqual([
-      // The order is reversed as the ritual contains the user-customized ids:]
+      // The order is reversed as the ritual contains the user-customized ids defined in src/schemas/ritual.schema.sample.ts:
       t_actionGroupId.Two,
       t_actionGroupId.One,
     ])
