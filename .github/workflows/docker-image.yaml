@@ -15,6 +15,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # Install Node.js for test purpose
+    - name: Set up Node.js to test with yarn test
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18' # Make sure to stay in sync with the version defined in Dockerfile
+
+    - name: Install dependencies to test with yarn test
+      run: yarn install
+
+    - name: Run tests
+      run: yarn test
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
