@@ -17,6 +17,7 @@ export enum ActionGroupControllerPath {
   PostArchiveActionGroup = `action-groups/:id/archive`,
   GetActionGroupById = `action-groups/:id`,
   DeleteTodayActionByActionGroup = `action-groups/:id/actions/today`,
+  DeleteYesterdayActionByActionGroup = `action-groups/:id/actions/yesterday`,
 }
 
 @Controller(AjkTownApiVersion.V1)
@@ -75,5 +76,16 @@ export class ActionGroupController {
     return (await this.actionGroupService.deleteTodayAction(atd, id)).toResDTO(
       atd,
     )
+  }
+
+  @Delete(ActionGroupControllerPath.DeleteYesterdayActionByActionGroup)
+  async deleteYesterdayActionByActionGroup(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ) {
+    const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
+    return (
+      await this.actionGroupService.deleteYesterdayAction(atd, id)
+    ).toResDTO(atd)
   }
 }

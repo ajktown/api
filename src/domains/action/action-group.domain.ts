@@ -272,14 +272,26 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   /**
-   * Delete every action associated to the action group that is TODAY!
+   * Delete every action associated to the action group that is TODAY or YESTERDAY!
    */
-  async deleteTodayAction(
+  async deleteAction(
     atd: AccessTokenDomain,
     model: ActionModel,
+    which: 'today' | 'yesterday', // Only today or yesterday is allowed to be deleted
   ): Promise<this> {
     if (this.props.ownerId !== atd.userId)
       throw new NotExistOrNoPermissionError()
+
+    const gte = (() => {
+      switch (which) {
+        case 'today':
+          return timeHandler.getStartOfToday(this.props.timezone)
+        case 'yesterday':
+          return timeHandler.getStartOfYesterday(this.props.timezone)
+        default:
+          throw new BadRequestError('Invalid which')
+      }
+    })()
 
     // get todays actions
     let docs: ActionDoc[] = []
@@ -288,7 +300,7 @@ export class ActionGroupDomain extends DomainRoot {
         ownerId: this.props.ownerId,
         groupId: this.props.id,
         createdAt: {
-          $gte: timeHandler.getStartOfToday(this.props.timezone),
+          $gte: gte,
         },
       })
     } catch (err) {
