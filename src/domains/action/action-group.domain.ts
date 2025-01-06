@@ -296,12 +296,12 @@ export class ActionGroupDomain extends DomainRoot {
     if (this.props.ownerId !== atd.userId)
       throw new NotExistOrNoPermissionError()
 
-    const gte = (() => {
+    const [startDate, endDate] = (() => {
       switch (which) {
         case 'today':
-          return timeHandler.getStartOfToday(this.props.timezone)
+          return timeHandler.getDateFromDaysAgo(0, this.props.timezone) // Get start and end for today
         case 'yesterday':
-          return timeHandler.getStartOfYesterday(this.props.timezone)
+          return timeHandler.getDateFromDaysAgo(1, this.props.timezone) // Get start and end for yesterday
         default:
           throw new DataNotSelectableError('which', ['today', 'yesterday'])
       }
@@ -314,7 +314,8 @@ export class ActionGroupDomain extends DomainRoot {
         ownerId: this.props.ownerId,
         groupId: this.props.id,
         createdAt: {
-          $gte: gte,
+          $gte: startDate,
+          $lte: endDate, // this is a must as deleting yesterday's action is allowed
         },
       })
     } catch (err) {
