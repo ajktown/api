@@ -28,6 +28,7 @@ import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permis
 import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
 import { NumberNotInRangeError } from '@/errors/400/index.num-not-in-range.error'
 import { PostActionBodyDTO } from '@/dto/post-action.dto'
+import { DataNotSelectableError } from '@/errors/400/data-not-selectable.error'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -289,7 +290,7 @@ export class ActionGroupDomain extends DomainRoot {
         case 'yesterday':
           return timeHandler.getStartOfYesterday(this.props.timezone)
         default:
-          throw new BadRequestError('Invalid which')
+          throw new DataNotSelectableError('which', ['today', 'yesterday'])
       }
     })()
 
