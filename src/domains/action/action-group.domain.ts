@@ -135,6 +135,19 @@ export class ActionGroupDomain extends DomainRoot {
     ].includes(this.state)
   }
 
+  get isYesterdayDeletable(): boolean {
+    const got = this.dateDomainMap.get(
+      timeHandler.getYYYYMMDD(
+        timeHandler.getYesterday(this.props.timezone),
+        this.props.timezone,
+      ),
+    )
+
+    if (got === undefined) return false // not exist => not deletable
+    if (got.toResDTO(0).isDummy) return false // dummy => not done => deleting does not make difference
+    return true
+  }
+
   private static fromMdb(
     doc: ActionGroupDoc,
     map: Map<string, ActionDomain>,
@@ -426,6 +439,7 @@ export class ActionGroupDomain extends DomainRoot {
         isDummyCommittable: this.isDummyCommittable,
         isLateCommittable: this.isLateCommittable,
         isDeletable: this.isDeletable,
+        isYesterdayDeletable: this.isYesterdayDeletable,
       },
     }
   }

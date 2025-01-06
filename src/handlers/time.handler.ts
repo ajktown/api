@@ -18,6 +18,9 @@ export const timeHandler = {
   getToday: (timezone: string): Date => {
     return DateTime.now().setZone(timezone).toJSDate()
   },
+  getYesterday: (timezone: string): Date => {
+    return DateTime.now().setZone(timezone).minus({ days: 1 }).toJSDate()
+  },
 
   /** return daysAgo for the given JS Date
    * This also make sure that it is in the same timezone as the given timezone
