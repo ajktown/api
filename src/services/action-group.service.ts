@@ -86,6 +86,18 @@ export class ActionGroupService {
     actionGroupId: string,
   ): Promise<ActionGroupDomain> {
     const actionGroup = await this.getById(atd, actionGroupId)
-    return actionGroup.deleteTodayAction(atd, this.actionModel)
+    return actionGroup.deleteAction(atd, this.actionModel, 'today')
+  }
+
+  /**
+   * Delete every actions associated to the action group that is YESTERDAY!
+   * This is developed as some users want to make the CGT records correct for all the time.
+   */
+  async deleteYesterdayAction(
+    atd: AccessTokenDomain,
+    actionGroupId: string,
+  ): Promise<ActionGroupDomain> {
+    const actionGroup = await this.getById(atd, actionGroupId)
+    return actionGroup.deleteAction(atd, this.actionModel, 'yesterday')
   }
 }

@@ -28,6 +28,7 @@ import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permis
 import { SupportedTimeZoneConst } from '@/constants/time-zone.const'
 import { NumberNotInRangeError } from '@/errors/400/index.num-not-in-range.error'
 import { PostActionBodyDTO } from '@/dto/post-action.dto'
+import { DataNotSelectableError } from '@/errors/400/data-not-selectable.error'
 
 /**
  * ActionGroupDomain first contains only level 1~4 data.
@@ -132,6 +133,19 @@ export class ActionGroupDomain extends DomainRoot {
       `LateCommitted`,
       `LateDummyCommitted`,
     ].includes(this.state)
+  }
+
+  get isYesterdayDeletable(): boolean {
+    const got = this.dateDomainMap.get(
+      timeHandler.getYYYYMMDD(
+        timeHandler.getYesterday(this.props.timezone),
+        this.props.timezone,
+      ),
+    )
+
+    if (got === undefined) return false // not exist => not deletable
+    if (got.toResDTO(0).isDummy) return false // dummy => not done => deleting does not make difference
+    return true
   }
 
   private static fromMdb(
@@ -272,14 +286,26 @@ export class ActionGroupDomain extends DomainRoot {
   }
 
   /**
-   * Delete every action associated to the action group that is TODAY!
+   * Delete every action associated to the action group that is TODAY or YESTERDAY!
    */
-  async deleteTodayAction(
+  async deleteAction(
     atd: AccessTokenDomain,
     model: ActionModel,
+    which: 'today' | 'yesterday', // Only today or yesterday is allowed to be deleted
   ): Promise<this> {
     if (this.props.ownerId !== atd.userId)
       throw new NotExistOrNoPermissionError()
+
+    const [startDate, endDate] = (() => {
+      switch (which) {
+        case 'today':
+          return timeHandler.getDateFromDaysAgo(0, this.props.timezone) // Get start and end for today
+        case 'yesterday':
+          return timeHandler.getDateFromDaysAgo(1, this.props.timezone) // Get start and end for yesterday
+        default:
+          throw new DataNotSelectableError('which', ['today', 'yesterday'])
+      }
+    })()
 
     // get todays actions
     let docs: ActionDoc[] = []
@@ -288,7 +314,8 @@ export class ActionGroupDomain extends DomainRoot {
         ownerId: this.props.ownerId,
         groupId: this.props.id,
         createdAt: {
-          $gte: timeHandler.getStartOfToday(this.props.timezone),
+          $gte: startDate,
+          $lte: endDate, // this is a must as deleting yesterday's action is allowed
         },
       })
     } catch (err) {
@@ -413,6 +440,7 @@ export class ActionGroupDomain extends DomainRoot {
         isDummyCommittable: this.isDummyCommittable,
         isLateCommittable: this.isLateCommittable,
         isDeletable: this.isDeletable,
+        isYesterdayDeletable: this.isYesterdayDeletable,
       },
     }
   }

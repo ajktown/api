@@ -8,8 +8,18 @@ export const timeHandler = {
   getStartOfToday: (timezone: string): Date => {
     return DateTime.now().setZone(timezone).startOf('day').toJSDate()
   },
+  getStartOfYesterday: (timezone: string): Date => {
+    return DateTime.now()
+      .setZone(timezone)
+      .minus({ days: 1 })
+      .startOf('day')
+      .toJSDate()
+  },
   getToday: (timezone: string): Date => {
     return DateTime.now().setZone(timezone).toJSDate()
+  },
+  getYesterday: (timezone: string): Date => {
+    return DateTime.now().setZone(timezone).minus({ days: 1 }).toJSDate()
   },
 
   /** return daysAgo for the given JS Date
