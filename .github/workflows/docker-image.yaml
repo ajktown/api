@@ -19,7 +19,7 @@ jobs:
     - name: Set up Node.js to test with yarn test
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # Make sure to stay in sync with the version defined in Dockerfile
+        node-version: '20' # Make sure to stay in sync with the version defined in Dockerfile
 
     - name: Install dependencies to test with yarn test
       run: yarn install
@@ -43,7 +43,6 @@ jobs:
     - name: Push the Docker image for PR
       if: github.event_name == 'pull_request'
       run: docker push ajktown/api:pr${{ github.event.pull_request.number }}
-
     # - name: Build the Docker image as latest
     #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     #   run: docker build . --file Dockerfile --tag ajktown/api:latest
