@@ -66,7 +66,7 @@ export class AccessTokenDomain {
     req: Request,
     jwtService: JwtService,
   ): Promise<AccessTokenDomain> {
-    // allow postman under dev
+    // allow postman ONLY under dev:
     if (envLambda.mode.isLocal() && req.headers['postman-token'])
       return AccessTokenDomain.fromUser(UserDomain.underDevEnv(), req)
 
@@ -76,8 +76,11 @@ export class AccessTokenDomain {
     const potentialToken = req.cookies[CookieConst.AjktownSecuredAccessToken]
     if (typeof potentialToken !== 'string')
       throw new DataNotPresentError(`AJK Town Secured Access Token`)
-    const attr = await jwtService.verify(potentialToken)
-    return new AccessTokenDomain(attr, getTimezone(req))
+
+    return new AccessTokenDomain(
+      await jwtService.verify(potentialToken), // IOauthPayload
+      getTimezone(req),
+    )
   }
 
   toDetailedInfo(): IOauthPayload & IOauthPayloadNonDb {
