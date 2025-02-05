@@ -12,7 +12,7 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
     if (!query.searchInput) return {}
 
     return this.toObjectWithSearch(
-      ['word', 'pronun', 'meaning', 'example'],
+      ['word', 'pronun', 'meaning', 'subDefinition', 'example'],
       query.searchInput,
     )
   }
