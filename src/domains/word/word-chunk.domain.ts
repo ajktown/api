@@ -59,6 +59,12 @@ export class WordChunkDomain {
       )
         .sort((a, b) => b.dateAdded - a.dateAdded)
         .sort((a, b) => b.sem - a.sem)
+        .sort((a, b) => {
+          // pinned words must be on the top of the list all the time, by the rule of AJK Town
+          if (a.isPinned && !b.isPinned) return -1
+          if (!a.isPinned && b.isPinned) return 1
+          return 0
+        })
         .map((wordRaw) => WordDomain.fromMdb(wordRaw)),
       query,
     )

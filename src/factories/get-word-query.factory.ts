@@ -23,27 +23,41 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
   ): FilterQuery<WordProps> {
     if (!atd.userId) throw new UnidentifiedUserError()
 
+    const queryBase: FilterQuery<WordProps>[] = [
+      {
+        ownerID: atd.userId,
+        ...this.getFilterForSearchInput(query),
+        ...this.toObject('_id', query.id),
+        ...this.toObject('language', query.languageCode),
+        ...this.toInObject('language', query.languageCodes),
+        ...this.toObject('sem', query.semester),
+        ...this.toObject('isFavorite', query.isFavorite),
+        ...this.toObject('word', query.term),
+        ...this.toObject('pronun', query.pronunciation),
+        ...this.toObject('meaning', query.definition),
+        ...this.toObject('example', query.example),
+        ...this.toNumRangeObjectByYear('dateAdded', query.year, atd),
+        ...this.toNumRangeObjectByDaysAgo('dateAdded', query.daysAgo, atd),
+        ...this.toNumRangeObjectByDaysAgoUntilToday(
+          'dateAdded',
+          query.daysAgoUntilToday,
+          atd,
+        ),
+        ...this.toInObject('tag', query.tags),
+        ...this.toObject('isArchived', query.isArchived),
+      },
+    ]
+
+    // user-pinned words always brought as the target data despite user query ONLY except when
+    // query length is 0.
+    // TODO: I think i need to some operation checks like:
+    // TODO: - favorite
+    // TODO: - tag
+    // TODO: - search input etc...
+    if (!query.searchInput) queryBase.push({ isPinned: true })
+
     return {
-      ownerID: atd.userId,
-      ...this.getFilterForSearchInput(query),
-      ...this.toObject('_id', query.id),
-      ...this.toObject('language', query.languageCode),
-      ...this.toInObject('language', query.languageCodes),
-      ...this.toObject('sem', query.semester),
-      ...this.toObject('isFavorite', query.isFavorite),
-      ...this.toObject('word', query.term),
-      ...this.toObject('pronun', query.pronunciation),
-      ...this.toObject('meaning', query.definition),
-      ...this.toObject('example', query.example),
-      ...this.toNumRangeObjectByYear('dateAdded', query.year, atd),
-      ...this.toNumRangeObjectByDaysAgo('dateAdded', query.daysAgo, atd),
-      ...this.toNumRangeObjectByDaysAgoUntilToday(
-        'dateAdded',
-        query.daysAgoUntilToday,
-        atd,
-      ),
-      ...this.toInObject('tag', query.tags),
-      ...this.toObject('isArchived', query.isArchived),
+      $or: queryBase,
     }
   }
 

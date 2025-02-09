@@ -34,6 +34,9 @@ export class WordProps {
   sem: number //231
 
   @Prop()
+  isPinned: boolean // this was introduced in Feb 2025. undefined isPinned is considered "not pinned" (aka false)
+
+  @Prop()
   isFavorite: boolean
 
   @Prop()

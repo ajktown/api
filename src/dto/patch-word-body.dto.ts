@@ -16,6 +16,11 @@ export class PatchWordByIdBodyDTO {
   @IsOptional()
   isFavorite: boolean
 
+  @Transform(intoBoolean)
+  @IsBoolean()
+  @IsOptional()
+  isPinned: boolean
+
   @IsString()
   @IsOptional()
   term: string
