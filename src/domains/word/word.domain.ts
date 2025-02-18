@@ -30,6 +30,7 @@ export class WordDomain extends DomainRoot {
     props.pronunciation = props.pronunciation?.trim() || ''
     props.definition = props.definition?.trim() || ''
     props.subDefinition = props.subDefinition?.trim() || ''
+    props.isPinned = props.isPinned || false
     props.example = props.example?.trim() || ''
     props.exampleLink = props.exampleLink?.trim() || ''
     props.tags = this.intoTrimmedAndUniqueArray(props.tags) // every tag must be trimmed/unique all the time
@@ -81,6 +82,7 @@ export class WordDomain extends DomainRoot {
       languageCode: props.language as GlobalLanguageCode, // TODO: Write a type validator
       semester: props.sem,
       isFavorite: props.isFavorite,
+      isPinned: props.isPinned,
       term: props.word,
       pronunciation: props.pronun,
       definition: props.meaning,
@@ -141,6 +143,7 @@ export class WordDomain extends DomainRoot {
       language: this.props.languageCode,
       sem: this.props.semester,
       isFavorite: this.props.isFavorite,
+      isPinned: this.props.isPinned,
       word: this.props.term,
       pronun: this.props.pronunciation,
       meaning: this.props.definition,
@@ -206,6 +209,7 @@ export class WordDomain extends DomainRoot {
         {
           language: dto.languageCode,
           isFavorite: dto.isFavorite,
+          isPinned: dto.isPinned,
           word: dto.term,
           pronun: dto.pronunciation,
           meaning: dto.definition,

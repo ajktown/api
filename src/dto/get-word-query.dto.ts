@@ -11,10 +11,15 @@ import { GetReqDTORoot } from './index.root'
 import { Transform } from 'class-transformer'
 import { intoBoolean, intoNumber, intoArray } from './index.validator'
 
-type PrivateNotYetImplemented = 'tags' | 'createdAt' | 'updatedAt'
+type PrivateOmitted =
+  | 'tags' // Simply not implemented yet
+  | 'createdAt' // Simply not implemented yet
+  | 'updatedAt' // Simply not implemented yet
+  | 'isPinned' // The isPinned field is not acceptable as pinned word is always returned as the first word in the list.
+
 export class GetWordQueryDTO
   extends GetReqDTORoot
-  implements Omit<IWord, PrivateNotYetImplemented>
+  implements Omit<IWord, PrivateOmitted>
 {
   @IsString()
   @IsOptional()

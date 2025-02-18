@@ -16,5 +16,6 @@ export interface IWord extends ISharedWord, DataBasicsDate {
   userId: string
   semester: number
   isFavorite: boolean
+  isPinned: boolean
   isArchived: boolean
 }
