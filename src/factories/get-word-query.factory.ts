@@ -54,7 +54,8 @@ export class GetWordQueryFactory extends FactoryRoot<WordProps> {
     // TODO: - favorite
     // TODO: - tag
     // TODO: - search input etc...
-    if (!query.searchInput) queryBase.push({ ownerID: atd.userId, isPinned: true })
+    if (!query.searchInput)
+      queryBase.push({ ownerID: atd.userId, isPinned: true })
 
     return {
       $or: queryBase,
