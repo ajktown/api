@@ -15,8 +15,3 @@ export interface IRitual {
   name: string
   orderedActionGroupIds: string[]
 }
-
-export interface IParentRitual extends IRitual {
-  actionGroupIds: string[]
-  archivedActionGroupSet: Set<string>
-}

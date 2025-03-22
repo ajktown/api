@@ -1,9 +1,9 @@
-import { IParentRitual } from '@/domains/ritual/index.interface'
+import { IRitualActionGroup } from '@/domains/ritual_action_group/index.interface'
 
 export interface GetRitualsRes {
-  rituals: IParentRitual[]
+  rituals: IRitualActionGroup[]
 }
 
 export interface GetRitualByIdRes {
-  ritual: IParentRitual
+  ritual: IRitualActionGroup
 }

@@ -5,11 +5,11 @@ import {
   ActionGroupProps,
 } from '@/schemas/action-group.schema'
 import { InjectModel } from '@nestjs/mongoose'
-import { RitualGroupDomain } from '@/domains/ritual/ritual-group.domain'
+import { RitualActionGroupGroupDomain } from '@/domains/ritual_action_group/ritual-action-group-group.domain'
 import { UserDomain } from '@/domains/user/user.domain'
 import { RitualModel, RitualProps } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
-import { ParentRitualDomain } from '@/domains/ritual/parent-ritual.domain'
+import { RitualActionGroupDomain } from '@/domains/ritual_action_group/ritual-action-group.domain'
 import { RitualDomain } from '@/domains/ritual/ritual.domain'
 import { ArchiveModel, ArchiveProps } from '@/schemas/archive.schema'
 
@@ -27,8 +27,8 @@ export class RitualService {
   /**
    * byAtd returns RitualDomain of a user by access token domain (or requester)
    */
-  async byAtd(atd: AccessTokenDomain): Promise<RitualGroupDomain> {
-    return RitualGroupDomain.fromMdb(
+  async byAtd(atd: AccessTokenDomain): Promise<RitualActionGroupGroupDomain> {
+    return RitualActionGroupGroupDomain.fromMdb(
       atd,
       this.ritualModel,
       this.actionGroupModel,
@@ -39,8 +39,8 @@ export class RitualService {
   /**
    * byUser returns RitualDomain of a user by user domain.
    */
-  async byUser(userDomain: UserDomain): Promise<RitualGroupDomain> {
-    return RitualGroupDomain.fromUser(
+  async byUser(userDomain: UserDomain): Promise<RitualActionGroupGroupDomain> {
+    return RitualActionGroupGroupDomain.fromUser(
       userDomain,
       this.ritualModel,
       this.actionGroupModel,
