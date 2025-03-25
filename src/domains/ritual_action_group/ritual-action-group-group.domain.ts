@@ -2,26 +2,28 @@ import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
 import { ActionGroupModel } from '@/schemas/action-group.schema'
 import { GetRitualsRes } from '@/responses/get-ritual.res'
-import { RitualDomain } from './ritual.domain'
+import { RitualDomain } from '../ritual/ritual.domain'
 import { UserDomain } from '../user/user.domain'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permission.error'
-import { ParentRitualDomain } from './parent-ritual.domain'
+import { RitualActionGroupDomain } from './ritual-action-group.domain'
 import { ArchiveModel } from '@/schemas/archive.schema'
 import { ArchiveDomain } from '../archive/archive.domain'
 import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
 import { CriticalError } from '@/errors/500/critical.error'
 
-export class RitualGroupDomain extends DomainRoot {
-  private readonly domains: ParentRitualDomain[]
+// RitualActionGroupGroupDomain contains multiple RitualActionGroupDomain
+// We are aware that it has "Group" appear twice in the name
+export class RitualActionGroupGroupDomain extends DomainRoot {
+  private readonly domains: RitualActionGroupDomain[]
 
-  private constructor(domains: ParentRitualDomain[]) {
+  private constructor(domains: RitualActionGroupDomain[]) {
     super()
     this.domains = domains
   }
 
   // default is the first one always.
-  getDefault(): ParentRitualDomain {
+  getDefault(): RitualActionGroupDomain {
     if (this.domains.length === 0) throw new NotExistOrNoPermissionError()
     return this.domains[0]
   }
@@ -36,7 +38,7 @@ export class RitualGroupDomain extends DomainRoot {
     actionGroupModel: ActionGroupModel,
     archiveModel: ArchiveModel,
     disableRecursion: boolean = false,
-  ): Promise<RitualGroupDomain> {
+  ): Promise<RitualActionGroupGroupDomain> {
     const ritualDocs = await ritualModel.find({
       ownerId: atd.userId,
     })
@@ -49,7 +51,7 @@ export class RitualGroupDomain extends DomainRoot {
       }
 
       await RitualDomain.postDefault(atd, ritualModel)
-      return RitualGroupDomain.fromMdb(
+      return RitualActionGroupGroupDomain.fromMdb(
         atd,
         ritualModel,
         actionGroupModel,
@@ -70,9 +72,9 @@ export class RitualGroupDomain extends DomainRoot {
     const actionGroupDocs = await actionGroupModel.find({
       ownerId: atd.userId,
     })
-    return new RitualGroupDomain(
+    return new RitualActionGroupGroupDomain(
       ritualDocs.map((doc) =>
-        ParentRitualDomain.fromDoc(
+        RitualActionGroupDomain.fromDoc(
           doc,
           actionGroupDocs,
           archivedActionGroupIds,
@@ -91,7 +93,7 @@ export class RitualGroupDomain extends DomainRoot {
     ritualModel: RitualModel,
     actionGroupModel: ActionGroupModel,
     archiveModel: ArchiveModel,
-  ): Promise<RitualGroupDomain> {
+  ): Promise<RitualActionGroupGroupDomain> {
     const ritualDocs = await ritualModel.find({
       ownerId: userDomain.id,
     })
@@ -113,9 +115,9 @@ export class RitualGroupDomain extends DomainRoot {
       .filter((d) => d.isActionGroupArchived)
       .map((d) => d.actionGroupId)
 
-    return new RitualGroupDomain(
+    return new RitualActionGroupGroupDomain(
       ritualDocs.map((doc) =>
-        ParentRitualDomain.fromDoc(
+        RitualActionGroupDomain.fromDoc(
           doc,
           actionGroupDocs,
           archivedActionGroupIds,

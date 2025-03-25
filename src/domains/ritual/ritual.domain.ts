@@ -3,7 +3,7 @@ import { AccessTokenDomain } from '../auth/access-token.domain'
 import { IRitual } from './index.interface'
 import { RitualModel } from '@/schemas/ritual.schema'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
-import { ParentRitualDomain } from './parent-ritual.domain'
+import { RitualActionGroupDomain } from '../ritual_action_group/ritual-action-group.domain'
 
 /**
  * Ritual domain groups the ActionDomain
@@ -25,7 +25,7 @@ export class RitualDomain extends DomainRoot {
     return this.props.id
   }
 
-  static fromParentRitual(domain: ParentRitualDomain): RitualDomain {
+  static fromParentRitual(domain: RitualActionGroupDomain): RitualDomain {
     return new RitualDomain(domain.iRitual)
   }
 

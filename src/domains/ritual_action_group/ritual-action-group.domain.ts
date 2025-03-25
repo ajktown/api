@@ -1,15 +1,16 @@
 import { DomainRoot } from '../index.root'
 import { AccessTokenDomain } from '../auth/access-token.domain'
-import { IParentRitual, IRitual } from './index.interface'
+import { IRitual } from '../ritual/index.interface'
 import { ReadForbiddenError } from '@/errors/403/action_forbidden_errors/read-forbidden.error'
 import { ActionGroupDoc } from '@/schemas/action-group.schema'
 import { RitualDoc } from '@/schemas/ritual.schema'
 import { GetRitualByIdRes } from '@/responses/get-ritual.res'
 import { GetRitualQueryDTO } from '@/dto/get-rituals-query.dto'
 import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
+import { IRitualActionGroup } from './index.interface'
 
 /**
- * ParentRitualDomain has both values:
+ * RitualActionGroupDomain has both values:
  *   - RitualDomain
  *   - ActionGroup ids
  * i.e) ritual domain: early bird
@@ -18,10 +19,10 @@ import { PatchRitualGroupBodyDTO } from '@/dto/patch-ritual-group-body.dto'
  * TODO: Maybe enforcing the same end time is a good strategy, for users
  * TODO: to maintain, OR we can suggest them to do so
  */
-export class ParentRitualDomain extends DomainRoot {
-  private readonly props: IParentRitual
+export class RitualActionGroupDomain extends DomainRoot {
+  private readonly props: IRitualActionGroup
 
-  private constructor(input: IParentRitual) {
+  private constructor(input: IRitualActionGroup) {
     super()
     this.props = input
   }
@@ -46,13 +47,13 @@ export class ParentRitualDomain extends DomainRoot {
     doc: RitualDoc,
     actionGroupDocs: ActionGroupDoc[],
     archivedActionGroupIds: string[],
-  ): ParentRitualDomain {
+  ): RitualActionGroupDomain {
     // map contains user's own order of action groups
     // the lower the i (or index), the higher the priority it should be seen
     // despite of its openMinsAfter or closeMinsAfter
     const map = new Map(doc.orderedActionGroupIds.map((id, i) => [id, i]))
 
-    return new ParentRitualDomain({
+    return new RitualActionGroupDomain({
       id: doc.id,
       ownerId: doc.ownerId,
       name: doc.name,
