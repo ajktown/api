@@ -1,4 +1,5 @@
 # AJK Town API
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ajktown/api)
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/mlajkim)
 
