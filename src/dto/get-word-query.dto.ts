@@ -27,7 +27,7 @@ export class GetWordQueryDTO
 
   @IsString()
   @IsOptional()
-  userId: string
+  userId: string // TODO: Modifying this to ownerId will cause DB migration, so be careful with this change. (Careful test may be needed, especially with FE)
 
   @IsOptional()
   @IsString()
