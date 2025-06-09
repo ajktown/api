@@ -13,7 +13,7 @@ export interface IOauthPayloadNonDb {
 }
 export interface IOauthPayload {
   userEmail: string
-  userId: string
+  userId: string // TODO: Modify this to ownerId (Careful test may be needed, especially with FE)
   profileImageUrl: string
   createdAt: string
 }

@@ -13,7 +13,7 @@ export interface ISharedWord {
 }
 export interface IWord extends ISharedWord, DataBasicsDate {
   id: string
-  userId: string
+  userId: string // TODO: Modify this to ownerId (Careful test may be needed, especially with FE)
   semester: number
   isFavorite: boolean
   isPinned: boolean
