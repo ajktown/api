@@ -1,5 +1,5 @@
 import { GlobalLanguageCode } from '@/global.interface'
-import { IsArray, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator'
 import { intoUniqueArray } from './index.validator'
 import { Transform } from 'class-transformer'
 
@@ -18,4 +18,8 @@ export class PatchPreferenceDto {
   @IsString()
   @IsOptional()
   gptApiKey: string
+
+  @IsBoolean()
+  @IsOptional()
+  useProgressDialog: boolean
 }

@@ -32,6 +32,10 @@ export class PreferenceProps {
 
   @Prop()
   gptApiKey: string
+
+  // To see the detail, check index.interface.ts of IPreference
+  @Prop({ default: true })
+  useProgressDialog: boolean
 }
 
 export const PreferenceSchema = SchemaFactory.createForClass(PreferenceProps)

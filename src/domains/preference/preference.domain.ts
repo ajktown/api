@@ -60,6 +60,7 @@ export class PreferenceDomain {
         nativeLanguages: [],
         recentTags: [],
         gptApiKey: ``,
+        useProgressDialog: true, // default to true
       })
 
       await temp.toDoc(model).save()
@@ -77,6 +78,7 @@ export class PreferenceDomain {
       dictPreference: DictPreferenceDomain.fromDoc(doc),
       recentTags: doc.recentTags ?? ([] as string[]),
       gptApiKey: doc.gptApiKey ?? ``,
+      useProgressDialog: doc.useProgressDialog ?? true, // default to true
     })
   }
 
@@ -87,6 +89,7 @@ export class PreferenceDomain {
       selectedDictIds: this.props.dictPreference.selectedDictIds,
       recentTags: this.props.recentTags,
       gptApiKey: this.props.gptApiKey,
+      useProgressDialog: this.props.useProgressDialog ?? true, // default to true if not set
     }
     return new preferenceModel(preferenceProps)
   }
@@ -120,6 +123,7 @@ export class PreferenceDomain {
           nativeLanguages,
           selectedDictIds,
           gptApiKey: dto.gptApiKey,
+          useProgressDialog: dto.useProgressDialog,
         },
         { new: true },
       )
