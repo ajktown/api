@@ -22,5 +22,5 @@ export class PatchPreferenceDto {
   @Transform(intoBooleanOrUndefined)
   @IsBoolean()
   @IsOptional()
-  useProgressDialog: boolean
+  useProgressDialog: undefined | boolean
 }
