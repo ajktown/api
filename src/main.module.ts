@@ -17,6 +17,7 @@ import { SharedResourceModule } from './modules/shared-resource.module'
 import { ActionGroupModule } from './modules/action-group.module'
 import { RitualModule } from './modules/ritual.module'
 import { UserModule } from './modules/user.module'
+import { MealModule } from './modules/meal.module'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserModule } from './modules/user.module'
     RitualModule,
     ActionGroupModule,
     SharedResourceModule,
+    MealModule,
     MongooseModule.forRoot(getMdbUriLambda()),
     JwtModule.register(getJwtOptionsLambda()),
   ],

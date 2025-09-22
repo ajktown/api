@@ -5,12 +5,15 @@ import { MealModel, MealProps } from '@/schemas/meal.schema'
 import { MealDomain } from '@/domains/meals/meal.domain'
 import { PostMealBodyDTO } from '@/dto/post-meal.dto'
 import { PatchMealBodyDTO } from '@/dto/patch-meal.dto'
+import { GetMealQueryDTO } from '@/dto/get-meal-query.dto'
+import { GetMealQueryFactory } from '@/factories/get-meal.factory'
 
 @Injectable()
 export class MealService {
   constructor(
     @InjectModel(MealProps.name)
     private mealModel: MealModel,
+    private readonly factory: GetMealQueryFactory,
   ) {}
 
   /** Create a new meal */
@@ -22,8 +25,11 @@ export class MealService {
   }
 
   /** Find all meals by owner */
-  async findAll(atd: AccessTokenDomain): Promise<MealDomain[]> {
-    return MealDomain.findAllByOwner(atd, this.mealModel)
+  async findAll(
+    atd: AccessTokenDomain,
+    query: GetMealQueryDTO,
+  ): Promise<MealDomain[]> {
+    return MealDomain.findAllByOwner(atd, query, this.factory, this.mealModel)
   }
 
   /** Find a single meal by id and owner */

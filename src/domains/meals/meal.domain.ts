@@ -6,6 +6,8 @@ import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/updat
 import { MealDoc, MealModel, MealProps } from '@/schemas/meal.schema'
 import { PatchMealBodyDTO } from '@/dto/patch-meal.dto'
 import { PostMealBodyDTO } from '@/dto/post-meal.dto'
+import { GetMealQueryDTO } from '@/dto/get-meal-query.dto'
+import { GetMealQueryFactory } from '@/factories/get-meal.factory'
 
 export class MealDomain {
   private readonly props: IMeal
@@ -68,9 +70,11 @@ export class MealDomain {
    */
   static async findAllByOwner(
     atd: AccessTokenDomain,
+    query: GetMealQueryDTO,
+    factory: GetMealQueryFactory,
     model: MealModel,
   ): Promise<MealDomain[]> {
-    const docs = await model.find({ ownerID: atd.userId }).exec()
+    const docs = await model.find(factory.getFilter(atd, query)).exec()
     return docs.map(MealDomain.fromMdb)
   }
 

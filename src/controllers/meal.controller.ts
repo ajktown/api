@@ -7,6 +7,7 @@ import {
   Delete,
   Req,
   Param,
+  Query,
 } from '@nestjs/common'
 import { AjkTownApiVersion } from './index.interface'
 import { Request } from 'express'
@@ -15,6 +16,7 @@ import { MealService } from '@/services/meal.service'
 import { AccessTokenDomain } from '@/domains/auth/access-token.domain'
 import { PostMealBodyDTO } from '@/dto/post-meal.dto'
 import { PatchMealBodyDTO } from '@/dto/patch-meal.dto'
+import { GetMealQueryDTO } from '@/dto/get-meal-query.dto'
 
 export enum MealControllerPath {
   PostMeal = `meals`,
@@ -38,10 +40,12 @@ export class MealController {
   }
 
   @Get(MealControllerPath.GetAllMeals)
-  async getAllMeals(@Req() req: Request) {
+  async getAllMeals(@Req() req: Request, @Query() query: GetMealQueryDTO) {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
-    const domains = await this.mealService.findAll(atd)
-    return domains.map((domain) => domain.toResDTO())
+    const domains = await this.mealService.findAll(atd, query)
+    return {
+      meals: domains.map((domain) => domain.toResDTO()),
+    }
   }
 
   @Get(MealControllerPath.GetMeal)
@@ -61,7 +65,10 @@ export class MealController {
   }
 
   @Delete(MealControllerPath.DeleteMeal)
-  async deleteMeal(@Req() req: Request, @Param('id') id: string): Promise<void> {
+  async deleteMeal(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ): Promise<void> {
     const atd = await AccessTokenDomain.fromReq(req, this.jwtService)
     await this.mealService.remove(atd, id)
     // No return value will result in a 204 No Content response
