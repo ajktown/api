@@ -1,11 +1,9 @@
 import { Transform } from 'class-transformer'
 import {
   IsArray,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  Min,
 } from 'class-validator'
 import { intoArray, intoNumber } from './index.validator'
 
