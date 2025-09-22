@@ -7,34 +7,31 @@ import {
   IsString,
   Min,
 } from 'class-validator'
-import { intoArray } from './index.validator'
+import { intoArray, intoNumber } from './index.validator'
 
 class PostMealIngredientsBodyDTO {
+  @Transform(intoNumber)
   @IsNumber()
-  @Min(0)
   protein: number
 }
 
 export class PostMealBodyDTO extends PostMealIngredientsBodyDTO {
   @IsString()
-  @IsNotEmpty()
   name: string
 
+  @Transform(intoNumber)
   @IsNumber()
-  @Min(0)
   amount: number
 
   @IsString()
-  @IsNotEmpty()
   unit: string
 
-  @Transform(intoArray) // from your example
-  @IsArray()
-  @IsString({ each: true })
+  @Transform(intoArray)
   @IsOptional()
+  @IsArray()
   labels?: string[]
 
+  @Transform(intoNumber)
   @IsNumber()
-  @Min(0)
   kcal: number
 }
