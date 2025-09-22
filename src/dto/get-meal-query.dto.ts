@@ -1,8 +1,5 @@
 import {
-  IsArray,
-  IsNumber,
   IsOptional,
-  IsString,
   IsDateString,
 } from 'class-validator'
 
