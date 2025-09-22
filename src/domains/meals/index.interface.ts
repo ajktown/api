@@ -1,4 +1,4 @@
-import { DataBasicsDate } from "@/global.interface"
+import { DataBasicsDate } from '@/global.interface'
 
 /**
  * @description

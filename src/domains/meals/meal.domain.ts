@@ -4,8 +4,8 @@ import { NotExistOrNoPermissionError } from '@/errors/404/not-exist-or-no-permis
 import { DeleteForbiddenError } from '@/errors/403/action_forbidden_errors/delete-forbidden.error'
 import { UpdateForbiddenError } from '@/errors/403/action_forbidden_errors/update-forbidden.error'
 import { MealDoc, MealModel, MealProps } from '@/schemas/meal.schema'
-import { PatchMealBodyDTO } from '@/dto/meal.patch.dto'
-import { PostMealBodyDTO } from '@/dto/meal.post.dto'
+import { PatchMealBodyDTO } from '@/dto/patch-meal.dto'
+import { PostMealBodyDTO } from '@/dto/post-meal.dto'
 
 export class MealDomain {
   private readonly props: IMeal

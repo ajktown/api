@@ -1,11 +1,5 @@
-import { Transform, Type } from 'class-transformer'
-import {
-  IsArray,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Min,
-} from 'class-validator'
+import { Transform } from 'class-transformer'
+import { IsArray, IsNumber, IsOptional, IsString, Min } from 'class-validator'
 import { intoArray } from './index.validator'
 
 class PatchMealIngredientsBodyDTO {
