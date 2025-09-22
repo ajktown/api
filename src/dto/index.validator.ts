@@ -80,3 +80,15 @@ export const intoArray = ({ value }: TransformFnParams): string[] => {
 export const intoUniqueArray = (params: TransformFnParams): string[] => {
   return Array.from(new Set(intoArray(params)))
 }
+
+export const intoUniqueNonEmptyTrimmedArray = (
+  params: TransformFnParams,
+): string[] => {
+  return Array.from(
+    new Set(
+      intoArray(params)
+        .map((item) => item.trim())
+        .filter((item) => item !== ''),
+    ),
+  )
+}

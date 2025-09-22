@@ -1,11 +1,6 @@
 import { Transform } from 'class-transformer'
-import {
-  IsArray,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator'
-import { intoArray, intoNumber } from './index.validator'
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator'
+import { intoNumber, intoUniqueNonEmptyTrimmedArray } from './index.validator'
 
 class PostMealIngredientsBodyDTO {
   @Transform(intoNumber)
@@ -24,7 +19,7 @@ export class PostMealBodyDTO extends PostMealIngredientsBodyDTO {
   @IsString()
   unit: string
 
-  @Transform(intoArray)
+  @Transform(intoUniqueNonEmptyTrimmedArray)
   @IsOptional()
   @IsArray()
   labels?: string[]
