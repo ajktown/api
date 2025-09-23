@@ -1,0 +1,30 @@
+import { Transform } from 'class-transformer'
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator'
+import { intoNumber, intoUniqueNonEmptyTrimmedArray } from './index.validator'
+
+class PostMealIngredientsBodyDTO {
+  @Transform(intoNumber)
+  @IsNumber()
+  protein: number
+}
+
+export class PostMealBodyDTO extends PostMealIngredientsBodyDTO {
+  @IsString()
+  name: string
+
+  @Transform(intoNumber)
+  @IsNumber()
+  amount: number
+
+  @IsString()
+  unit: string
+
+  @Transform(intoUniqueNonEmptyTrimmedArray)
+  @IsOptional()
+  @IsArray()
+  labels?: string[]
+
+  @Transform(intoNumber)
+  @IsNumber()
+  kcal: number
+}

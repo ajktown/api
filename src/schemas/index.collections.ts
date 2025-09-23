@@ -10,6 +10,7 @@ export enum SchemaCollectionName {
   Archives = `archives`,
   ActionGroups = 'action-groups',
   Rituals = `rituals`,
+  Meals = `meals`,
 }
 
 export enum DiscriminatorKey {
